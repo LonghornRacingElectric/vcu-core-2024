@@ -7,4 +7,4 @@ include_directories(src)
 
 add_executable(vcu_core
         src/VcuModel.cpp
-        src/VcuModel.h src/VcuParameters.h src/blocks/AppsProcessor.h src/blocks/AppsProcessor.cpp)
+        src/VcuModel.h src/VcuParameters.h src/blocks/AppsProcessor.h src/blocks/AppsProcessor.cpp src/blocks/BseProcessor.h src/blocks/BseProcessor.cpp)
