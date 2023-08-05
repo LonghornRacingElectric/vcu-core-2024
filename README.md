@@ -13,4 +13,3 @@ outputs. This allows us to test blocks independently and facilitates
 collaboration.
 
 (block diagram goes here)
-
