@@ -12,8 +12,8 @@
 
 // https://www.figma.com/file/z98vFbTBytWElKBb5sTkwk/Lapsim-v2024-Architecture?type=whiteboard&node-id=0%3A1&t=05V7HnOWgZNBNB2B-1
 
-typedef struct VcuInputs {
 
+typedef struct VcuInput {
     float apps1; // apps1 voltage (V)
     float apps2; // apps2 voltage (V)
 
@@ -24,15 +24,14 @@ typedef struct VcuInputs {
     float wheelSpeedFr;
     float wheelSpeedBl;
     float wheelSpeedBr;
+} VcuInput;
 
-} VcuInputs;
 
-typedef struct VcuOutputs {
-
+typedef struct VcuOutput {
     bool enableInverter;
     float inverterTorqueRequest; // torque (Nm)
+} VcuOutput;
 
-} VcuOutputs;
 
 class VcuModel {
 private:
@@ -61,7 +60,7 @@ private:
     SoftShutdownOutput softShutdownOutput;
 
 public:
-    void evaluate(VcuParameters* params, VcuInputs* vcuInput, VcuOutputs* vcuOutput, float deltaTime);
+    void evaluate(VcuParameters* params, VcuInput* vcuInput, VcuOutput* vcuOutput, float deltaTime);
 };
 
 

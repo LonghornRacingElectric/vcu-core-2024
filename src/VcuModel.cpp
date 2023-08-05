@@ -1,6 +1,6 @@
 #include "VcuModel.h"
 
-void VcuModel::evaluate(VcuParameters *params, VcuInputs *vcuInput, VcuOutputs *vcuOutput, float deltaTime) {
+void VcuModel::evaluate(VcuParameters *params, VcuInput *vcuInput, VcuOutput *vcuOutput, float deltaTime) {
 
     appsProcessorInput = {
             vcuInput->apps1,
