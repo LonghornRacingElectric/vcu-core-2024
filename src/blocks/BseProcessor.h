@@ -1,7 +1,7 @@
 #ifndef VCU_CORE_BSEPROCESSOR_H
 #define VCU_CORE_BSEPROCESSOR_H
 
-#include "parameters/VcuParameters.h"
+#include "VcuParameters.h"
 
 typedef struct BseProcessorInput {
     float bse1; // bse1 voltage (V)

@@ -2,7 +2,7 @@
 #define VCU_CORE_SOFTSHUTDOWN_H
 
 
-#include "parameters/VcuParameters.h"
+#include "VcuParameters.h"
 
 
 typedef struct SoftShutdownInput {

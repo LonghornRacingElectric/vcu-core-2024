@@ -1,8 +1,8 @@
 #ifndef VCU_CORE_VCUPARAMETERS_H
 #define VCU_CORE_VCUPARAMETERS_H
 
-#include "FunctionParameter2D.h"
-#include "FunctionParameter3D.h"
+#include "parameters/FunctionParameter2D.h"
+#include "parameters/FunctionParameter3D.h"
 
 /**
  * These are the tunable values of the VCU.

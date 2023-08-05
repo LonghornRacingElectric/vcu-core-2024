@@ -1,7 +1,7 @@
 #ifndef VCU_CORE_APPSPROCESSOR_H
 #define VCU_CORE_APPSPROCESSOR_H
 
-#include "parameters/VcuParameters.h"
+#include "VcuParameters.h"
 
 typedef struct AppsProcessorInput {
     float apps1; // apps1 voltage (V)

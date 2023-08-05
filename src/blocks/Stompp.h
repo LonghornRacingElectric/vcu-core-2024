@@ -1,7 +1,7 @@
 #ifndef VCU_CORE_STOMPP_H
 #define VCU_CORE_STOMPP_H
 
-#include "parameters/VcuParameters.h"
+#include "VcuParameters.h"
 
 
 typedef struct StomppInput {

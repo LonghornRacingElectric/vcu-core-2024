@@ -2,7 +2,7 @@
 #define VCU_CORE_TORQUEMAP_H
 
 
-#include "parameters/VcuParameters.h"
+#include "VcuParameters.h"
 
 
 typedef struct TorqueMapInput {

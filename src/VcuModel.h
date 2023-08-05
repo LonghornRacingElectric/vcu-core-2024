@@ -2,7 +2,7 @@
 #define VCU_CORE_2024_VCU_CORE_H
 
 
-#include "parameters/VcuParameters.h"
+#include "VcuParameters.h"
 #include "blocks/AppsProcessor.h"
 #include "blocks/BseProcessor.h"
 #include "blocks/Stompp.h"
@@ -19,6 +19,11 @@ typedef struct VcuInputs {
 
     float bse1; // bse1 voltage (V)
     float bse2; // bse2 voltage (V)
+
+    float wheelSpeedFl; // wheel speed (rad/s)
+    float wheelSpeedFr;
+    float wheelSpeedBl;
+    float wheelSpeedBr;
 
 } VcuInputs;
 
