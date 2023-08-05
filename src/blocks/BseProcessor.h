@@ -1,19 +1,21 @@
 #ifndef VCU_CORE_BSEPROCESSOR_H
 #define VCU_CORE_BSEPROCESSOR_H
 
+#include "parameters/VcuParameters.h"
+
 typedef struct BseProcessorInput {
-    float bse1;
-    float bse2;
+    float bse1; // bse1 voltage (V)
+    float bse2; // bse2 voltage (V)
 } BseProcessorInput;
 
 typedef struct BseProcessorOutput {
-    float bse;
-    bool plausible;
-}
+    float bse; // brake pressure (%)
+    bool ok;
+} BseProcessorOutput;
 
 class BseProcessor {
 public:
-    void evaluate() // TODO
+    void evaluate(VcuParameters* params, BseProcessorInput* input, BseProcessorOutput* output, float deltaTime);
 };
 
 

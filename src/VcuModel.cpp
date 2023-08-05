@@ -1,31 +1,34 @@
 #include "VcuModel.h"
 
-void VcuModel::evaluate(VcuParameters* params, VcuInputs* input, VcuOutputs* output, float deltaTime) {
-    appsProcessorInput = { input->apps1, input->apps2 };
+void VcuModel::evaluate(VcuParameters *params, VcuInputs *vcuInput, VcuOutputs *vcuOutput, float deltaTime) {
+
+    appsProcessorInput = {vcuInput->apps1, vcuInput->apps2};
     appsProcessorOutput = {};
     appsProcessor.evaluate(params, &appsProcessorInput, &appsProcessorOutput, deltaTime);
 
-    bseProcessorInput = {};
+    bseProcessorInput = {vcuInput->bse1, vcuInput->bse2};
     bseProcessorOutput = {};
     bseProcessor.evaluate(params, &bseProcessorInput, &bseProcessorOutput, deltaTime);
 
-    stomppInput = {};
+    stomppInput = {appsProcessorOutput.apps, bseProcessorOutput.bse};
     stomppOutput = {};
     stompp.evaluate(params, &stomppInput, &stomppOutput, deltaTime);
 
-    torqueMappingInput = {};
-    torqueMappingOutput = {};
-    torqueMapping.evaluate(params, &torqueMappingInput, &torqueMappingOutput, deltaTime);
+    torqueMapInput = {appsProcessorOutput.apps};
+    torqueMapOutput = {};
+    torqueMap.evaluate(params, &torqueMapInput, &torqueMapOutput, deltaTime);
 
-    tractionControlInput = {};
+    tractionControlInput = {torqueMapOutput.torqueRequest};
     tractionControlOutput = {};
     tractionControl.evaluate(params, &tractionControlInput, &tractionControlOutput, deltaTime);
 
-    softwareShutdownInput = {};
-    softwareShutdownOutput = {};
-    softwareShutdown.evaluate(params, &softwareShutdownInput, &softwareShutdownOutput, deltaTime);
+    softShutdownInput = {};
+    softShutdownOutput = {};
+    softShutdown.evaluate(params, &softShutdownInput, &softShutdownOutput, deltaTime);
 
-    output = {
-
+    *vcuOutput = {
+        softShutdownOutput.enableInverter,
+        softShutdownOutput.inverterTorqueRequest
     };
+
 }
