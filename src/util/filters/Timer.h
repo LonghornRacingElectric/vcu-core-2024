@@ -3,7 +3,14 @@
 
 
 class Timer {
-
+private:
+    float duration;
+    float time;
+public:
+    explicit Timer(float duration);
+    void reset();
+    void count(float deltaTime);
+    bool isFinished();
 };
 
 

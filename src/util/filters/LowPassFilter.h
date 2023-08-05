@@ -6,11 +6,10 @@
  */
 class LowPassFilter {
 private:
-    float defaultValue;
     float timeConstant;
     float accumulator;
 public:
-    LowPassFilter(float defaultValue, float timeConstant);
+    explicit LowPassFilter(float timeConstant);
     void add(float value, float deltaTime);
     float get();
     void reset();

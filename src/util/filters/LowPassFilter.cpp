@@ -1,13 +1,12 @@
 #include "LowPassFilter.h"
 
-LowPassFilter::LowPassFilter(float defaultValue, float timeConstant) {
+LowPassFilter::LowPassFilter(float timeConstant) {
     this->timeConstant = timeConstant;
-    this->defaultValue = defaultValue;
-    this->accumulator = defaultValue;
+    this->accumulator = 0;
 }
 
 void LowPassFilter::reset() {
-    this->accumulator = this->defaultValue;
+    this->accumulator = 0;
 }
 
 void LowPassFilter::add(float value, float deltaTime) {
