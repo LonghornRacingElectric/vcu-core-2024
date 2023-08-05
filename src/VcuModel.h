@@ -30,7 +30,7 @@ typedef struct VcuInputs {
 typedef struct VcuOutputs {
 
     bool enableInverter;
-    float inverterTorqueRequest;
+    float inverterTorqueRequest; // torque (Nm)
 
 } VcuOutputs;
 
