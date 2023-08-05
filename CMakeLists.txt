@@ -3,8 +3,15 @@ project(vcu_core)
 
 set(CMAKE_CXX_STANDARD 14)
 
+include(FetchContent)
+FetchContent_Declare(
+        googletest
+        URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
+)
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
+
 include_directories(src)
 
-add_executable(vcu_core
-        src/VcuModel.cpp
-        src/VcuModel.h src/VcuParameters.h src/blocks/AppsProcessor.h src/blocks/AppsProcessor.cpp src/blocks/BseProcessor.h src/blocks/BseProcessor.cpp src/util/parameters/FunctionParameter3D.h src/util/parameters/FunctionParameter3D.cpp src/util/parameters/FunctionParameter2D.cpp src/blocks/Stompp.h src/blocks/Stompp.cpp src/blocks/TorqueMap.h src/blocks/TorqueMap.cpp src/blocks/TractionControl.h src/blocks/TractionControl.cpp src/blocks/SoftShutdown.cpp src/util/filters/Timer.h src/util/filters/Timer.cpp src/util/filters/LowPassFilter.h src/util/filters/LowPassFilter.cpp)
+add_subdirectory(src)
+add_subdirectory(tests)
