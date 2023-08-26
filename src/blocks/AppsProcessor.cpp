@@ -37,6 +37,8 @@ void AppsProcessor::evaluate(VcuParameters* params, AppsProcessorInput* input,
         output->apps = 100;
         return;
     }
+    // check if we need evaluation or not
+    
     // since percentage will be (input - min) / (max - min)
     // finding max - min
     float diff = params->apps1VoltageMax - params->apps1VoltageMin;
