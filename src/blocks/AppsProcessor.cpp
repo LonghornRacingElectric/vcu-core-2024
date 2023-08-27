@@ -49,6 +49,7 @@ void AppsProcessor::evaluate(VcuParameters* params, AppsProcessorInput* input,
     float app2Perc = input->apps2 - params->apps2VoltageMin;
     // calc percentage
     app1Perc = app1Perc / diff;
+    diff = params->apps2VoltageMax - params->apps2VoltageMin;
     app2Perc = app2Perc / diff;
     // find perc difference and see if it is within 10%
     diff = app1Perc - app2Perc;
@@ -57,26 +58,32 @@ void AppsProcessor::evaluate(VcuParameters* params, AppsProcessorInput* input,
     // check if values comply
     if(diff > params->appsPlausibilityRange)
     {
+        // check if clock is finished
+        clock.count(deltaTime);
         if(clock.isFinished())
         {
             output->ok = false;
             clock.reset();
             return;
         }
-        clock.count(deltaTime);
+
 
     }
     else {
         output->ok = true;
         float preconv = (app1Perc + app2Perc) / 2; // TODO average
+        // dead zone min
         if (preconv <= 0.05)
         {
             output->apps = 0;
         }
+        // dead zone max
         else if (preconv >= 0.95)
         {
-            output->apps = 100;
-        } else
+            output->apps = 1;
+        }
+        // function to map from 0.05 -> 0.95
+        else
         {
             output->apps = 1.111111*(preconv - 0.05);
         }
