@@ -22,6 +22,7 @@ typedef struct VcuParameters {
     float apps1VoltageMax; // voltage corresponding to 100% pedal travel (V)
     float apps2VoltageMin; // voltage corresponding to 0% pedal travel (V)
     float apps2VoltageMax; // voltage corresponding to 100% pedal travel (V)
+    float appsDeadZonePct; // (%) of travel that is 0 or 100
 
     // ===== BSE PARAMETERS =====
     float bseLowPassFilterTimeConstant; // (s)
