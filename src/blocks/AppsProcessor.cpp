@@ -71,7 +71,7 @@ void AppsProcessor::evaluate(VcuParameters* params, AppsProcessorInput* input,
         output->ok = true;
         float preconv = (app1Perc + app2Perc) / 2;
         // calculate slope
-        float slope = 1/(1 - params->appsDeadZonePct);
+        float slope = 1/(1 - (2*params->appsDeadZonePct));
         // dead zone min
         if (preconv <= params->appsDeadZonePct)
         {
