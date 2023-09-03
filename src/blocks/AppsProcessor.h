@@ -17,11 +17,12 @@ typedef struct AppsProcessorOutput {
 
 class AppsProcessor {
 public:
+    void reset();
     void evaluate(VcuParameters* params, AppsProcessorInput* input, AppsProcessorOutput* output, float deltaTime);
 private:
     Timer clock = Timer(0.1f);
-    LowPassFilter app1Filter = LowPassFilter(0.01);
-    LowPassFilter app2Filter = LowPassFilter(0.01);
+    LowPassFilter app1Filter = LowPassFilter(0.05);
+    LowPassFilter app2Filter = LowPassFilter(0.05);
 };
 
 

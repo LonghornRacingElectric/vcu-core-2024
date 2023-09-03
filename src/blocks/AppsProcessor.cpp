@@ -14,25 +14,31 @@ void AppsProcessor::evaluate(VcuParameters* params, AppsProcessorInput* input,
 
 
     //check if inputs are within working range first
-
+    output->ok = true;
     //checking whether app1 input is greater than max voltage params or less than min voltage params
     if(input->apps1 < params->apps1VoltageMin)
     {
         output->ok = false;
-        return;
+
     } else if (input->apps1 > params->apps1VoltageMax)
     {
         output->ok = false;
-        return;
+
     }
     //checking whether app2 input is greater than max voltage params or less than min voltage params
     if(input->apps2 < params->apps2VoltageMin)
     {
         output->ok = false;
-        return;
+
     } else if (input->apps2 > params->apps2VoltageMax)
     {
         output->ok = false;
+
+    }
+    if(!output->ok)
+    {
+        app1Filter.reset();
+        app2Filter.reset();
         return;
     }
 
@@ -65,6 +71,11 @@ void AppsProcessor::evaluate(VcuParameters* params, AppsProcessorInput* input,
             app2Filter.reset();
             return;
         }
+        else
+        {
+            output->ok = true;
+            return;
+        }
 
 
     }
@@ -72,7 +83,7 @@ void AppsProcessor::evaluate(VcuParameters* params, AppsProcessorInput* input,
         output->ok = true;
         float preconv = (app1Perc + app2Perc) / 2;
         // calculate slope
-        float slope = 1/(1 - (2*params->appsDeadZonePct));
+        float slope = 1.0f/(1.0f - (2.0f*params->appsDeadZonePct));
         // dead zone min
         if (preconv <= params->appsDeadZonePct)
         {
@@ -93,4 +104,11 @@ void AppsProcessor::evaluate(VcuParameters* params, AppsProcessorInput* input,
     }
     // TODO add low-pass filters
 
+}
+
+void AppsProcessor::reset()
+{
+    app1Filter.reset();
+    app2Filter.reset();
+    clock.reset();
 }
