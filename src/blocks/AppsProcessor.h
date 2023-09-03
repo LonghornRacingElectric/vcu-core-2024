@@ -2,6 +2,7 @@
 #define VCU_CORE_APPSPROCESSOR_H
 
 #include "VcuParameters.h"
+#include "util/filters/Timer.h"
 
 typedef struct AppsProcessorInput {
     float apps1; // apps1 voltage (V)
@@ -16,6 +17,8 @@ typedef struct AppsProcessorOutput {
 class AppsProcessor {
 public:
     void evaluate(VcuParameters* params, AppsProcessorInput* input, AppsProcessorOutput* output, float deltaTime);
+private:
+    Timer clock = Timer(0.1f);
 };
 
 

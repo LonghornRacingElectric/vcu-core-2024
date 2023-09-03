@@ -47,4 +47,9 @@ TEST(AppsProcessor, AppsRulesCompliance) {
     appsProcessorInput = {3.0f, 0.2f};
     appsProcessor.evaluate(&vcuParameters, &appsProcessorInput, &appsProcessorOutput, 1.0f);
     EXPECT_FALSE(appsProcessorOutput.ok);
+
+    // Test clock function
+    appsProcessorInput = {4.0f, 0.5f};
+    appsProcessor.evaluate(&vcuParameters, &appsProcessorInput, &appsProcessorOutput, 0);
+    EXPECT_FALSE(appsProcessorOutput.ok);
 }

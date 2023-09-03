@@ -1,5 +1,6 @@
+
 #include "AppsProcessor.h"
-#include "util/filters/Timer.h"
+
 
 /**
  * Take APPS raw analog voltages and convert them to pedal travel percentages.
@@ -7,7 +8,7 @@
  *
  * Read the rules!
  */
-Timer clock(0.1);
+
 void AppsProcessor::evaluate(VcuParameters* params, AppsProcessorInput* input,
                              AppsProcessorOutput* output, float deltaTime) {
 
@@ -43,16 +44,14 @@ void AppsProcessor::evaluate(VcuParameters* params, AppsProcessorInput* input,
     
     // since percentage will be (input - min) / (max - min)
     // finding max - min
-    float diff = params->apps1VoltageMax - params->apps1VoltageMin;
     // finding input - min
     float app1Perc = input->apps1 - params->apps1VoltageMin;
     float app2Perc = input->apps2 - params->apps2VoltageMin;
     // calc percentage
-    app1Perc = app1Perc / diff;
-    diff = params->apps2VoltageMax - params->apps2VoltageMin;
-    app2Perc = app2Perc / diff;
+    app1Perc = app1Perc / (params->apps1VoltageMax - params->apps1VoltageMin);
+    app2Perc = app2Perc / (params->apps2VoltageMax - params->apps2VoltageMin);
     // find perc difference and see if it is within 10%
-    diff = app1Perc - app2Perc;
+    float diff = app1Perc - app2Perc;
     // turn value to positive if negative
     if(diff < 0) {diff = -diff;}
     // check if values comply
@@ -63,7 +62,6 @@ void AppsProcessor::evaluate(VcuParameters* params, AppsProcessorInput* input,
         if(clock.isFinished())
         {
             output->ok = false;
-            clock.reset();
             return;
         }
 
