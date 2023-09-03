@@ -50,6 +50,11 @@ TEST(AppsProcessor, AppsRulesCompliance) {
 
     // Test clock function
     appsProcessorInput = {4.0f, 0.5f};
-    appsProcessor.evaluate(&vcuParameters, &appsProcessorInput, &appsProcessorOutput, 0);
+    appsProcessor.evaluate(&vcuParameters, &appsProcessorInput, &appsProcessorOutput, 0.09f);
+    EXPECT_TRUE(appsProcessorOutput.ok);
+
+    // Test clock function
+    appsProcessorInput = {4.0f, 0.5f};
+    appsProcessor.evaluate(&vcuParameters, &appsProcessorInput, &appsProcessorOutput, 0.11f);
     EXPECT_FALSE(appsProcessorOutput.ok);
 }
