@@ -86,6 +86,7 @@ void AppsProcessor::evaluate(VcuParameters* params, AppsProcessorInput* input,
         else
         {
             output->apps = slope*(preconv - params->appsDeadZonePct);
+            clock.reset();
         }
         return;
     }
