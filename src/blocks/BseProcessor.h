@@ -9,7 +9,7 @@ typedef struct BseProcessorInput {
 } BseProcessorInput;
 
 typedef struct BseProcessorOutput {
-    float bse; // brake pressure (%)
+    float bse; // brake pressure (psi)
     bool ok;
 } BseProcessorOutput;
 
