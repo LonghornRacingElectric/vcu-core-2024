@@ -69,21 +69,23 @@ void AppsProcessor::evaluate(VcuParameters* params, AppsProcessorInput* input,
     }
     else {
         output->ok = true;
-        float preconv = (app1Perc + app2Perc) / 2; // TODO average
+        float preconv = (app1Perc + app2Perc) / 2;
+        // calculate slope
+        float slope = 1/(1 - params->appsDeadZonePct);
         // dead zone min
-        if (preconv <= 0.05)
+        if (preconv <= params->appsDeadZonePct)
         {
             output->apps = 0;
         }
         // dead zone max
-        else if (preconv >= 0.95)
+        else if (preconv >= (1 - params->appsDeadZonePct))
         {
             output->apps = 1;
         }
         // function to map from 0.05 -> 0.95
         else
         {
-            output->apps = 1.111111*(preconv - 0.05);
+            output->apps = slope*(preconv - params->appsDeadZonePct);
         }
         return;
     }
