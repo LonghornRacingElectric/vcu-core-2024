@@ -3,6 +3,7 @@
 
 #include "VcuParameters.h"
 #include "util/filters/Timer.h"
+#include "util/filters/LowPassFilter.h"
 
 typedef struct AppsProcessorInput {
     float apps1; // apps1 voltage (V)
@@ -19,6 +20,8 @@ public:
     void evaluate(VcuParameters* params, AppsProcessorInput* input, AppsProcessorOutput* output, float deltaTime);
 private:
     Timer clock = Timer(0.1f);
+    LowPassFilter app1Filter = LowPassFilter(0.01);
+    LowPassFilter app2Filter = LowPassFilter(0.01);
 };
 
 

@@ -13,11 +13,6 @@ void AppsProcessor::evaluate(VcuParameters* params, AppsProcessorInput* input,
                              AppsProcessorOutput* output, float deltaTime) {
 
 
-    /**
-     *
-     *
-     *
-     */
     //check if inputs are within working range first
 
     //checking whether app1 input is greater than max voltage params or less than min voltage params
@@ -40,13 +35,17 @@ void AppsProcessor::evaluate(VcuParameters* params, AppsProcessorInput* input,
         output->ok = false;
         return;
     }
+
+    // add low pass filter
+    app1Filter.add(input->apps1, deltaTime);
+    app2Filter.add(input->apps2, deltaTime);
     // check if we need evaluation or not
-    
+
     // since percentage will be (input - min) / (max - min)
     // finding max - min
     // finding input - min
-    float app1Perc = input->apps1 - params->apps1VoltageMin;
-    float app2Perc = input->apps2 - params->apps2VoltageMin;
+    float app1Perc = app1Filter.get() - params->apps1VoltageMin;
+    float app2Perc = app2Filter.get() - params->apps2VoltageMin;
     // calc percentage
     app1Perc = app1Perc / (params->apps1VoltageMax - params->apps1VoltageMin);
     app2Perc = app2Perc / (params->apps2VoltageMax - params->apps2VoltageMin);
@@ -62,6 +61,8 @@ void AppsProcessor::evaluate(VcuParameters* params, AppsProcessorInput* input,
         if(clock.isFinished())
         {
             output->ok = false;
+            app1Filter.reset();
+            app2Filter.reset();
             return;
         }
 
