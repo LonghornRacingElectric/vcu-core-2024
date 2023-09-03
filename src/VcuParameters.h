@@ -25,9 +25,14 @@ typedef struct VcuParameters {
 
     // ===== BSE PARAMETERS =====
     float bseLowPassFilterTimeConstant; // (s)
-    float plausibilityRange; // (%)
-    FunctionParameter2D bse1; // brake pressure (psi) as a function of voltage (V)
-    FunctionParameter2D bse2;
+    float bsePlausibilityRange; // (%)
+    float bseVoltageMin; // voltage corresponding to 0% brake pressure (V)
+    float bseVoltageMax; // voltage corresponding to 100% brake pressure (V)
+    float bsePressureMin; // minimum brake pressure (psi)
+    float bsePressureMax; // maximum brake pressure (psi)
+
+    // ===== STOMPP PARAMETERS =====
+    float stomppMechanicalBrakesThreshold; // minimum pressure to count as mechanical brakes engaged for EV 5.7 (psi)
 
     // ===== TORQUE MAP PARAMETERS =====
     FunctionParameter2D pedalToTorqueRequest; // torque request (Nm) as a function of pedal travel (%)
