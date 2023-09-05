@@ -16,6 +16,10 @@ typedef struct BseProcessorOutput {
 class BseProcessor {
 public:
     void evaluate(VcuParameters* params, BseProcessorInput* input, BseProcessorOutput* output, float deltaTime);
+private:
+    Timer clock = Timer(0.1f);
+    LowPassFilter bse1Filter = LowPassFilter(0.005);
+    LowPassFilter bse2Filter = LowPassFilter(0.005);
 };
 
 

@@ -1,4 +1,5 @@
 #include "BseProcessor.h"
+#include "util/MathUtils.h"
 
 /**
  * Take BSE raw analog voltages and convert them to brake pressures.
@@ -13,8 +14,18 @@
 void BseProcessor::evaluate(VcuParameters *params, BseProcessorInput *input,
                             BseProcessorOutput *output, float deltaTime) {
 
-    // TODO implement
+    output->ok = (input->bse1 >= bseVoltageMin && input->bse2 >= bseVoltageMin);
+    if (!output->ok) {
+        bse1Filter.reset();
+        bse2Filter.reset();
+    }
+    
+    bse1Filter.add(input->bse1, deltaTime);
+    bse2Filter.add(input->bse2, deltaTime);
 
-    output->ok = false;
+    float bse1Pressure = map(input->bse1, bseVoltageMin, bseVoltageMax, bsePressureMin, bsePressureMax);
+    float bse2Pressure = map(input->bse1, bseVoltageMin, bseVoltageMax, bsePressureMin, bsePressureMax);
+    // float perc = percent(bse1Pressure, bse2Pressure);
 
+    output->bse = (bse1Pressure + bse2Pressure) / 2;
 }
