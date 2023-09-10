@@ -24,6 +24,12 @@ typedef struct VcuInput {
     float wheelSpeedFr;
     float wheelSpeedBl;
     float wheelSpeedBr;
+
+    float motorTemp; // (deg C)
+    float inverterTemp;
+    float batteryTemp;
+
+    float batterySoc; // (%)
 } VcuInput;
 
 
@@ -35,6 +41,8 @@ typedef struct VcuOutput {
 
 class VcuModel {
 private:
+    VcuParameters* params;
+
     AppsProcessor appsProcessor;
     AppsProcessorInput appsProcessorInput;
     AppsProcessorOutput appsProcessorOutput;
@@ -60,7 +68,8 @@ private:
     SoftShutdownOutput softShutdownOutput;
 
 public:
-    void evaluate(VcuParameters* params, VcuInput* vcuInput, VcuOutput* vcuOutput, float deltaTime);
+    void setParameters(VcuParameters* newParams);
+    void evaluate(VcuInput* vcuInput, VcuOutput* vcuOutput, float deltaTime);
 };
 
 

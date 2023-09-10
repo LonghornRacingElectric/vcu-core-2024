@@ -15,6 +15,7 @@ typedef struct BseProcessorOutput {
 
 class BseProcessor {
 public:
+    void setParameters(VcuParameters* params) {};
     void evaluate(VcuParameters* params, BseProcessorInput* input, BseProcessorOutput* output, float deltaTime);
 };
 

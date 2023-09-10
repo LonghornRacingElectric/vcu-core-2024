@@ -15,6 +15,6 @@ void BseProcessor::evaluate(VcuParameters *params, BseProcessorInput *input,
 
     // TODO implement
 
-    output->ok = false;
+    output->ok = true;
 
 }

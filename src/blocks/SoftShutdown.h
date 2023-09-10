@@ -22,6 +22,7 @@ typedef struct SoftShutdownOutput {
 
 class SoftShutdown {
 public:
+    void setParameters(VcuParameters* params) {};
     void evaluate(VcuParameters *params, SoftShutdownInput *input, SoftShutdownOutput *output, float deltaTime);
 };
 
