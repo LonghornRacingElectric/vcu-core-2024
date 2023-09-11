@@ -9,8 +9,7 @@ static constexpr float map(const float value, const float fromLow, const float f
 }
 
 static constexpr float percent(const float a, const float b) {
-    float result = 0;
-    result =  fabs(b-a) / ((b+a)/2);
+    return fabs(b-a) / ((b+a)/2);
 }
 
 #endif
