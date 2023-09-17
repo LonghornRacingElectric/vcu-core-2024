@@ -17,8 +17,6 @@
 
 void Stompp::evaluate(VcuParameters *params, StomppInput *input, StomppOutput *output, float deltaTime) {
 
-    // TODO implement rule EV 5.7
-
     //"stomppActive = false" means "output.ok = true"
     //"output.ok = true" means motor functions normally
 

@@ -22,6 +22,7 @@ typedef struct TractionControlOutput {
 
 class TractionControl {
 public:
+    void setParameters(VcuParameters* params) {};
     void evaluate(VcuParameters *params, TractionControlInput *input, TractionControlOutput *output, float deltaTime);
 };
 

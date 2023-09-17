@@ -5,8 +5,20 @@
  */
 
 void TorqueMap::evaluate(VcuParameters *params, TorqueMapInput *input, TorqueMapOutput *output, float deltaTime) {
+    float torqueRequest = params->mapPedalToTorqueRequest(input->apps);
+    float derate;
 
-    // TODO implement this properly
-    output->torqueRequest = input->apps * 230;
+    derate = params->mapDerateMotorTemp(input->motorTemp);
+    torqueRequest *= derate;
 
+    derate = params->mapDerateInverterTemp(input->inverterTemp);
+    torqueRequest *= derate;
+
+    derate = params->mapDerateBatteryTemp(input->batteryTemp);
+    torqueRequest *= derate;
+
+    derate = params->mapDerateBatterySoc(input->batterySoc);
+    torqueRequest *= derate;
+
+    output->torqueRequest = torqueRequest;
 }
