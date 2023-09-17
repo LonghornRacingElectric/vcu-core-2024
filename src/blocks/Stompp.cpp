@@ -11,6 +11,6 @@ void Stompp::evaluate(VcuParameters *params, StomppInput *input, StomppOutput *o
 
     // TODO implement rule EV 5.7
 
-    output->ok = false;
+    output->ok = true;
 
 }

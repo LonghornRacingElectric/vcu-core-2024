@@ -9,6 +9,7 @@ typedef struct SoftShutdownInput {
     bool appsOk;
     bool bseOk;
     bool stomppOk;
+    bool prndlState; // (true = drive)
 
     float torqueRequest; // torque (Nm)
 } SoftShutdownInput;
@@ -22,6 +23,7 @@ typedef struct SoftShutdownOutput {
 
 class SoftShutdown {
 public:
+    void setParameters(VcuParameters* params) {};
     void evaluate(VcuParameters *params, SoftShutdownInput *input, SoftShutdownOutput *output, float deltaTime);
 };
 
