@@ -30,6 +30,8 @@ TEST(Vcu, NormalTorqueRequests) {
 
     vcuModel.setParameters(&params);
 
+    // TODO put the car in drive lmao
+
     // apps 0%
     input.apps1 = 1.0f;
     input.apps2 = 0.5f;

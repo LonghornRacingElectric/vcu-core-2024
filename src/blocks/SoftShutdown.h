@@ -9,6 +9,7 @@ typedef struct SoftShutdownInput {
     bool appsOk;
     bool bseOk;
     bool stomppOk;
+    bool prndlState; // (true = drive)
 
     float torqueRequest; // torque (Nm)
 } SoftShutdownInput;
