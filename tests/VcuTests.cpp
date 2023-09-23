@@ -24,13 +24,31 @@ TEST(Vcu, NormalTorqueRequests) {
     params.bsePressureMin = 10;
     params.bsePressureMax = 100;
 
+    params.prndlBrakeToStartThreshold = 50;
+    params.prndlSwitchDebounceDuration = 0.05f;
+    params.prndlBuzzerDuration = 1.0f;
+
     float arr[11] = {0.0f, 23.0f, 46.0f, 69.0f, 92.0f, 115.0f,
                      138.0f, 161.0f, 184.0f, 207.0f, 230.0f};
     params.mapPedalToTorqueRequest = CurveParameter(0.0f, 1.0f, arr);
 
     vcuModel.setParameters(&params);
 
-    // TODO put the car in drive lmao
+    // put car into drive
+    input.bse1 = 4.0f;
+    input.bse2 = 4.0f;
+    input.inverterReady = true;
+    input.driveSwitch = true;
+    for(int i = 0; i < 100; i++) {
+        vcuModel.evaluate(&input, &output, 0.001f);
+    }
+    EXPECT_TRUE(output.prndlState);
+    EXPECT_TRUE(output.r2dBuzzer);
+    for(int i = 0; i < 100; i++) {
+        vcuModel.evaluate(&input, &output, 0.1f);
+    }
+    EXPECT_TRUE(output.prndlState);
+    EXPECT_FALSE(output.r2dBuzzer);
 
     // apps 0%
     input.apps1 = 1.0f;

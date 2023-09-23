@@ -59,8 +59,8 @@ void VcuModel::evaluate(VcuInput *vcuInput, VcuOutput *vcuOutput, float deltaTim
 
     prndlInput = {
             vcuInput->driveSwitch,
-            bseProcessorOutput.bse,
             vcuInput->inverterReady,
+            bseProcessorOutput.bse,
     };
     prndl.evaluate(params, &prndlInput, &prndlOutput, deltaTime);
 
