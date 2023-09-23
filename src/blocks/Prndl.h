@@ -3,12 +3,13 @@
 
 
 #include "VcuParameters.h"
+#include "util/filters/Debounce.h"
 
 
 typedef struct PrndlInput {
     bool driveSwitch; // true = drive
-    float brakePressure;
     bool inverterReady;
+    float brakePressure;
 } PrndlInput;
 
 
@@ -19,8 +20,12 @@ typedef struct PrndlOutput {
 
 
 class Prndl {
+private:
+    bool state = false;
+    Debounce switchInputDebounce = Debounce(0, false);
+    Timer buzzerTimer = Timer(0);
 public:
-    void setParameters(VcuParameters* params) {};
+    void setParameters(VcuParameters* params);
     void evaluate(VcuParameters *params, PrndlInput *input, PrndlOutput *output, float deltaTime);
 };
 

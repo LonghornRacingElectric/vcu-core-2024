@@ -45,6 +45,11 @@ typedef struct VcuParameters {
     CurveParameter mapDerateBatteryTemp; // allowed torque (%) as a function of battery temperature (deg C)
     CurveParameter mapDerateBatterySoc; // allowed torque (%) as a function of battery SoC (%)
 
+    // ===== PRNDL PARAMETERS =====
+    float prndlBrakeToStartThreshold; // minimum pressure required on the brakes to go into drive (psi)
+    float prndlBuzzerDuration; // how long the buzzer buzzes (s)
+    float prndlSwitchDebounceDuration; // how long a digital high/low must be sustained to be considered (s)
+
     // ==== TRACTION CONTROL PARAMETERS =====
     // tbd
 

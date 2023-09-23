@@ -1,4 +1,5 @@
 #include "Prndl.h"
+#include "util/filters/Timer.h"
 
 /**
  * PRNDL (pronounced "prindle") = Park, Reverse, Neutral, Drive, Low. At least that's what it is in a real car.
@@ -16,7 +17,32 @@
  */
 
 void Prndl::evaluate(VcuParameters *params, PrndlInput *input, PrndlOutput *output, float deltaTime) {
-    // TODO implement
-    output->state = false; // park = false, drive = true
-    output->buzzer = false; // do not buzz
+    switchInputDebounce.add(input->driveSwitch, deltaTime);
+    bool driveSwitch = switchInputDebounce.get();
+
+    if (state) {
+        // we're currently in Drive
+        buzzerTimer.count(deltaTime);
+
+        if (!driveSwitch || !input->inverterReady) {
+            state = false;
+        }
+
+    } else {
+        // we're currently in Park
+        bool brakesPressed = (input->brakePressure > params->prndlBrakeToStartThreshold);
+
+        if (driveSwitch && input->inverterReady && brakesPressed) {
+            state = true; // switch to Drive
+            buzzerTimer.reset();
+        }
+    }
+
+    output->state = state; // Park = false, Drive = true
+    output->buzzer = state && !buzzerTimer.isFinished(); // buzz if we're in the first X seconds of Drive
+}
+
+void Prndl::setParameters(VcuParameters *params) {
+    buzzerTimer = Timer(params->prndlBuzzerDuration);
+    switchInputDebounce = Debounce(params->prndlSwitchDebounceDuration, switchInputDebounce.get());
 }
