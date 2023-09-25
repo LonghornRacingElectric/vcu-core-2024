@@ -8,6 +8,19 @@
 void TrackPositioning::evaluate(VcuParameters *params, TrackPositioningInput *input, TrackPositioningOutput *output,
                                 float deltaTime) {
     // TODO implement
+    if(isInitialState) {
+        // TODO -- SETUP INITIAL STATE WITH A NEW COVARIANCE MATRIX
+
+        isInitialState = false;
+    }
+
+    // TODO -- IF WE ALREADY HAVE INITIAL VALUES, RUN CALCULATIONS WITH KALMAN FILTER AND MATRIX CLASS
+    float xVelocity = input->gpsSpeed + ((input->imu2Accel.x +  input->imu1Accel.x)/2) * deltaTime;
+    float yVelocity = input->gpsSpeed + ((input->imu2Accel.y +  input->imu1Accel.y)/2) * deltaTime;
+    float zVelocity = input->gpsSpeed + ((input->imu2Accel.z +  input->imu1Accel.z)/2) * deltaTime;
+
+    xyz displacement = {xVelocity * deltaTime, yVelocity * deltaTime, zVelocity * deltaTime};
+
     output->vehicleDisplacement = {0, 0, 0}; // m
     output->vehicleVelocity = {0, 0, 0}; // m/s
     output->vehicleAcceleration = {0, 0, 0}; // m/s^2

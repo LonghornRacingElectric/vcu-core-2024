@@ -4,6 +4,7 @@
 
 #include "VcuParameters.h"
 #include "util/Structs.h"
+#include "util/math/Matrix.h"
 
 
 typedef struct TrackPositioningInput {
@@ -30,6 +31,10 @@ typedef struct TrackPositioningInput {
     float wheelAngleBr;
 } TrackPositioningInput;
 
+typedef struct TrackPositioningState {
+    Matrix state;
+    Matrix covariance;
+} TrackPositioningState;
 
 typedef struct TrackPositioningOutput {
     xyz vehicleDisplacement;
@@ -39,6 +44,10 @@ typedef struct TrackPositioningOutput {
 
 
 class TrackPositioning {
+private:
+    TrackPositioningState systemState;
+    bool isInitialState = true;
+
 public:
     void setParameters(VcuParameters* params) {};
     void evaluate(VcuParameters *params, TrackPositioningInput *input, TrackPositioningOutput *output, float deltaTime);
