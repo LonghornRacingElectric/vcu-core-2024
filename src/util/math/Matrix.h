@@ -17,17 +17,19 @@ public:
     }
 }
 
-//    Matrix(std::vector<std::vector<float>> matrix) {
-//     this->matrix.resize(matrix.size());
-//     for(auto & i : matrix) {
-//         i.resize(columns);
-//     }
-//     for(int i = 0; i < rows; i++) {
-//         for(int j = 0; j < columns; j++) {
-//             matrix.at(i).at(j) = value;
-//         }
-//     }
-// }
+    explicit Matrix(std::vector<std::vector<float>> matrix) {
+     this->matrix.resize(matrix.size());
+     for(auto & i : matrix) {
+         i.resize(matrix[0].size());
+     }
+     for(int i = 0; i < matrix.size(); i++) {
+         for(int j = 0; j < matrix[0].size(); j++) {
+             matrix.at(i).at(j) = value;
+         }
+     }
+ }
+
+
 
 /**
  * Multiplies this matrix with another matrix.

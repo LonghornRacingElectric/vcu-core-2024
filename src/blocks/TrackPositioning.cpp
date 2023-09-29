@@ -1,5 +1,7 @@
 
 #include "TrackPositioning.h"
+#include <vector>
+#include "util/math/Position.h"
 
 /**
  * Dead reckoning! Use accelerometer, GPS, and potentially even wheel speed and angle data to estimate the position
@@ -10,6 +12,14 @@ void TrackPositioning::evaluate(VcuParameters *params, TrackPositioningInput *in
     // TODO implement
     if(isInitialState) {
         // TODO -- SETUP INITIAL STATE WITH A NEW COVARIANCE MATRIX
+        xyz initialPositions = Position::convertToXYZ(input->gpsLat, input->gpsLong);
+
+        std::vector<std::vector<float>> initialStateVector {
+                {initialPositions.x, initialPositions.y}, // positional state
+                {(float) input->gpsSpeed} // velocity state
+        };
+        auto* initialState = new Matrix(initialStateVector);
+
 
         isInitialState = false;
     }
@@ -25,3 +35,4 @@ void TrackPositioning::evaluate(VcuParameters *params, TrackPositioningInput *in
     output->vehicleVelocity = {0, 0, 0}; // m/s
     output->vehicleAcceleration = {0, 0, 0}; // m/s^2
 }
+
