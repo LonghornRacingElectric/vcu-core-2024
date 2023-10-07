@@ -19,10 +19,10 @@ typedef struct TrackPositioningInput {
     xyz imu2Gyro;
     xyz imu3Gyro;
 
-    float wheelSpeedFl; // wheel speed (rad/s)
-    float wheelSpeedFr;
-    float wheelSpeedBl;
-    float wheelSpeedBr;
+    float wheelDisplacementFl; // wheel speed (rad)
+    float wheelDisplacementFr;
+    float wheelDisplacementBl;
+    float wheelDisplacementBr;
 
     float wheelAngleFl; // wheel angle (rad), left turn is +
     float wheelAngleFr;

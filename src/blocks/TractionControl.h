@@ -8,10 +8,10 @@
 typedef struct TractionControlInput {
     float unregulatedTorqueRequest; // torque (Nm)
 
-    float wheelSpeedFl; // (rad/s)
-    float wheelSpeedFr;
-    float wheelSpeedBl;
-    float wheelSpeedBr;
+    float wheelDisplacementFl; // (rad/s)
+    float wheelDisplacementFr;
+    float wheelDisplacementBl;
+    float wheelDisplacementBr;
 } TractionControlInput;
 
 

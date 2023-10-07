@@ -27,10 +27,10 @@ typedef struct VcuInput {
 
     float steeringWheelPotVoltage; // (V)
 
-    float wheelSpeedFl; // wheel speed (rad/s)
-    float wheelSpeedFr;
-    float wheelSpeedBl;
-    float wheelSpeedBr;
+    float wheelDisplacementFl; // wheel displacement (rad)
+    float wheelDisplacementFr;
+    float wheelDisplacementBl;
+    float wheelDisplacementBr;
 
     float motorTemp; // (deg C)
     float inverterTemp;

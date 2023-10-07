@@ -45,10 +45,10 @@ void VcuModel::evaluate(VcuInput *vcuInput, VcuOutput *vcuOutput, float deltaTim
 
     tractionControlInput = {
             torqueMapOutput.torqueRequest,
-            vcuInput->wheelSpeedFl,
-            vcuInput->wheelSpeedFr,
-            vcuInput->wheelSpeedBl,
-            vcuInput->wheelSpeedBr,
+            vcuInput->wheelDisplacementFl,
+            vcuInput->wheelDisplacementFr,
+            vcuInput->wheelDisplacementBl,
+            vcuInput->wheelDisplacementBr,
     };
     tractionControl.evaluate(params, &tractionControlInput, &tractionControlOutput, deltaTime);
 
@@ -78,10 +78,10 @@ void VcuModel::evaluate(VcuInput *vcuInput, VcuOutput *vcuOutput, float deltaTim
             vcuInput->imu2Gyro,
             vcuInput->imu3Gyro,
 
-            vcuInput->wheelSpeedFl,
-            vcuInput->wheelSpeedFr,
-            vcuInput->wheelSpeedBl,
-            vcuInput->wheelSpeedBr,
+            vcuInput->wheelDisplacementFl,
+            vcuInput->wheelDisplacementFr,
+            vcuInput->wheelDisplacementBl,
+            vcuInput->wheelDisplacementBr,
 
             steeringOutput.wheelAngleFl,
             steeringOutput.wheelAngleFr,
