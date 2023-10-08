@@ -28,9 +28,7 @@ TEST(Vcu, NormalTorqueRequests) {
     params.prndlSwitchDebounceDuration = 0.05f;
     params.prndlBuzzerDuration = 1.0f;
 
-    float arr[11] = {0.0f, 23.0f, 46.0f, 69.0f, 92.0f, 115.0f,
-                     138.0f, 161.0f, 184.0f, 207.0f, 230.0f};
-    params.mapPedalToTorqueRequest = CurveParameter(0.0f, 1.0f, arr);
+    params.mapPedalToTorqueRequest = CurveParameter(1.0f, 230.0f);
 
     vcuModel.setParameters(&params);
 
@@ -49,6 +47,8 @@ TEST(Vcu, NormalTorqueRequests) {
     }
     EXPECT_TRUE(output.prndlState);
     EXPECT_FALSE(output.r2dBuzzer);
+    input.bse1 = 0.5f;
+    input.bse2 = 0.5f;
 
     // apps 0%
     input.apps1 = 1.0f;

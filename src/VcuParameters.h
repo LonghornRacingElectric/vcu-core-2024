@@ -16,39 +16,39 @@
 typedef struct VcuParameters {
 
     // ===== APPS PARAMETERS =====
-    float appsLowPassFilterTimeConstant; // (s)
-    float appsImplausibilityTime; // (s)
-    float appsPlausibilityRange; // (%)
-    float apps1VoltageMin; // voltage corresponding to 0% pedal travel (V)
-    float apps1VoltageMax; // voltage corresponding to 100% pedal travel (V)
-    float apps2VoltageMin; // voltage corresponding to 0% pedal travel (V)
-    float apps2VoltageMax; // voltage corresponding to 100% pedal travel (V)
-    float appsDeadZonePct; // (%) of travel that is 0 or 100
+    float appsLowPassFilterTimeConstant = 0.000f; // (s)
+    float appsImplausibilityTime = 0.100f; // (s)
+    float appsPlausibilityRange = 0.10f; // (%)
+    float apps1VoltageMin = 1.0f; // voltage corresponding to 0% pedal travel (V)
+    float apps1VoltageMax = 4.0f; // voltage corresponding to 100% pedal travel (V)
+    float apps2VoltageMin = 0.5f; // voltage corresponding to 0% pedal travel (V)
+    float apps2VoltageMax = 2.0f; // voltage corresponding to 100% pedal travel (V)
+    float appsDeadZonePct = 0.05f; // (%) of travel that is 0 or 100
 
     // ===== BSE PARAMETERS =====
-    float bseLowPassFilterTimeConstant; // (s)
-    float bsePlausibilityRange; // (%)
-    float bseVoltageMin; // voltage corresponding to 0% brake pressure (V)
-    float bseVoltageMax; // voltage corresponding to 100% brake pressure (V)
-    float bsePressureMin; // minimum brake pressure (psi)
-    float bsePressureMax; // maximum brake pressure (psi)
+    float bseLowPassFilterTimeConstant = 0.000f; // (s)
+    float bsePlausibilityRange = 0.10f; // (%)
+    float bseVoltageMin = 1.0f; // voltage corresponding to 0% brake pressure (V)
+    float bseVoltageMax = 4.0f; // voltage corresponding to 100% brake pressure (V)
+    float bsePressureMin = 0.0f; // minimum brake pressure (psi)
+    float bsePressureMax = 1000.0f; // maximum brake pressure (psi)
 
     // ===== STOMPP PARAMETERS =====
-    float stomppMechanicalBrakesThreshold; // minimum pressure to count as mechanical brakes engaged for EV 4.7 (psi)
-    float stomppAppsCutoffThreshold; // apps pedal travel where motor power needs to be cut off (%)
-    float stomppAppsRecoveryThreshold; // apps pedal travel where motor power can be restored (%)
+    float stomppMechanicalBrakesThreshold = 100.0f; // minimum pressure to count as mechanical brakes engaged for EV 4.7 (psi)
+    float stomppAppsCutoffThreshold = 0.25f; // apps pedal travel where motor power needs to be cut off (%)
+    float stomppAppsRecoveryThreshold = 0.05f; // apps pedal travel where motor power can be restored (%)
 
     // ===== TORQUE MAP PARAMETERS =====
-    CurveParameter mapPedalToTorqueRequest; // torque request (Nm) as a function of pedal travel (%)
+    CurveParameter mapPedalToTorqueRequest = CurveParameter(1.0f, 230.0f); // torque request (Nm) as a function of pedal travel (%)
     CurveParameter mapDerateMotorTemp; // allowed torque (%) as a function of motor temperature (deg C)
     CurveParameter mapDerateInverterTemp; // allowed torque (%) as a function of inverter temperature (deg C)
     CurveParameter mapDerateBatteryTemp; // allowed torque (%) as a function of battery temperature (deg C)
     CurveParameter mapDerateBatterySoc; // allowed torque (%) as a function of battery SoC (%)
 
     // ===== PRNDL PARAMETERS =====
-    float prndlBrakeToStartThreshold; // minimum pressure required on the brakes to go into drive (psi)
-    float prndlBuzzerDuration; // how long the buzzer buzzes (s)
-    float prndlSwitchDebounceDuration; // how long a digital high/low must be sustained to be considered (s)
+    float prndlBrakeToStartThreshold = 100.0f; // minimum pressure required on the brakes to go into drive (psi)
+    float prndlBuzzerDuration = 2.0f; // how long the buzzer buzzes (s)
+    float prndlSwitchDebounceDuration = 0.100f; // how long a digital high/low must be sustained to be considered (s)
 
     // ==== TRACTION CONTROL PARAMETERS =====
     // tbd

@@ -15,6 +15,7 @@ void BseProcessor::evaluate(VcuParameters *params, BseProcessorInput *input,
 
     // TODO implement
 
+    output->bse = (input->bse1 - params->bseVoltageMin) * 1000.0f;
     output->ok = true;
 
 }
