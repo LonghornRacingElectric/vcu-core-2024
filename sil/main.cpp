@@ -60,18 +60,22 @@ void input() {
 }
 
 void output_bool(bool b) {
-    cout << (int)b << endl;
+    cout << (int)b << '\n';
 }
 
 void output_xyz(xyz vec) {
-    cout << vec.x << endl;
-    cout << vec.y << endl;
-    cout << vec.z << endl;
+    cout << vec.x << '\n';
+    cout << vec.y << '\n';
+    cout << vec.z << '\n';
+}
+
+void output_float(float f) {
+    cout << f << '\n';
 }
 
 void output() {
     output_bool(vcuOutput.enableInverter);
-    cout << vcuOutput.inverterTorqueRequest << endl;
+    output_float(vcuOutput.inverterTorqueRequest);
 
     output_bool(vcuOutput.prndlState);
     output_bool(vcuOutput.r2dBuzzer);
@@ -86,6 +90,8 @@ void output() {
     output_bool(vcuOutput.faultBse);
     output_bool(vcuOutput.faultStompp);
     output_bool(vcuOutput.faultSteering);
+
+    cout << flush;
 }
 
 int main() {
