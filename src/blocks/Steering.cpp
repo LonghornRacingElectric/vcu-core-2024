@@ -9,16 +9,25 @@
  * isn't acting up.
 */
 
-void Steering::evaluate(VcuParameters *params, SteeringInput *input, SteeringOutput *output, float deltaTime) {
+void Steering::evaluate(VcuParameters *params, SteeringInput* input, SteeringOutput* output, float deltaTime) {
 
-    // TODO implement
+    //TODO implement
 
-    output->steeringWheelAngle = 0;
+    output->steeringWheelAngle = -180.0f * (((input->steeringPotVoltage) / 3.3f) - 0.5f);
 
-    output->wheelAngleFl = output->steeringWheelAngle * 2.0f;
-    output->wheelAngleFr = output->steeringWheelAngle * 2.0f;
+    if (output->steeringWheelAngle > 0) {
+        output->wheelAngleFl = params->steeringWheelToInnerWheel(output->steeringWheelAngle);
+        output->wheelAngleFr = params->steeringWheelToOuterWheel(output->steeringWheelAngle);
+    } else if (output->steeringWheelAngle < 0) {
+        output->wheelAngleFl = -params->steeringWheelToOuterWheel(-output->steeringWheelAngle);
+        output->wheelAngleFr = -params->steeringWheelToInnerWheel(-output->steeringWheelAngle);
+    } else if (output->steeringWheelAngle == 0) {
+        output->wheelAngleFl = 0;
+        output->wheelAngleFr = 0;
+    }
     output->wheelAngleBl = 0; // the rears will very likely be 0, but rear wheel steering is permitted by the rules :0
     output->wheelAngleBr = 0;
 
     output->ok = true;
 }
+

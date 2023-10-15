@@ -53,6 +53,11 @@ typedef struct VcuParameters {
     // ==== TRACTION CONTROL PARAMETERS =====
     // tbd
 
+
+    // ==== STEERING PARAMETERS ====
+    CurveParameter steeringWheelToOuterWheel;
+    CurveParameter steeringWheelToInnerWheel;
+
 } VcuParameters;
 
 #endif //VCU_CORE_VCUPARAMETERS_H
