@@ -19,6 +19,8 @@ TEST(Steering, Steering) {
     float arrO[11] = {0.0044f, 0.0447f, 0.0855f, 0.1267f, 0.1688f, 0.2115f, 0.2553f, 0.2953f, 0.3363f, 0.3838f, 0.4388f};
     params.steeringWheelToOuterWheel = CurveParameter(0.0f, 90.0f, arrO);
 
+    params.steeringPotMaxVoltage = 3.3f;
+    params.steeringWheelMaxAngle = 90.0f;
 
     //TEST -- VOLTAGE -> STEERING ANGLE
     // Test voltage to steering angle for 0

@@ -13,7 +13,7 @@ void Steering::evaluate(VcuParameters *params, SteeringInput* input, SteeringOut
 
     //TODO implement
 
-    output->steeringWheelAngle = -180.0f * (((input->steeringPotVoltage) / 3.3f) - 0.5f);
+    output->steeringWheelAngle = -2.0f * (params->steeringWheelMaxAngle)*(((input->steeringPotVoltage) / params->steeringPotMaxVoltage) - 0.5f);
 
     if (output->steeringWheelAngle > 0) {
         output->wheelAngleFl = params->steeringWheelToInnerWheel(output->steeringWheelAngle);

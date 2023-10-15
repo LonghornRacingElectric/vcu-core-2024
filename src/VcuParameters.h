@@ -57,6 +57,9 @@ typedef struct VcuParameters {
     // ==== STEERING PARAMETERS ====
     CurveParameter steeringWheelToOuterWheel;
     CurveParameter steeringWheelToInnerWheel;
+    float steeringPotMaxVoltage;
+    float steeringWheelMaxAngle;
+
 
 } VcuParameters;
 
