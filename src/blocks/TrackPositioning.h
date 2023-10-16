@@ -6,7 +6,6 @@
 #include "util/Structs.h"
 #include "util/math/Matrix.h"
 
-
 typedef struct TrackPositioningInput {
     double gpsLat; // degrees
     double gpsLong; // degrees
@@ -46,7 +45,15 @@ typedef struct TrackPositioningOutput {
 class TrackPositioning {
 private:
     TrackPositioningState systemState;
+    Matrix stateMatrix;
+
+    // process covariance matrix
+    Matrix P;
+
+    // computational Identity matrix
+    Matrix A;
     bool isInitialState = true;
+    float t{};
 
 public:
     void setParameters(VcuParameters* params) {};

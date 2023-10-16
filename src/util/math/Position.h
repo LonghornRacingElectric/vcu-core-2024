@@ -28,6 +28,8 @@ public:
 
     // TODO -- IMPLEMENT USING HAVERSINE
     static xyz convertToXYZ(double longitude, double latitude);
+
+    static Position convertToLongitudeLatitude(xyz cartesianCoords);
 };
 
 
