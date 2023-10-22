@@ -21,9 +21,10 @@ public:
     void evaluate(VcuParameters* params, AppsProcessorInput* input, AppsProcessorOutput* output, float deltaTime);
     void setParameters(VcuParameters* params);
 private:
-    Timer clock = Timer(0.1f);
-    LowPassFilter app1Filter = LowPassFilter(0.005);
-    LowPassFilter app2Filter = LowPassFilter(0.005);
+    Timer rangeClock = Timer(0.1f);
+    Timer differenceClock = Timer(0.1f);
+    LowPassFilter app1Filter = LowPassFilter(0);
+    LowPassFilter app2Filter = LowPassFilter(0);
 };
 
 
