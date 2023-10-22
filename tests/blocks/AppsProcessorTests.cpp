@@ -13,7 +13,11 @@ TEST(AppsProcessor, AppsRulesCompliance) {
     vcuParameters.apps1VoltageMax = 4.0f;
     vcuParameters.apps2VoltageMin = 0.5f;
     vcuParameters.apps2VoltageMax = 2.0f;
-    vcuParameters.appsPlausibilityRange = 0.1;
+    vcuParameters.appsImplausibilityTime = 0.1f;
+    vcuParameters.appsPlausibilityRange = 0.1f;
+    vcuParameters.appsLowPassFilterTimeConstant = 0.005f;
+
+    appsProcessor.setParameters(&vcuParameters);
 
     // Test 0% pedal travel
     appsProcessorInput = {1.0f, 0.5f};

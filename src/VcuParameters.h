@@ -27,7 +27,7 @@ typedef struct VcuParameters {
 
     // ===== BSE PARAMETERS =====
     float bseLowPassFilterTimeConstant = 0.000f; // (s)
-    float bsePlausibilityRange = 0.10f; // (%)
+    float bseImplausibilityTime = 0.100f; // (s)
     float bseVoltageMin = 1.0f; // voltage corresponding to 0% brake pressure (V)
     float bseVoltageMax = 4.0f; // voltage corresponding to 100% brake pressure (V)
     float bsePressureMin = 0.0f; // minimum brake pressure (psi)

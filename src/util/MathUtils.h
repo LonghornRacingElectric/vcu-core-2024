@@ -8,8 +8,4 @@ static constexpr float map(const float value, const float fromLow, const float f
     return (value - fromLow) * (toHigh - toLow) / (fromHigh - fromLow) + toLow;
 }
 
-static constexpr float percent(const float a, const float b) {
-    return fabs(b-a) / ((b+a)/2);
-}
-
 #endif

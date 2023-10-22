@@ -18,7 +18,7 @@ TEST(Vcu, NormalTorqueRequests) {
     params.appsImplausibilityTime = 0.100f;
 
     params.bseLowPassFilterTimeConstant = 0.005f;
-    params.bsePlausibilityRange = 0.1f;
+    params.bseImplausibilityTime = 0.1f;
     params.bseVoltageMin = 0.5f;
     params.bseVoltageMax = 4.5f;
     params.bsePressureMin = 10;
