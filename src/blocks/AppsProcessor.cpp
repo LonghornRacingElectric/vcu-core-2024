@@ -102,8 +102,6 @@ void AppsProcessor::evaluate(VcuParameters* params, AppsProcessorInput* input,
         }
         return;
     }
-    // TODO add low-pass filters
-
 }
 
 void AppsProcessor::reset()
@@ -111,4 +109,10 @@ void AppsProcessor::reset()
     app1Filter.reset();
     app2Filter.reset();
     clock.reset();
+}
+
+void AppsProcessor::setParameters(VcuParameters *params) {
+    this->clock = Timer(params->appsImplausibilityTime);
+    this->app1Filter = LowPassFilter(params->appsLowPassFilterTimeConstant);
+    this->app2Filter = LowPassFilter(params->appsLowPassFilterTimeConstant);
 }

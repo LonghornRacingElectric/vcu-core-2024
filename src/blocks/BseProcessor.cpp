@@ -27,7 +27,7 @@ void BseProcessor::evaluate(VcuParameters *params, BseProcessorInput *input,
 
     float bse1Pressure = map(bse1Filter.get(), bseVoltageMin, bseVoltageMax, bsePressureMin, bsePressureMax);
     float bse2Pressure = map(bse2Filter.get(), bseVoltageMin, bseVoltageMax, bsePressureMin, bsePressureMax);
-    // float perc = percent(bse1Pressure, bse2Pressure);
+    output->ok = true;
 
     output->bse = (bse1Pressure + bse2Pressure) / 2;
 }

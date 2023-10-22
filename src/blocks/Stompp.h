@@ -17,7 +17,12 @@ typedef struct StomppOutput {
 
 class Stompp {
 public:
+    void reset();
+    void toggleStompp();
+    void setParameters(VcuParameters* params) {};
     void evaluate(VcuParameters *params, StomppInput *input, StomppOutput *output, float deltaTime);
+private:
+    bool stomppActive = false;
 };
 
 

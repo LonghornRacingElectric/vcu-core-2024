@@ -8,10 +8,10 @@
 typedef struct TractionControlInput {
     float unregulatedTorqueRequest; // torque (Nm)
 
-    float wheelSpeedFl; // (rad/s)
-    float wheelSpeedFr;
-    float wheelSpeedBl;
-    float wheelSpeedBr;
+    float wheelDisplacementFl; // (rad/s)
+    float wheelDisplacementFr;
+    float wheelDisplacementBl;
+    float wheelDisplacementBr;
 } TractionControlInput;
 
 
@@ -22,6 +22,7 @@ typedef struct TractionControlOutput {
 
 class TractionControl {
 public:
+    void setParameters(VcuParameters* params) {};
     void evaluate(VcuParameters *params, TractionControlInput *input, TractionControlOutput *output, float deltaTime);
 };
 

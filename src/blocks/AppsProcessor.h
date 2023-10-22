@@ -19,6 +19,7 @@ class AppsProcessor {
 public:
     void reset();
     void evaluate(VcuParameters* params, AppsProcessorInput* input, AppsProcessorOutput* output, float deltaTime);
+    void setParameters(VcuParameters* params);
 private:
     Timer clock = Timer(0.1f);
     LowPassFilter app1Filter = LowPassFilter(0.005);

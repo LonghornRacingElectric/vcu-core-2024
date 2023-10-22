@@ -8,7 +8,7 @@
 void SoftShutdown::evaluate(VcuParameters *params, SoftShutdownInput *input, SoftShutdownOutput *output,
                             float deltaTime) {
 
-    bool everythingOk = input->appsOk && input->bseOk && input->stomppOk;
+    bool everythingOk = (input->appsOk && input->bseOk && input->stomppOk && input->prndlState);
 
     // TODO look into Cascadia documentation and see if enable/disable is relevant here
     output->enableInverter = everythingOk;
