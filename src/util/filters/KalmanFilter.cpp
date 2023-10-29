@@ -77,17 +77,23 @@ void KalmanFilter::update(const Matrix &y, const Matrix &control, float dt) {
 
     std::cout << "\nSTATE TRANSITION\n" + stateTransition.toString();
 
-
     processCovariance = stateTransition * processCovariance * stateTransition.getTranspose();
+
+    // remove extraneous values
+    for(int row = 0; row < processCovariance.rows(); row++) {
+        for(int col = 0; col < processCovariance.columns(); col++) {
+            if(col != row && processCovariance.get(row, col) != 0) {
+                processCovariance.set(row,col,0);
+            }
+        }
+    }
 
     std::cout << "\nPROCESS COVARIANCE\n" + processCovariance.toString();
     std::cout << "\nR\n" + R.toString();
 
-
     Matrix kalmanGain = processCovariance / (processCovariance + R);
 
-    std::cout << "\nKALMAN GAIN\n" + kalmanGain.toString();
-
+    std::cout << "\nKALMAN GAIN\n" + kalmanGain.toString(); 
     Matrix H = Matrix::getIdentityMatrix(n*2);
 
     std::cout << "\nH\n" + H.toString();
