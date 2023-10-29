@@ -28,8 +28,8 @@ typedef struct VcuParameters {
     // ===== BSE PARAMETERS =====
     float bseLowPassFilterTimeConstant = 0.000f; // (s)
     float bseImplausibilityTime = 0.100f; // (s)
-    float bseVoltageMin = 1.0f; // voltage corresponding to 0% brake pressure (V)
-    float bseVoltageMax = 4.0f; // voltage corresponding to 100% brake pressure (V)
+    float bseVoltageMin = 0.5f; // voltage corresponding to 0% brake pressure (V)
+    float bseVoltageMax = 4.5f; // voltage corresponding to 100% brake pressure (V)
     float bsePressureMin = 0.0f; // minimum brake pressure (psi)
     float bsePressureMax = 1000.0f; // maximum brake pressure (psi)
 
@@ -57,8 +57,8 @@ typedef struct VcuParameters {
     // ==== STEERING PARAMETERS ====
     CurveParameter steeringWheelToOuterWheel;
     CurveParameter steeringWheelToInnerWheel;
-    float steeringPotMaxVoltage;
-    float steeringWheelMaxAngle;
+    float steeringPotMaxVoltage = 3.3f;
+    float steeringWheelMaxAngle = 90.0f;
 
 
 } VcuParameters;
