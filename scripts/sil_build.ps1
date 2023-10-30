@@ -1,4 +1,4 @@
-cd ..
-cmake --build ./cmake-build-debug --target vcu_core
-cd scripts
-./post_sil_build.ps1
+$p = (Get-Item .).FullName + "\cmake-build-debug"
+cmake --build $p --target vcu_core_tests -j 16
+cmake --build $p --target vcu_core -j 16
+Copy-Item "./cmake-build-debug/sil/vcu_core.exe" -Destination ".."
