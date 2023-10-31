@@ -40,9 +40,13 @@ void TractionControl::evaluate(VcuParameters *params, TractionControlInput *inpu
     excess = excess / averageFrontVelocity;
     if(excess < 0) excess = 0;
 
+    if(wheelVelocityBl < 1.0f || wheelVelocityBr < 1.0f) {
+        excess = 0.0f;
+    }
+
     float negativeFeedback = 5.0f * excess;
     lowPassFeedback.add(negativeFeedback, deltaTime);
-    negativeFeedback = 0;//lowPassFeedback.get();
+    negativeFeedback = lowPassFeedback.get();
 
     if(negativeFeedback > input->unregulatedTorqueRequest) {
         negativeFeedback = input->unregulatedTorqueRequest;
