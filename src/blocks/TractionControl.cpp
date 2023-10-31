@@ -34,24 +34,30 @@ void TractionControl::evaluate(VcuParameters *params, TractionControlInput *inpu
     wheelVelocityBr = lowPassBr.get();
 
     float averageFrontVelocity = (wheelVelocityFl + wheelVelocityFr) / 2.0f;
-    float excessL = wheelVelocityBl - averageFrontVelocity;
-    float excessR = wheelVelocityBr - averageFrontVelocity;
-    float excess = (excessL > excessR) ? excessL : excessR;
-    excess = excess / averageFrontVelocity;
-    if(excess < 0) excess = 0;
+    float excessVelocityL = wheelVelocityBl - averageFrontVelocity;
+    float excessVelocityR = wheelVelocityBr - averageFrontVelocity;
+    float excessVelocity = (excessVelocityL > excessVelocityR) ? excessVelocityL : excessVelocityR;
+    float excessSlip = (excessVelocity / averageFrontVelocity) - 0.15f;
 
-    if(wheelVelocityBl < 1.0f || wheelVelocityBr < 1.0f) {
-        excess = 0.0f;
+    if(excessSlip < 0 || excessVelocity < 0.01f) {
+        excessSlip = 0;
+    }
+    excessVelocity = excessSlip * averageFrontVelocity;
+    lowPassFeedback.add(excessVelocity, deltaTime);
+    excessVelocity = lowPassFeedback.get();
+
+    float negativeFeedback = 3.0f * excessVelocity;
+
+    float maxTorque = 230.0f;
+    float openLoopTorqueLimit = input->unregulatedTorqueRequest;
+    if(input->unregulatedTorqueRequest > maxTorque) {
+        openLoopTorqueLimit = maxTorque;
     }
 
-    float negativeFeedback = 5.0f * excess;
-    lowPassFeedback.add(negativeFeedback, deltaTime);
-    negativeFeedback = lowPassFeedback.get();
-
-    if(negativeFeedback > input->unregulatedTorqueRequest) {
-        negativeFeedback = input->unregulatedTorqueRequest;
+    if(negativeFeedback > openLoopTorqueLimit) {
+        negativeFeedback = openLoopTorqueLimit;
     }
 
-    output->regulatedTorqueRequest = input->unregulatedTorqueRequest - negativeFeedback;
+    output->regulatedTorqueRequest = openLoopTorqueLimit - negativeFeedback;
 
 }
