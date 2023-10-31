@@ -51,8 +51,8 @@ typedef struct VcuParameters {
     float prndlSwitchDebounceDuration = 0.100f; // how long a digital high/low must be sustained to be considered (s)
 
     // ==== TRACTION CONTROL PARAMETERS =====
-    // tbd
-
+    float tcsVelocityLowPassFilterTimeConstant = 0.030f;
+    float tcsFeedbackLowPassFilterTimeConstant = 1.0f;
 
     // ==== STEERING PARAMETERS ====
     CurveParameter steeringWheelToOuterWheel;
