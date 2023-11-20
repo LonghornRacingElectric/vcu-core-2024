@@ -52,6 +52,9 @@ void input() {
     cin >> vcuInput.batterySoc;
     vcuInput.inverterReady = input_bool();
 
+    cin >> vcuInput.batteryVoltage;
+    cin >> vcuInput.batteryCurrent;
+
     vcuInput.driveSwitch = input_bool();
 
     cin >> vcuInput.gpsLat;

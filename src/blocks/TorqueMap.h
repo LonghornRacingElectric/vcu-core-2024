@@ -11,6 +11,8 @@ typedef struct TorqueMapInput {
     float inverterTemp; // (deg C)
     float batteryTemp; // (deg C)
     float batterySoc; // (%)
+    float batteryVoltage; // (V)
+    float batteryCurrent; // (A)
 } TorqueMapInput;
 
 

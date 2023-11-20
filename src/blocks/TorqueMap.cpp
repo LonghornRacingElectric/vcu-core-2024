@@ -20,5 +20,20 @@ void TorqueMap::evaluate(VcuParameters *params, TorqueMapInput *input, TorqueMap
     derate = params->mapDerateBatterySoc(input->batterySoc);
     torqueRequest *= derate;
 
+    float currentPower = input->batteryVoltage * input->batteryCurrent;
+    if(currentPower > params->mapPowerLimit) { // acceleration power limit
+        float error = currentPower - params->mapPowerLimit;
+        torqueRequest = torqueRequest - (params->mapPowerLimitFeedbackP * error);
+        if(torqueRequest < 0) {
+            torqueRequest = 0;
+        }
+    } else if(currentPower < -params->mapPowerLimit) { // regen power limit
+        float error = currentPower + params->mapPowerLimit;
+        torqueRequest = torqueRequest - (params->mapPowerLimitFeedbackP * error);
+        if(torqueRequest > 0) {
+            torqueRequest = 0;
+        }
+    }
+
     output->torqueRequest = torqueRequest;
 }
