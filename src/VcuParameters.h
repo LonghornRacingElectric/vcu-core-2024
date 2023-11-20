@@ -45,7 +45,7 @@ typedef struct VcuParameters {
     CurveParameter mapDerateBatteryTemp; // allowed torque (%) as a function of battery temperature (deg C)
     CurveParameter mapDerateBatterySoc; // allowed torque (%) as a function of battery SoC (%)
     float mapPowerLimit = 78000; // power limit (W)
-    float mapPowerLimitFeedbackP = 0.10f; // PID proportional gain (Nm/A)
+    float mapPowerLimitFeedbackP = 0.10f; // PID proportional gain (Nm/W)
     float mapPowerLimitFeedbackTimeConstant = 0.100f;
 
     // ===== PRNDL PARAMETERS =====
