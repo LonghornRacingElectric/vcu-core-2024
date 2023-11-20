@@ -11,10 +11,13 @@ TEST(TorqueMap, PowerLimit) {
     params.mapDerateMotorTemp = CurveParameter();
     params.mapPowerLimit = 80000;
     params.mapPowerLimitFeedbackP = 0.01f;
+    params.mapPowerLimitFeedbackTimeConstant = 0;
 
     TorqueMapInput torqueMapInput;
     TorqueMapOutput torqueMapOutput;
     TorqueMap torqueMap;
+
+    torqueMap.setParameters(&params);
 
     torqueMapInput = {
             1.0f,

@@ -21,19 +21,27 @@ void TorqueMap::evaluate(VcuParameters *params, TorqueMapInput *input, TorqueMap
     torqueRequest *= derate;
 
     float currentPower = input->batteryVoltage * input->batteryCurrent;
-    if(currentPower > params->mapPowerLimit) { // acceleration power limit
-        float error = currentPower - params->mapPowerLimit;
-        torqueRequest = torqueRequest - (params->mapPowerLimitFeedbackP * error);
-        if(torqueRequest < 0) {
-            torqueRequest = 0;
-        }
-    } else if(currentPower < -params->mapPowerLimit) { // regen power limit
-        float error = currentPower + params->mapPowerLimit;
-        torqueRequest = torqueRequest - (params->mapPowerLimitFeedbackP * error);
-        if(torqueRequest > 0) {
-            torqueRequest = 0;
-        }
+    float powerError = 0;
+    if (currentPower > params->mapPowerLimit) {
+        // acceleration power limit
+        powerError = params->mapPowerLimit - currentPower;
+    } else if (currentPower < -params->mapPowerLimit) {
+        // regen power limit
+        powerError = -params->mapPowerLimit - currentPower;
+    }
+    powerNegativeFeedbackFilter.add(powerError, deltaTime);
+    float negativeFeedback = powerNegativeFeedbackFilter.get() * params->mapPowerLimitFeedbackP;
+    if ((torqueRequest > 0 && torqueRequest + negativeFeedback < 0)
+        || (torqueRequest < 0 && torqueRequest + negativeFeedback > 0)
+        || (torqueRequest == 0)) {
+        torqueRequest = 0;
+    } else {
+        torqueRequest = torqueRequest + negativeFeedback;
     }
 
     output->torqueRequest = torqueRequest;
+}
+
+void TorqueMap::setParameters(VcuParameters *params) {
+    this->powerNegativeFeedbackFilter = LowPassFilter(params->mapPowerLimitFeedbackTimeConstant);
 }
