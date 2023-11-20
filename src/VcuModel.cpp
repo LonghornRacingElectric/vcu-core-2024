@@ -11,6 +11,7 @@ void VcuModel::setParameters(VcuParameters *newParams) {
     this->steering.setParameters(newParams);
     this->trackPositioning.setParameters(newParams);
     this->drs.setParameters(newParams);
+    this->cooling.setParameters(newParams);
     this->softShutdown.setParameters(newParams);
 }
 
@@ -98,6 +99,13 @@ void VcuModel::evaluate(VcuInput *vcuInput, VcuOutput *vcuOutput, float deltaTim
     };
     drs.evaluate(params, &drsInput, &drsOutput, deltaTime);
 
+    coolingInput = {
+            vcuInput->batteryTemp,
+            vcuInput->inverterTemp,
+            vcuInput->motorTemp,
+    };
+    cooling.evaluate(params, &coolingInput, &coolingOutput, deltaTime);
+
     softShutdownInput = {
             appsProcessorOutput.ok,
             bseProcessorOutput.ok,
@@ -115,6 +123,10 @@ void VcuModel::evaluate(VcuInput *vcuInput, VcuOutput *vcuOutput, float deltaTim
         prndlOutput.buzzer,
 
         drsOutput.enable,
+
+        coolingOutput.pumpOutput,
+        coolingOutput.radiatorOutput,
+        coolingOutput.batteryFansOutput,
 
         trackPositioningOutput.vehicleDisplacement,
         trackPositioningOutput.vehicleVelocity,
