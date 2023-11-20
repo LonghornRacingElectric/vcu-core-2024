@@ -16,7 +16,10 @@ void TractionControl::setParameters(VcuParameters *params) {
 
 void TractionControl::evaluate(VcuParameters *params, TractionControlInput *input, TractionControlOutput *output,
                                float deltaTime) {
-
+    if(!params->tcsEnabled) {
+        output->regulatedTorqueRequest = input->unregulatedTorqueRequest;
+        return;
+    }
 
     // TODO replace this stupid implementation
     float wheelVelocityFl = differentiatorFl.get(input->wheelDisplacementFl, deltaTime);

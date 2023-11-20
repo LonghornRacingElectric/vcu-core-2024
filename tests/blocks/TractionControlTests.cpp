@@ -8,6 +8,7 @@ TEST(TractionControl, TractionControlFunctionality) {
     TractionControlOutput tractionControlOutput;
     VcuParameters vcuParameters;
 
+    vcuParameters.tcsEnabled = true;
     vcuParameters.tcsVelocityLowPassFilterTimeConstant = 0;
     vcuParameters.tcsFeedbackLowPassFilterTimeConstant = 0.01f;
 
