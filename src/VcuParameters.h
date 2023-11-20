@@ -45,8 +45,8 @@ typedef struct VcuParameters {
     CurveParameter mapDerateBatteryTemp; // allowed torque (%) as a function of battery temperature (deg C)
     CurveParameter mapDerateBatterySoc; // allowed torque (%) as a function of battery SoC (%)
     float mapPowerLimit = 78000; // power limit (W)
-    float mapPowerLimitFeedbackP = 0.01f; // PID proportional gain (Nm/A)
-    float mapPowerLimitFeedbackTimeConstant = 0.020f;
+    float mapPowerLimitFeedbackP = 0.10f; // PID proportional gain (Nm/A)
+    float mapPowerLimitFeedbackTimeConstant = 0.100f;
 
     // ===== PRNDL PARAMETERS =====
     float prndlBrakeToStartThreshold = 100.0f; // minimum pressure required on the brakes to go into drive (psi)
@@ -56,7 +56,7 @@ typedef struct VcuParameters {
     // ==== TRACTION CONTROL PARAMETERS =====
     bool tcsEnabled = true;
     float tcsVelocityLowPassFilterTimeConstant = 0.020f;
-    float tcsFeedbackLowPassFilterTimeConstant = 0.020f;
+    float tcsFeedbackLowPassFilterTimeConstant = 0.050f;
 
     // ==== STEERING PARAMETERS ====
     CurveParameter steeringWheelToOuterWheel;
