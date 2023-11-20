@@ -39,6 +39,9 @@ typedef struct VcuInput {
     float batterySoc; // (%)
     bool inverterReady; // (true = ready)
 
+    float batteryVoltage; // (V)
+    float batteryCurrent; // (A)
+
     bool driveSwitch; // (true = D, false = P)
 
     double gpsLat; // degrees

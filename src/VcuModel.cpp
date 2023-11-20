@@ -40,6 +40,8 @@ void VcuModel::evaluate(VcuInput *vcuInput, VcuOutput *vcuOutput, float deltaTim
             vcuInput->inverterTemp,
             vcuInput->batteryTemp,
             vcuInput->batterySoc,
+            vcuInput->batteryVoltage,
+            vcuInput->batteryCurrent,
     };
     torqueMap.evaluate(params, &torqueMapInput, &torqueMapOutput, deltaTime);
 

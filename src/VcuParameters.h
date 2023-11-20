@@ -44,6 +44,8 @@ typedef struct VcuParameters {
     CurveParameter mapDerateInverterTemp; // allowed torque (%) as a function of inverter temperature (deg C)
     CurveParameter mapDerateBatteryTemp; // allowed torque (%) as a function of battery temperature (deg C)
     CurveParameter mapDerateBatterySoc; // allowed torque (%) as a function of battery SoC (%)
+    float mapPowerLimit = 78000; // power limit (W)
+    float mapPowerLimitFeedbackP = 0.01f; // PID proportional gain (Nm/A)
 
     // ===== PRNDL PARAMETERS =====
     float prndlBrakeToStartThreshold = 100.0f; // minimum pressure required on the brakes to go into drive (psi)
