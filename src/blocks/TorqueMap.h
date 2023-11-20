@@ -3,6 +3,7 @@
 
 
 #include "VcuParameters.h"
+#include "util/filters/LowPassFilter.h"
 
 
 typedef struct TorqueMapInput {
@@ -22,8 +23,10 @@ typedef struct TorqueMapOutput {
 
 
 class TorqueMap {
+private:
+    LowPassFilter powerNegativeFeedbackFilter = LowPassFilter(0);
 public:
-    void setParameters(VcuParameters* params) {};
+    void setParameters(VcuParameters* params);
     void evaluate(VcuParameters *params, TorqueMapInput *input, TorqueMapOutput *output, float deltaTime);
 };
 
