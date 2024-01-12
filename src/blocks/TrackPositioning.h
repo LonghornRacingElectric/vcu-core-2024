@@ -4,7 +4,7 @@
 
 #include "VcuParameters.h"
 #include "util/Structs.h"
-#include "util/math/Matrix.h"
+#include "util/filters/KalmanFilter.h"
 
 typedef struct TrackPositioningInput {
     double gpsLat; // degrees
@@ -46,9 +46,13 @@ class TrackPositioning {
 private:
     TrackPositioningState systemState;
     Matrix stateMatrix;
+    KalmanFilter filter;
+
 
     // process covariance matrix
-    Matrix P;
+    Matrix covariance;
+
+    Matrix control;
 
     // computational Identity matrix
     Matrix A;

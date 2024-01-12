@@ -84,6 +84,8 @@ int columns() const;
  */
 Matrix divide(const Matrix& other) const;
 
+Matrix divideDiagonal(const Matrix& other) const;
+
 Matrix multiply(const Matrix& other) const;
 
 Matrix add(const Matrix& other) const;

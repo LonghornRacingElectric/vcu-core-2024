@@ -24,22 +24,30 @@ void TrackPositioning::evaluate(VcuParameters *params, TrackPositioningInput *in
         stateMatrix = *new Matrix(initialStateVector);
 
         t = 0;
+        control = Matrix(3, 1);
+        control.set(0, 0, 0);
+        control.set(1, 0, 0);
+        control.set(2, 0, 0);
+
+        covariance = Matrix::getIdentityMatrix(3*2);
+
+        filter = *new KalmanFilter(3 * 2, 0, stateMatrix, control, covariance);
 
         isInitialState = false;
     }
 
-//    Matrix newState = stateMatrix * stateMatrix.getTranspose();
 
     // TODO -- IF WE ALREADY HAVE INITIAL VALUES, RUN CALCULATIONS WITH KALMAN FILTER AND MATRIX CLASS
-    float xVelocity = input->gpsSpeed + ((input->imu2Accel.x + input->imu1Accel.x)/2) * deltaTime;
-    float yVelocity = input->gpsSpeed + ((input->imu2Accel.y + input->imu1Accel.y)/2) * deltaTime;
-    float zVelocity = input->gpsSpeed + ((input->imu2Accel.z + input->imu1Accel.z)/2) * deltaTime;
 
-    xyz displacement = {xVelocity * deltaTime, yVelocity * deltaTime, zVelocity * deltaTime};
+    control.set(0,0, input->imu1Accel.x);
+    control.set(1,0, input->imu1Accel.y);
+    control.set(2,0, input->imu1Accel.z);
 
-    output->vehicleDisplacement = {0, 0, 0}; // m
-    output->vehicleVelocity = {0, 0, 0}; // m/s
-    output->vehicleAcceleration = {0, 0, 0}; // m/s^2
+    filter.update(filter.state(), control, deltaTime);
+
+    output->vehicleDisplacement = {filter.state().get(0,0), filter.state().get(0,1), filter.state().get(0,2)}; // m
+    output->vehicleVelocity = {filter.state().get(0,3), filter.state().get(0,4), filter.state().get(0,5)}; // m/s
+    output->vehicleAcceleration = {input->imu1Accel.x, input->imu1Accel.y, input->imu1Accel.z}; // m/s^2
 
 
     t += deltaTime;

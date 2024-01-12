@@ -44,6 +44,21 @@ Matrix Matrix::divide(const Matrix& other) const {
     return result;
 }
 
+Matrix Matrix::divideDiagonal(const Matrix& other) const {
+    if(other.columns() != columns() || other.rows() != rows()) {
+        throw std::invalid_argument("Both matrices must be of the same dimensions");
+    }
+    Matrix result(rows(), columns(), 0.0f);
+    for(int row = 0; row < rows(); row++) {
+            if(other.get(row, row) == 0 && get(row, row) == 0) {
+                result.set(row, row, 0);
+            } else {
+                result.set(row, row, get(row, row) / other.get(row, row));
+            }
+    }
+    return result;
+}
+
 Matrix Matrix::multiply(const Matrix& other) const {
     if(columns() != other.rows()) {
         throw std::invalid_argument("This matrix columns must be equal to other matrix rows");
