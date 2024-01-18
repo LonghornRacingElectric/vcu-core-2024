@@ -65,17 +65,17 @@ void KalmanFilter::update(const Matrix &y, const Matrix &control, float dt) {
         controlTransition.set(col, col - n, dt);
     }
 
-    std::cout << "\nCONTROL TRANSITION\n" + controlTransition.toString();
+//    std::cout << "\nCONTROL TRANSITION\n" + controlTransition.toString();
 
     x_hat_new = stateTransition * x_hat + controlTransition * u;
 
-    std::cout << "\nX HAT NEW\n" + x_hat_new.toString();
+//    std::cout << "\nX HAT NEW\n" + x_hat_new.toString();
 
     u = control;
 
-    std::cout << "\nU\n" + u.toString();
-
-    std::cout << "\nSTATE TRANSITION\n" + stateTransition.toString();
+//    std::cout << "\nU\n" + u.toString();
+//
+//    std::cout << "\nSTATE TRANSITION\n" + stateTransition.toString();
 
     processCovariance = stateTransition * processCovariance * stateTransition.getTranspose();
 
@@ -88,23 +88,23 @@ void KalmanFilter::update(const Matrix &y, const Matrix &control, float dt) {
         }
     }
 
-    std::cout << "\nPROCESS COVARIANCE\n" + processCovariance.toString();
-    std::cout << "\nR\n" + R.toString();
+//    std::cout << "\nPROCESS COVARIANCE\n" + processCovariance.toString();
+//    std::cout << "\nR\n" + R.toString();
 
     Matrix kalmanGain = processCovariance / (processCovariance + R);
 
-    std::cout << "\nKALMAN GAIN\n" + kalmanGain.toString(); 
+//    std::cout << "\nKALMAN GAIN\n" + kalmanGain.toString();
     Matrix H = Matrix::getIdentityMatrix(n*2);
 
-    std::cout << "\nH\n" + H.toString();
+//    std::cout << "\nH\n" + H.toString();
 
     x_hat = x_hat_new + kalmanGain * (y - H * x_hat_new);
 
-    std::cout << "\nX HAT\n" + x_hat.toString();
+//    std::cout << "\nX HAT\n" + x_hat.toString();
 
-    std::cout << "\nKALMAN GAIN X H\n" + (kalmanGain*H).toString();
+//    std::cout << "\nKALMAN GAIN X H\n" + (kalmanGain*H).toString();
 
     processCovariance = (H - (kalmanGain * H)) * processCovariance;
 
-    std::cout << "\nPROCESS COVARIANCE 2\n" + processCovariance.toString();
+//    std::cout << "\nPROCESS COVARIANCE 2\n" + processCovariance.toString();
 }
