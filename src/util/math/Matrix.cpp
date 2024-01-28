@@ -122,7 +122,7 @@ Matrix Matrix::operator+(const Matrix &other) const {
 }
 
 Matrix Matrix::operator/(const Matrix &other) const {
-    return divide(other);
+    return divideDiagonal(other);
 }
 
 Matrix Matrix::operator-(const Matrix &other) const {

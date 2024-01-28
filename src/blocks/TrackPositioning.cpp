@@ -43,6 +43,7 @@ void TrackPositioning::evaluate(VcuParameters *params, TrackPositioningInput *in
     control.set(1,0, input->imu1Accel.y);
     control.set(2,0, input->imu1Accel.z);
 
+    // FILTER.state() should be a GPS State instead.
     filter.update(filter.state(), control, deltaTime);
 
     output->vehicleDisplacement = {filter.state().get(0,0), filter.state().get(0,1), filter.state().get(0,2)}; // m
