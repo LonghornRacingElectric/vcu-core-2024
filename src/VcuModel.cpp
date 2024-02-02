@@ -11,6 +11,8 @@ void VcuModel::setParameters(VcuParameters *newParams) {
     this->steering.setParameters(newParams);
     this->trackPositioning.setParameters(newParams);
     this->drs.setParameters(newParams);
+    this->cooling.setParameters(newParams);
+    this->indicators.setParameters(newParams);
     this->softShutdown.setParameters(newParams);
 }
 
@@ -63,6 +65,7 @@ void VcuModel::evaluate(VcuInput *vcuInput, VcuOutput *vcuOutput, float deltaTim
             vcuInput->driveSwitch,
             vcuInput->inverterReady,
             bseProcessorOutput.bse,
+            appsProcessorOutput.apps,
     };
     prndl.evaluate(params, &prndlInput, &prndlOutput, deltaTime);
 
@@ -98,6 +101,18 @@ void VcuModel::evaluate(VcuInput *vcuInput, VcuOutput *vcuOutput, float deltaTim
     };
     drs.evaluate(params, &drsInput, &drsOutput, deltaTime);
 
+    coolingInput = {
+            vcuInput->batteryTemp,
+            vcuInput->inverterTemp,
+            vcuInput->motorTemp,
+    };
+    cooling.evaluate(params, &coolingInput, &coolingOutput, deltaTime);
+
+    indicatorsInput = {
+            bseProcessorOutput.bse,
+    };
+    indicators.evaluate(params, &indicatorsInput, &indicatorsOutput, deltaTime);
+
     softShutdownInput = {
             appsProcessorOutput.ok,
             bseProcessorOutput.ok,
@@ -113,8 +128,13 @@ void VcuModel::evaluate(VcuInput *vcuInput, VcuOutput *vcuOutput, float deltaTim
 
         prndlOutput.state,
         prndlOutput.buzzer,
+        indicatorsOutput.brakeLight,
 
         drsOutput.enable,
+
+        coolingOutput.pumpOutput,
+        coolingOutput.radiatorOutput,
+        coolingOutput.batteryFansOutput,
 
         trackPositioningOutput.vehicleDisplacement,
         trackPositioningOutput.vehicleVelocity,
