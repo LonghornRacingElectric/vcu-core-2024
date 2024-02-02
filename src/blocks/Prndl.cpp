@@ -19,6 +19,8 @@
 void Prndl::evaluate(VcuParameters *params, PrndlInput *input, PrndlOutput *output, float deltaTime) {
     switchInputDebounce.add(input->driveSwitch, deltaTime);
     bool driveSwitch = switchInputDebounce.get();
+    bool driveSwitchRisingEdge = (driveSwitch > driveSwitchLastState);
+    driveSwitchLastState = driveSwitch;
 
     if (state) {
         // we're currently in Drive
@@ -31,8 +33,9 @@ void Prndl::evaluate(VcuParameters *params, PrndlInput *input, PrndlOutput *outp
     } else {
         // we're currently in Park
         bool brakesPressed = (input->brakePressure > params->prndlBrakeToStartThreshold);
+        bool acceleratorReleased = (input->apps == 0.0f);
 
-        if (driveSwitch && input->inverterReady && brakesPressed) {
+        if (driveSwitchRisingEdge && input->inverterReady && brakesPressed && acceleratorReleased) {
             state = true; // switch to Drive
             buzzerTimer.reset();
         }

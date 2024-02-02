@@ -10,6 +10,7 @@ typedef struct PrndlInput {
     bool driveSwitch; // true = drive
     bool inverterReady;
     float brakePressure;
+    float apps;
 } PrndlInput;
 
 
@@ -22,6 +23,7 @@ typedef struct PrndlOutput {
 class Prndl {
 private:
     bool state = false;
+    bool driveSwitchLastState = false;
     Debounce switchInputDebounce = Debounce(0, false);
     Timer buzzerTimer = Timer(0);
 public:

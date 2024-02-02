@@ -90,8 +90,13 @@ void output() {
 
     output_bool(vcuOutput.prndlState);
     output_bool(vcuOutput.r2dBuzzer);
+    output_bool(vcuOutput.brakeLight);
 
     output_bool(vcuOutput.enableDragReduction);
+
+    output_float(vcuOutput.pumpOutput);
+    output_float(vcuOutput.radiatorOutput);
+    output_float(vcuOutput.batteryFansOutput);
 
     output_xyz(vcuOutput.vehicleDisplacement);
     output_xyz(vcuOutput.vehicleVelocity);

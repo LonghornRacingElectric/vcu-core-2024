@@ -15,6 +15,7 @@
 #include "blocks/Steering.h"
 #include "util/Structs.h"
 #include "blocks/Cooling.h"
+#include "blocks/Indicators.h"
 
 // https://www.figma.com/file/z98vFbTBytWElKBb5sTkwk/Lapsim-v2024-Architecture?type=whiteboard&node-id=0%3A1&t=05V7HnOWgZNBNB2B-1
 
@@ -65,6 +66,7 @@ typedef struct VcuOutput {
 
     bool prndlState; // (true = drive)
     bool r2dBuzzer; // (true = buzz)
+    bool brakeLight; // (true = on)
 
     bool enableDragReduction; // (true = enable)
 
@@ -126,6 +128,10 @@ private:
     Cooling cooling;
     CoolingInput coolingInput;
     CoolingOutput coolingOutput;
+
+    Indicators indicators;
+    IndicatorsInput indicatorsInput;
+    IndicatorsOutput indicatorsOutput;
 
     SoftShutdown softShutdown;
     SoftShutdownInput softShutdownInput;
