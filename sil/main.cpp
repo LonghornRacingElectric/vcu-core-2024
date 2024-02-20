@@ -47,13 +47,16 @@ void input() {
 
     cin >> vcuInput.motorTemp;
     cin >> vcuInput.inverterTemp;
-    cin >> vcuInput.batteryTemp;
+    cin >> vcuInput.hvBatteryTemp;
 
-    cin >> vcuInput.batterySoc;
+    cin >> vcuInput.hvBatterySoc;
     vcuInput.inverterReady = input_bool();
 
-    cin >> vcuInput.batteryVoltage;
-    cin >> vcuInput.batteryCurrent;
+    cin >> vcuInput.hvBatteryVoltage;
+    cin >> vcuInput.hvBatteryCurrent;
+
+    cin >> vcuInput.lvBatteryVoltage;
+    cin >> vcuInput.lvBatteryCurrent;
 
     vcuInput.driveSwitch = input_bool();
 
@@ -101,6 +104,9 @@ void output() {
     output_xyz(vcuOutput.vehicleDisplacement);
     output_xyz(vcuOutput.vehicleVelocity);
     output_xyz(vcuOutput.vehicleAcceleration);
+
+    output_float(vcuOutput.hvBatterySoc);
+    output_float(vcuOutput.lvBatterySoc);
 
     output_bool(vcuOutput.faultApps);
     output_bool(vcuOutput.faultBse);
