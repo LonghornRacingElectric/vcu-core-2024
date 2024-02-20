@@ -3,6 +3,7 @@
 
 
 #include "VcuParameters.h"
+#include "util/Structs.h"
 #include "blocks/AppsProcessor.h"
 #include "blocks/BseProcessor.h"
 #include "blocks/Stompp.h"
@@ -13,133 +14,155 @@
 #include "blocks/DragReductionSystem.h"
 #include "blocks/Prndl.h"
 #include "blocks/Steering.h"
-#include "util/Structs.h"
 #include "blocks/Cooling.h"
 #include "blocks/Indicators.h"
+#include "blocks/SocEstimation.h"
+#include "blocks/Dash.h"
 
 // https://www.figma.com/file/z98vFbTBytWElKBb5sTkwk/Lapsim-v2024-Architecture?type=whiteboard&node-id=0%3A1&t=05V7HnOWgZNBNB2B-1
 
 
 typedef struct VcuInput {
-    float apps1; // apps1 voltage (V)
-    float apps2; // apps2 voltage (V)
+  float apps1; // apps1 voltage (V)
+  float apps2; // apps2 voltage (V)
 
-    float bse1; // bse1 voltage (V)
-    float bse2; // bse2 voltage (V)
+  float bse1; // bse1 voltage (V)
+  float bse2; // bse2 voltage (V)
 
-    float steeringWheelPotVoltage; // (V)
+  float steeringWheelPotVoltage; // (V)
 
-    float wheelDisplacementFl; // wheel displacement (rad)
-    float wheelDisplacementFr;
-    float wheelDisplacementBl;
-    float wheelDisplacementBr;
+  float wheelDisplacementFl; // wheel displacement (rad)
+  float wheelDisplacementFr;
+  float wheelDisplacementBl;
+  float wheelDisplacementBr;
 
-    float motorTemp; // (deg C)
-    float inverterTemp;
-    float batteryTemp;
+  float motorTemp; // (deg C)
+  float inverterTemp;
+  float hvBatteryTemp;
 
-    float batterySoc; // (%)
-    bool inverterReady; // (true = ready)
+  float hvBatterySoc; // (%)
+  bool inverterReady; // (true = ready)
 
-    float batteryVoltage; // (V)
-    float batteryCurrent; // (A)
+  float hvBatteryVoltage; // (V)
+  float hvBatteryCurrent; // (A)
 
-    bool driveSwitch; // (true = D, false = P)
+  float lvBatteryVoltage; // (V)
+  float lvBatteryCurrent; // (A)
 
-    double gpsLat; // degrees
-    double gpsLong; // degrees
-    float gpsSpeed; // knots
-    float gpsHeading; // degrees
+  bool driveSwitch; // (true = D, false = P)
 
-    xyz imu1Accel; // accel x, y, z (m/s^2)
-    xyz imu2Accel;
-    xyz imu3Accel;
-    xyz imu1Gyro; // gyro x, y, z (rad/s)
-    xyz imu2Gyro;
-    xyz imu3Gyro;
+  double gpsLat; // degrees
+  double gpsLong; // degrees
+  float gpsSpeed; // knots
+  float gpsHeading; // degrees
+
+  xyz imu1Accel; // accel x, y, z (m/s^2)
+  xyz imu2Accel;
+  xyz imu3Accel;
+  xyz imu1Gyro; // gyro x, y, z (rad/s)
+  xyz imu2Gyro;
+  xyz imu3Gyro;
 } VcuInput;
 
 
 typedef struct VcuOutput {
-    bool enableInverter; // (true = enable)
-    float inverterTorqueRequest; // torque (Nm)
+  bool enableInverter; // (true = enable)
+  float inverterTorqueRequest; // torque (Nm)
 
-    bool prndlState; // (true = drive)
-    bool r2dBuzzer; // (true = buzz)
-    bool brakeLight; // (true = on)
+  bool prndlState; // (true = drive)
+  bool r2dBuzzer; // (true = buzz)
+  bool brakeLight; // (true = on)
 
-    bool enableDragReduction; // (true = enable)
+  bool enableDragReduction; // (true = enable)
 
-    float pumpOutput; // (%)
-    float radiatorOutput; // (%)
-    float batteryFansOutput; // (%)
+  float pumpOutput; // (%)
+  float radiatorOutput; // (%)
+  float batteryFansOutput; // (%)
 
-    xyz vehicleDisplacement; // x, y, z (m)
-    xyz vehicleVelocity; // x, y, z (m/s)
-    xyz vehicleAcceleration; // x, y, z (m/s^2)
+  xyz vehicleDisplacement; // x, y, z (m)
+  xyz vehicleVelocity; // x, y, z (m/s)
+  xyz vehicleAcceleration; // x, y, z (m/s^2)
 
-    bool faultApps; // (true = fault)
-    bool faultBse;
-    bool faultStompp;
-    bool faultSteering;
+  float hvBatterySoc; // (%)
+  float lvBatterySoc; // (%)
+
+  float dashSpeed; // (mph)
+
+  float telemetryApps;
+  float telemetryBse;
+  float telemetrySteeringWheel; // (
+
+  bool faultApps; // (true = fault)
+  bool faultBse;
+  bool faultStompp;
+  bool faultSteering;
 } VcuOutput;
 
 
 class VcuModel {
 private:
-    VcuParameters* params;
+  VcuParameters *params;
 
-    AppsProcessor appsProcessor;
-    AppsProcessorInput appsProcessorInput;
-    AppsProcessorOutput appsProcessorOutput;
+  AppsProcessor appsProcessor;
+  AppsProcessorInput appsProcessorInput;
+  AppsProcessorOutput appsProcessorOutput;
 
-    BseProcessor bseProcessor;
-    BseProcessorInput bseProcessorInput;
-    BseProcessorOutput bseProcessorOutput;
+  BseProcessor bseProcessor;
+  BseProcessorInput bseProcessorInput;
+  BseProcessorOutput bseProcessorOutput;
 
-    Stompp stompp;
-    StomppInput stomppInput;
-    StomppOutput stomppOutput;
+  Stompp stompp;
+  StomppInput stomppInput;
+  StomppOutput stomppOutput;
 
-    TorqueMap torqueMap;
-    TorqueMapInput torqueMapInput;
-    TorqueMapOutput torqueMapOutput;
+  TorqueMap torqueMap;
+  TorqueMapInput torqueMapInput;
+  TorqueMapOutput torqueMapOutput;
 
-    TractionControl tractionControl;
-    TractionControlInput tractionControlInput;
-    TractionControlOutput tractionControlOutput;
+  TractionControl tractionControl;
+  TractionControlInput tractionControlInput;
+  TractionControlOutput tractionControlOutput;
 
-    Prndl prndl;
-    PrndlInput prndlInput;
-    PrndlOutput prndlOutput;
+  Prndl prndl;
+  PrndlInput prndlInput;
+  PrndlOutput prndlOutput;
 
-    Steering steering;
-    SteeringInput steeringInput;
-    SteeringOutput steeringOutput;
+  Steering steering;
+  SteeringInput steeringInput;
+  SteeringOutput steeringOutput;
 
-    TrackPositioning trackPositioning;
-    TrackPositioningInput trackPositioningInput;
-    TrackPositioningOutput trackPositioningOutput;
+  TrackPositioning trackPositioning;
+  TrackPositioningInput trackPositioningInput;
+  TrackPositioningOutput trackPositioningOutput;
 
-    DragReductionSystem drs;
-    DragReductionSystemInput drsInput;
-    DragReductionSystemOutput drsOutput;
+  DragReductionSystem drs;
+  DragReductionSystemInput drsInput;
+  DragReductionSystemOutput drsOutput;
 
-    Cooling cooling;
-    CoolingInput coolingInput;
-    CoolingOutput coolingOutput;
+  Cooling cooling;
+  CoolingInput coolingInput;
+  CoolingOutput coolingOutput;
 
-    Indicators indicators;
-    IndicatorsInput indicatorsInput;
-    IndicatorsOutput indicatorsOutput;
+  Indicators indicators;
+  IndicatorsInput indicatorsInput;
+  IndicatorsOutput indicatorsOutput;
 
-    SoftShutdown softShutdown;
-    SoftShutdownInput softShutdownInput;
-    SoftShutdownOutput softShutdownOutput;
+  SocEstimation socEstimation;
+  SocEstimationInput socEstimationInput;
+  SocEstimationOutput socEstimationOutput;
+
+  SoftShutdown softShutdown;
+  SoftShutdownInput softShutdownInput;
+  SoftShutdownOutput softShutdownOutput;
+
+  Dash dash;
+  DashInput dashInput;
+  DashOutput dashOutput;
 
 public:
-    void setParameters(VcuParameters* newParams);
-    void evaluate(VcuInput* vcuInput, VcuOutput* vcuOutput, float deltaTime);
+  void setParameters(VcuParameters *newParams);
+
+  void evaluate(VcuInput *vcuInput, VcuOutput *vcuOutput, float deltaTime);
 };
 
 
