@@ -11,8 +11,8 @@ typedef struct SteeringInput {
 
 
 typedef struct SteeringOutput {
-    float steeringWheelAngle;
-    float wheelAngleFl;
+    float steeringWheelAngle; // (degrees)
+    float wheelAngleFl; // (radians)
     float wheelAngleFr;
     float wheelAngleBl;
     float wheelAngleBr;

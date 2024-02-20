@@ -14,6 +14,7 @@ void VcuModel::setParameters(VcuParameters *newParams) {
   this->cooling.setParameters(newParams);
   this->indicators.setParameters(newParams);
   this->socEstimation.setParameters(newParams);
+  this->dash.setParameters(newParams);
   this->softShutdown.setParameters(newParams);
 }
 
@@ -122,6 +123,12 @@ void VcuModel::evaluate(VcuInput *vcuInput, VcuOutput *vcuOutput, float deltaTim
   };
   socEstimation.evaluate(params, &socEstimationInput, &socEstimationOutput, deltaTime);
 
+  dashInput = {
+      vcuInput->wheelDisplacementFl,
+      vcuInput->wheelDisplacementFr,
+  };
+  dash.evaluate(params, &dashInput, &dashOutput, deltaTime);
+
   softShutdownInput = {
       appsProcessorOutput.ok,
       bseProcessorOutput.ok,
@@ -152,6 +159,14 @@ void VcuModel::evaluate(VcuInput *vcuInput, VcuOutput *vcuOutput, float deltaTim
       socEstimationOutput.hvBatterySoc,
       socEstimationOutput.lvBatterySoc,
 
+      dashOutput.speedometer,
+
+      // additional telemetry
+      appsProcessorOutput.apps,
+      bseProcessorOutput.bse,
+      steeringOutput.steeringWheelAngle,
+
+      // faults
       !appsProcessorOutput.ok,
       !bseProcessorOutput.ok,
       !stomppOutput.ok,

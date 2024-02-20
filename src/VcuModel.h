@@ -17,6 +17,7 @@
 #include "blocks/Cooling.h"
 #include "blocks/Indicators.h"
 #include "blocks/SocEstimation.h"
+#include "blocks/Dash.h"
 
 // https://www.figma.com/file/z98vFbTBytWElKBb5sTkwk/Lapsim-v2024-Architecture?type=whiteboard&node-id=0%3A1&t=05V7HnOWgZNBNB2B-1
 
@@ -85,6 +86,12 @@ typedef struct VcuOutput {
   float hvBatterySoc; // (%)
   float lvBatterySoc; // (%)
 
+  float dashSpeed; // (mph)
+
+  float telemetryApps;
+  float telemetryBse;
+  float telemetrySteeringWheel; // (
+
   bool faultApps; // (true = fault)
   bool faultBse;
   bool faultStompp;
@@ -147,6 +154,10 @@ private:
   SoftShutdown softShutdown;
   SoftShutdownInput softShutdownInput;
   SoftShutdownOutput softShutdownOutput;
+
+  Dash dash;
+  DashInput dashInput;
+  DashOutput dashOutput;
 
 public:
   void setParameters(VcuParameters *newParams);

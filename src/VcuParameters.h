@@ -69,7 +69,7 @@ typedef struct VcuParameters {
   float steeringWheelMaxAngle = 90.0f;
 
   // ==== SOC PARAMETERS ====
-  float socCurrentLpfTimeConstant = 0.5f; // (s)
+  float socCurrentLpfTimeConstant = 0.500f; // (s)
   CurveParameter socHvVoltageCurve = CurveParameter(600.0f, 1.0f); // HV SoC (%) as a function of voltage (V)
   float socHvRemembered = -1.0f; // remembered HV SoC from last time, negative if N/A (%)
   float socHvLowCurrent = 0.500f; // HV current that's low enough to treat bus voltage as open circuit voltage (A)
@@ -78,6 +78,10 @@ typedef struct VcuParameters {
   float socLvRemembered = -1.0f; // remembered LV SoC from last time, negative if N/A (%)
   float socLvLowCurrent = 0.500f; // LV current that's low enough to treat bus voltage as open circuit voltage (A)
   float socLvCharge = 30000.0f; // LV battery charge (Coulombs)
+
+  // ==== DASH PARAMETERS ====
+  float dashSpeedLpfTimeConstant = 0.050f; // (s)
+  float dashTireRadius = 0.2f; // (m)
 
 } VcuParameters;
 
