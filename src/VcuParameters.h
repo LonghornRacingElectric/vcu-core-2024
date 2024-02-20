@@ -69,6 +69,7 @@ typedef struct VcuParameters {
   float steeringWheelMaxAngle = 90.0f;
 
   // ==== SOC PARAMETERS ====
+  float socCurrentLpfTimeConstant = 0.5f; // (s)
   CurveParameter socHvVoltageCurve = CurveParameter(600.0f, 1.0f); // HV SoC (%) as a function of voltage (V)
   float socHvRemembered = -1.0f; // remembered HV SoC from last time, negative if N/A (%)
   float socHvLowCurrent = 0.500f; // HV current that's low enough to treat bus voltage as open circuit voltage (A)

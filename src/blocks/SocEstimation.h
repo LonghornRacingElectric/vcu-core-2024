@@ -3,6 +3,7 @@
 
 
 #include "VcuParameters.h"
+#include "util/filters/LowPassFilter.h"
 
 
 typedef struct SocEstimationInput {
@@ -22,10 +23,12 @@ typedef struct SocEstimationOutput {
 class SocEstimation {
 private:
   float hvBatterySoc = -1.0f;
+  LowPassFilter hvBatteryCurrentLpf = LowPassFilter(0.0f);
   float lvBatterySoc = -1.0f;
+  LowPassFilter lvBatteryCurrentLpf = LowPassFilter(0.0f);
 
-  static void estimate(float voltage, float current, float &soc, CurveParameter &curve, float totalCharge, float lowCurrent,
-                float deltaTime);
+  static void estimateSoc(float voltage, float current, float &soc, CurveParameter &curve, LowPassFilter &lpf,
+                   float totalCharge, float lowCurrent, float deltaTime);
 
 public:
   void setParameters(VcuParameters *params);
