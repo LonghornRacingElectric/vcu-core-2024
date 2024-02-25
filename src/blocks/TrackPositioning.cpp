@@ -50,7 +50,6 @@ void TrackPositioning::evaluate(VcuParameters *params, TrackPositioningInput *in
     output->vehicleVelocity = {filter.state().get(0,3), filter.state().get(0,4), filter.state().get(0,5)}; // m/s
     output->vehicleAcceleration = {input->imu1Accel.x, input->imu1Accel.y, input->imu1Accel.z}; // m/s^2
 
-
     t += deltaTime;
 }
 
