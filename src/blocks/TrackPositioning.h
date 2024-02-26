@@ -49,19 +49,10 @@ typedef struct TrackGPSLocation {
 class TrackPositioning {
 private:
     TrackPositioningState systemState;
-    Matrix stateMatrix;
     ExtendedKalmanFilter filter;
-
+    ControlState control;
     TrackGPSLocation initialLocation;
 
-
-    // process covariance matrix
-    Matrix covariance;
-
-    Matrix control;
-
-    // computational Identity matrix
-    Matrix A;
     bool isInitialState = true;
     float t{};
 

@@ -13,6 +13,10 @@ void TrackPositioning::evaluate(VcuParameters *params, TrackPositioningInput *in
     // TODO implement
     if(isInitialState) {
         initialLocation = {input->gpsLat, input->gpsLong};
+        filter = ExtendedKalmanFilter();
+        control.a_x = 0;
+        control.a_y = 0;
+        control.v_theta = 0;
         isInitialState = false;
     }
 
@@ -21,9 +25,9 @@ void TrackPositioning::evaluate(VcuParameters *params, TrackPositioningInput *in
 
     SquareDist displacement = Position::unitDistanceBetween(initialLocation.lng, initialLocation.lat, input->gpsLong, input->gpsLat);
 
-    control.set(0,0, input->imu1Accel.x);
-    control.set(1,0, input->imu1Accel.y);
-    control.set(2,0, input->imu1Accel.z);
+    control.a_x = (input->imu1Accel.x + input->imu2Accel.x + input->imu3Accel.x) / 3.0f;
+    control.a_y  = (input->imu1Accel.y + input->imu2Accel.y + input->imu3Accel.y) / 3.0f;
+    control.v_theta = input->imu1Gyro.x;
 
     // FILTER.state() should be a GPS State instead.
     filter.update(control, deltaTime);
