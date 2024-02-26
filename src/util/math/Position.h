@@ -8,11 +8,20 @@
 
 #include "util/Structs.h"
 
+
+typedef struct SquareDist {
+    double x_displacement;
+    double y_displacement;
+} SquareDist;
+
 class Position {
 
 private:
     float longitude, latitude;
     constexpr static double radiusOfEarthMeters = 6357 * 1000;
+    constexpr static double radiusOfEarth = 6357;
+
+    static double degreesToRadians(double deg);
 
 public:
     Position(float longitude, float latitude) {
@@ -26,8 +35,11 @@ public:
         this->latitude = coordinates.y;
     }
 
-    // TODO -- IMPLEMENT USING HAVERSINE
     static xyz convertToXYZ(double longitude, double latitude);
+
+    static double distanceBetween(double lng1, double lat1, double lng2, double lat2);
+
+    static SquareDist unitDistanceBetween(double lng1, double lat1, double lng2, double lat2);
 
     static Position convertToLongitudeLatitude(xyz cartesianCoords);
 };

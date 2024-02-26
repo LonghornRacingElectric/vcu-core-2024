@@ -10,20 +10,24 @@
  * @param control
  * @param delta_t
  */
-void ExtendedKalmanFilter::f(ControlState *control, float delta_t) {
+void ExtendedKalmanFilter::f(ControlState control, float delta_t) {
     // Gets the acceleration of the vehicle in terms of global coordinates (instead of vehicle coordinates)
 
-    PositionalState current_state = {control->a_x, control->a_y};
+    PositionalState current_state = {control.a_x, control.a_y};
     PositionalState global_state = convertLocalToGlobal(&current_state, theta);
 
     // Calculate new position based on previous velocity estimate
     double y_new = y + v_y + ((1.0 / 2.0) * global_state.y * (delta_t * delta_t));
     double x_new = x + v_x + ((1.0 / 2.0) * global_state.x * (delta_t * delta_t));
-    double theta_new = control->v_theta * delta_t + theta;
+    double theta_new = control.v_theta * delta_t + theta;
 
     // Calculate new velocities
     double v_x_new = v_x + delta_t * global_state.x;
     double v_y_new = v_y + delta_t * global_state.y;
+
+    // calculate the jacobian for the current iteration
+    evaluateJacobian({delta_t, a_x, a_y, theta});
+
 
     // update the variables in the filter state.
     y = y_new;
@@ -32,6 +36,9 @@ void ExtendedKalmanFilter::f(ControlState *control, float delta_t) {
 
     x = x_new;
     v_x = v_x_new;
+
+    a_x = control->a_x;
+    a_y = control->a_y;
 }
 
 double ExtendedKalmanFilter::getGlobalTheta(double theta) {
@@ -72,4 +79,11 @@ ExtendedKalmanFilter::ExtendedKalmanFilter() {
     x = 0, y = 0, v_x = 0, v_y = 0, theta = 0;
     state = Matrix(5,1);
     state_prev = Matrix(5, 1);
+}
+
+
+void ExtendedKalmanFilter::update(ControlState u, float delta_time) {
+    // update state prediction and generate the jacobian matrix
+    f(u, delta_time);
+
 }

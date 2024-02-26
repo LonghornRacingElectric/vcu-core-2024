@@ -33,11 +33,9 @@ private:
      Matrix state_prev;
     Matrix jacobian;
 
-    double x, y, v_x, v_y, theta;
+    double x, y, v_x, v_y, a_x, a_y, theta;
 
-    void update(Matrix u);
-
-     void f(ControlState *control, float delta_t);
+    void f(ControlState control, float delta_t);
 
      Matrix evaluateJacobian(JacobianVariables variables);
 
@@ -49,12 +47,11 @@ public:
     ExtendedKalmanFilter();
 
     Matrix getState() {
-        return *state;
+        return state;
     };
 
-    Matrix updateState();
 
-
+    void update(ControlState u, float delta_time);
 }
 
 #endif //VCU_CORE_EXTENDEDKALMANFILTER_H
