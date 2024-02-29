@@ -4,7 +4,7 @@
 
 #include "VcuParameters.h"
 #include "util/Structs.h"
-
+#include "util/filters/ExtendedKalmanFilter.h"
 
 typedef struct TrackPositioningInput {
     double gpsLat; // degrees
@@ -30,6 +30,10 @@ typedef struct TrackPositioningInput {
     float wheelAngleBr;
 } TrackPositioningInput;
 
+typedef struct TrackPositioningState {
+    Matrix state;
+    Matrix covariance;
+} TrackPositioningState;
 
 typedef struct TrackPositioningOutput {
     xyz vehicleDisplacement;
@@ -37,8 +41,21 @@ typedef struct TrackPositioningOutput {
     xyz vehicleAcceleration;
 } TrackPositioningOutput;
 
+typedef struct TrackGPSLocation {
+    double lat;
+    double lng;
+} TrackGPSLocation;
 
 class TrackPositioning {
+private:
+    TrackPositioningState systemState;
+    ExtendedKalmanFilter filter;
+    ControlState control;
+    TrackGPSLocation initialLocation;
+
+    bool isInitialState = true;
+    float t{};
+
 public:
     void setParameters(VcuParameters* params) {};
     void evaluate(VcuParameters *params, TrackPositioningInput *input, TrackPositioningOutput *output, float deltaTime);
