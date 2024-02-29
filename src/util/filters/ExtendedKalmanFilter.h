@@ -12,7 +12,6 @@ typedef struct PositionalState {
     double y;
 } PositionalState;
 
-
 typedef struct ControlState {
     float a_x;
     float a_y;
@@ -26,12 +25,21 @@ typedef struct JacobianVariables {
     double theta;
 } JacobianVariables;
 
+typedef struct VehicleState {
+    float x;
+    float y;
+    float v_x;
+    float v_y;
+    float theta;
+} VehicleState;
+
 class ExtendedKalmanFilter {
 
 private:
-     Matrix state;
-     Matrix state_prev;
+    Matrix state;
+    Matrix state_prev;
     Matrix jacobian;
+    VehicleState struct_state;
 
     double x, y, v_x, v_y, a_x, a_y, theta;
 
@@ -46,8 +54,8 @@ private:
 public:
     ExtendedKalmanFilter();
 
-    Matrix getState() {
-        return state;
+    VehicleState getState() {
+        return struct_state;
     };
 
 

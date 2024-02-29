@@ -37,8 +37,8 @@ void ExtendedKalmanFilter::f(ControlState control, float delta_t) {
     x = x_new;
     v_x = v_x_new;
 
-    a_x = control->a_x;
-    a_y = control->a_y;
+    a_x = control.a_x;
+    a_y = control.a_y;
 }
 
 double ExtendedKalmanFilter::getGlobalTheta(double theta) {
