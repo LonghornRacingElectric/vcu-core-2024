@@ -9,7 +9,7 @@
 typedef struct PrndlInput {
     bool driveSwitch; // true = drive
     bool inverterReady;
-    float brakePressure;
+    float bse;
     float apps;
 } PrndlInput;
 

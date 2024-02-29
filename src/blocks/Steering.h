@@ -16,8 +16,6 @@ typedef struct SteeringOutput {
     float wheelAngleFr;
     float wheelAngleBl;
     float wheelAngleBr;
-
-    bool ok;
 } SteeringOutput;
 
 

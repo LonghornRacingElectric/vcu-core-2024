@@ -8,7 +8,7 @@ TEST(Prndl, PrndlFunctionality){
     PrndlOutput prndlOutput;
     VcuParameters vcuParameters;
 
-    vcuParameters.prndlBrakeToStartThreshold = 50;
+    vcuParameters.prndlBrakeToStartThreshold = 0.1f;
     vcuParameters.prndlSwitchDebounceDuration = 0.05f;
     vcuParameters.prndlBuzzerDuration = 1.0f;
 

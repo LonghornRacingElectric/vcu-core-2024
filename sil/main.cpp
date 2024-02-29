@@ -40,10 +40,10 @@ void input() {
 
   cin >> vcuInput.steeringWheelPotVoltage;
 
-  cin >> vcuInput.wheelDisplacementFl;
-  cin >> vcuInput.wheelDisplacementFr;
-  cin >> vcuInput.wheelDisplacementBl;
-  cin >> vcuInput.wheelDisplacementBr;
+  cin >> vcuInput.wheelMagneticFieldFl;
+  cin >> vcuInput.wheelMagneticFieldFr;
+  cin >> vcuInput.wheelMagneticFieldBl;
+  cin >> vcuInput.wheelMagneticFieldBr;
 
   cin >> vcuInput.motorTemp;
   cin >> vcuInput.inverterTemp;
@@ -87,6 +87,10 @@ void output_float(float f) {
   cout << f << '\n';
 }
 
+void output_int(int i) {
+  cout << i << '\n';
+}
+
 void output() {
   output_bool(vcuOutput.enableInverter);
   output_float(vcuOutput.inverterTorqueRequest);
@@ -110,14 +114,19 @@ void output() {
 
   output_float(vcuOutput.dashSpeed);
 
+  output_float(vcuOutput.telemetryApps1);
+  output_float(vcuOutput.telemetryApps2);
   output_float(vcuOutput.telemetryApps);
+  output_float(vcuOutput.telemetryBse1);
+  output_float(vcuOutput.telemetryBse2);
   output_float(vcuOutput.telemetryBse);
+  output_float(vcuOutput.telemetryWheelSpeedFl);
+  output_float(vcuOutput.telemetryWheelSpeedFr);
+  output_float(vcuOutput.telemetryWheelSpeedBl);
+  output_float(vcuOutput.telemetryWheelSpeedBr);
   output_float(vcuOutput.telemetrySteeringWheel);
 
-  output_bool(vcuOutput.faultApps);
-  output_bool(vcuOutput.faultBse);
-  output_bool(vcuOutput.faultStompp);
-  output_bool(vcuOutput.faultSteering);
+  output_int(vcuOutput.flags);
 
   cout << flush;
 }

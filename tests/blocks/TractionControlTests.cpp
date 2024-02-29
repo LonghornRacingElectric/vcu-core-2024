@@ -9,7 +9,6 @@ TEST(TractionControl, TractionControlFunctionality) {
     VcuParameters vcuParameters;
 
     vcuParameters.tcsEnabled = true;
-    vcuParameters.tcsVelocityLowPassFilterTimeConstant = 0;
     vcuParameters.tcsFeedbackLowPassFilterTimeConstant = 0.01f;
 
     tractionControl.setParameters(&vcuParameters);
@@ -17,7 +16,8 @@ TEST(TractionControl, TractionControlFunctionality) {
     for(int i = 0; i < 10; i++) {
         tractionControlInput = {
                 0.0f,
-                0, 0, 0, 0
+                0, 0, 0, 0,
+                true
         };
         tractionControl.evaluate(&vcuParameters, &tractionControlInput, &tractionControlOutput, 0.001f);
         EXPECT_FLOAT_EQ(tractionControlOutput.regulatedTorqueRequest, 0.0f);
@@ -27,7 +27,8 @@ TEST(TractionControl, TractionControlFunctionality) {
         float x = i;
         tractionControlInput = {
                 100.0f,
-                x, x, x*2, x*2
+                x, x, x*2, x*2,
+                true
         };
         tractionControl.evaluate(&vcuParameters, &tractionControlInput, &tractionControlOutput, 0.001f);
         if(i > 0) {

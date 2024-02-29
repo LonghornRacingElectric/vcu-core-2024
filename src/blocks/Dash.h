@@ -8,8 +8,8 @@
 
 
 typedef struct DashInput {
-  float wheelDisplacementFl;
-  float wheelDisplacementFr;
+  float wheelSpeedFl;
+  float wheelSpeedFr;
 } DashInput;
 
 
@@ -21,8 +21,6 @@ typedef struct DashOutput {
 
 class Dash {
 private:
-  Differentiator differentiatorFl = Differentiator();
-  Differentiator differentiatorFr = Differentiator();
   LowPassFilter speedLpf = LowPassFilter(0.0f);
 public:
   void setParameters(VcuParameters *params);
