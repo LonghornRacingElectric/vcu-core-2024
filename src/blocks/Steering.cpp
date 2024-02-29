@@ -25,7 +25,5 @@ void Steering::evaluate(VcuParameters *params, SteeringInput *input, SteeringOut
   }
   output->wheelAngleBl = 0; // the rears will very likely be 0, but rear wheel steering is permitted by the rules :0
   output->wheelAngleBr = 0;
-
-  output->ok = true;
 }
 

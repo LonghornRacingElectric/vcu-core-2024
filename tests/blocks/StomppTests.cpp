@@ -17,7 +17,7 @@ TEST(Stompp, StomppRulesCompliance){
     StomppOutput stomppOutput = {};
 
     VcuParameters vcuParameters = {};
-    vcuParameters.stomppMechanicalBrakesThreshold = 10.0f; //Brakes detected at 10psi
+    vcuParameters.stomppMechanicalBrakesThreshold = 0.1f;
 
     //Test 0% apps with no break pressure - Stompp remains disabled
     stomppInput = {0.0f, 0.0f};
@@ -27,7 +27,7 @@ TEST(Stompp, StomppRulesCompliance){
 
     //Test 0%-100% accelerator travel with insignificant break pressure - Stompp remains disabled
     for(int appsInRange = 0; appsInRange < 100; appsInRange++) {
-        stomppInput = {(float)(appsInRange)/100, 10.0f};
+        stomppInput = {(float)(appsInRange)/100, 0.05f};
         stomppProcessor.evaluate(&vcuParameters, &stomppInput, &stomppOutput, 1.0f);
         EXPECT_TRUE(stomppOutput.ok);
         stomppProcessor.reset();

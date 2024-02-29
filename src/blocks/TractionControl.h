@@ -11,10 +11,12 @@
 typedef struct TractionControlInput {
     float unregulatedTorqueRequest; // torque (Nm)
 
-    float wheelDisplacementFl; // (rad)
-    float wheelDisplacementFr;
-    float wheelDisplacementBl;
-    float wheelDisplacementBr;
+    float wheelSpeedFl; // (rad)
+    float wheelSpeedFr;
+    float wheelSpeedBl;
+    float wheelSpeedBr;
+
+    bool wheelSpeedsOk;
 } TractionControlInput;
 
 
@@ -29,11 +31,6 @@ private:
     Differentiator differentiatorFr;
     Differentiator differentiatorBl;
     Differentiator differentiatorBr;
-
-    LowPassFilter lowPassFl = LowPassFilter(0);
-    LowPassFilter lowPassFr = LowPassFilter(0);
-    LowPassFilter lowPassBl = LowPassFilter(0);
-    LowPassFilter lowPassBr = LowPassFilter(0);
 
     LowPassFilter lowPassFeedback = LowPassFilter(0);
 public:

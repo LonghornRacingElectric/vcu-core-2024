@@ -15,6 +15,7 @@ void VcuModel::setParameters(VcuParameters *newParams) {
   this->indicators.setParameters(newParams);
   this->socEstimation.setParameters(newParams);
   this->dash.setParameters(newParams);
+  this->wheelMagnets.setParameters(newParams);
   this->softShutdown.setParameters(newParams);
 }
 
@@ -38,6 +39,14 @@ void VcuModel::evaluate(VcuInput *vcuInput, VcuOutput *vcuOutput, float deltaTim
   };
   stompp.evaluate(params, &stomppInput, &stomppOutput, deltaTime);
 
+  wheelMagnetsInput = {
+      vcuInput->wheelMagneticFieldFl,
+      vcuInput->wheelMagneticFieldFr,
+      vcuInput->wheelMagneticFieldBl,
+      vcuInput->wheelMagneticFieldBr,
+  };
+  wheelMagnets.evaluate(params, &wheelMagnetsInput, &wheelMagnetsOutput, deltaTime);
+
   torqueMapInput = {
       appsProcessorOutput.apps,
       vcuInput->motorTemp,
@@ -51,10 +60,11 @@ void VcuModel::evaluate(VcuInput *vcuInput, VcuOutput *vcuOutput, float deltaTim
 
   tractionControlInput = {
       torqueMapOutput.torqueRequest,
-      vcuInput->wheelDisplacementFl,
-      vcuInput->wheelDisplacementFr,
-      vcuInput->wheelDisplacementBl,
-      vcuInput->wheelDisplacementBr,
+      wheelMagnetsOutput.wheelSpeedFl,
+      wheelMagnetsOutput.wheelSpeedFr,
+      wheelMagnetsOutput.wheelSpeedBl,
+      wheelMagnetsOutput.wheelSpeedBr,
+      wheelMagnetsOutput.ok,
   };
   tractionControl.evaluate(params, &tractionControlInput, &tractionControlOutput, deltaTime);
 
@@ -85,10 +95,11 @@ void VcuModel::evaluate(VcuInput *vcuInput, VcuOutput *vcuOutput, float deltaTim
       vcuInput->imu2Gyro,
       vcuInput->imu3Gyro,
 
-      vcuInput->wheelDisplacementFl,
-      vcuInput->wheelDisplacementFr,
-      vcuInput->wheelDisplacementBl,
-      vcuInput->wheelDisplacementBr,
+      // TODO remove wheel and steering data once merged, it's not used in EKF
+      0,
+      0,
+      0,
+      0,
 
       steeringOutput.wheelAngleFl,
       steeringOutput.wheelAngleFr,
@@ -124,8 +135,8 @@ void VcuModel::evaluate(VcuInput *vcuInput, VcuOutput *vcuOutput, float deltaTim
   socEstimation.evaluate(params, &socEstimationInput, &socEstimationOutput, deltaTime);
 
   dashInput = {
-      vcuInput->wheelDisplacementFl,
-      vcuInput->wheelDisplacementFr,
+      wheelMagnetsOutput.wheelSpeedFl,
+      wheelMagnetsOutput.wheelSpeedFr,
   };
   dash.evaluate(params, &dashInput, &dashOutput, deltaTime);
 
@@ -137,6 +148,16 @@ void VcuModel::evaluate(VcuInput *vcuInput, VcuOutput *vcuOutput, float deltaTim
       tractionControlOutput.regulatedTorqueRequest,
   };
   softShutdown.evaluate(params, &softShutdownInput, &softShutdownOutput, deltaTime);
+
+  uint16_t flags = (appsProcessorOutput.fault)
+                   | (bseProcessorOutput.fault << 3)
+                   | (stomppOutput.fault << 6)
+                   | (wheelMagnetsOutput.fault << 7)
+                   | (softShutdownOutput.enableInverter << 8)
+                   | (prndlOutput.state << 9)
+                   | (prndlOutput.buzzer << 10)
+                   | (indicatorsOutput.brakeLight << 11)
+                   | (drsOutput.enable << 12);
 
   *vcuOutput = {
       softShutdownOutput.enableInverter,
@@ -162,15 +183,20 @@ void VcuModel::evaluate(VcuInput *vcuInput, VcuOutput *vcuOutput, float deltaTim
       dashOutput.speedometer,
 
       // additional telemetry
+      appsProcessorOutput.apps1,
+      appsProcessorOutput.apps2,
       appsProcessorOutput.apps,
+      bseProcessorOutput.bse1,
+      bseProcessorOutput.bse2,
       bseProcessorOutput.bse,
+      wheelMagnetsOutput.wheelSpeedFl,
+      wheelMagnetsOutput.wheelSpeedFr,
+      wheelMagnetsOutput.wheelSpeedBl,
+      wheelMagnetsOutput.wheelSpeedBr,
       steeringOutput.steeringWheelAngle,
 
       // faults
-      !appsProcessorOutput.ok,
-      !bseProcessorOutput.ok,
-      !stomppOutput.ok,
-      !steeringOutput.ok,
+      flags,
   };
 
 }

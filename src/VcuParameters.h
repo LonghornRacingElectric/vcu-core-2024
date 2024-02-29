@@ -30,11 +30,9 @@ typedef struct VcuParameters {
   float bseImplausibilityTime = 0.100f; // (s)
   float bseVoltageMin = 0.5f; // voltage corresponding to 0% brake pressure (V)
   float bseVoltageMax = 4.5f; // voltage corresponding to 100% brake pressure (V)
-  float bsePressureMin = 0.0f; // minimum brake pressure (psi)
-  float bsePressureMax = 1000.0f; // maximum brake pressure (psi)
 
   // ===== STOMPP PARAMETERS =====
-  float stomppMechanicalBrakesThreshold = 100.0f; // minimum pressure to count as mechanical brakes engaged for EV 4.7 (psi)
+  float stomppMechanicalBrakesThreshold = 0.1f; // minimum brakes to count as mechanical brakes engaged for EV 4.7 (%)
   float stomppAppsCutoffThreshold = 0.25f; // apps pedal travel where motor power needs to be cut off (%)
   float stomppAppsRecoveryThreshold = 0.05f; // apps pedal travel where motor power can be restored (%)
 
@@ -50,7 +48,7 @@ typedef struct VcuParameters {
   float mapPowerLimitFeedbackTimeConstant = 0.100f;
 
   // ===== PRNDL PARAMETERS =====
-  float prndlBrakeToStartThreshold = 100.0f; // minimum pressure required on the brakes to go into drive (psi)
+  float prndlBrakeToStartThreshold = 0.1f; // minimum brakes required to go into drive (%)
   float prndlBuzzerDuration = 2.0f; // how long the buzzer buzzes (s)
   float prndlSwitchDebounceDuration = 0.100f; // how long a digital high/low must be sustained to be considered (s)
 
@@ -59,7 +57,6 @@ typedef struct VcuParameters {
 
   // ==== TRACTION CONTROL PARAMETERS =====
   bool tcsEnabled = true;
-  float tcsVelocityLowPassFilterTimeConstant = 0.020f;
   float tcsFeedbackLowPassFilterTimeConstant = 0.050f;
 
   // ==== STEERING PARAMETERS ====
@@ -82,6 +79,9 @@ typedef struct VcuParameters {
   // ==== DASH PARAMETERS ====
   float dashSpeedLpfTimeConstant = 0.050f; // (s)
   float dashTireRadius = 0.2f; // (m)
+
+  // ==== WHEEL MAGNET PARAMETERS ====
+  float wheelMagnetLpfTimeConstant = 0.050f; // (s)
 
 } VcuParameters;
 

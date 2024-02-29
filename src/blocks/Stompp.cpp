@@ -17,44 +17,44 @@
 
 void Stompp::evaluate(VcuParameters *params, StomppInput *input, StomppOutput *output, float deltaTime) {
 
-    //"stomppActive = false" means "output.ok = true"
-    //"output.ok = true" means motor functions normally
+  //"stomppActive = false" means "output.ok = true"
+  //"output.ok = true" means motor functions normally
 
-    //"stomppActive = true" means "output.ok = false"
-    //"output.ok = false" means motor is disabled
+  //"stomppActive = true" means "output.ok = false"
+  //"output.ok = false" means motor is disabled
 
 
-    //Check for two main requirements. Enable STOMPP IF:
-    //  Brakes are active
-    //  Accelerator Travel > 25%
-    if((input->bse > params->stomppMechanicalBrakesThreshold) && (input->apps > params->stomppAppsCutoffThreshold)){
-        output->ok = false;
-        stomppActive = true;
-    }
-
-    //To disable STOMPP, Accelerator Travel must fall under 5%
-    if(stomppActive) {
-        output->ok = false;
-        if (input->apps < params->stomppAppsRecoveryThreshold) {
-            output->ok = true;
-            stomppActive = false;
-        }
-    }
-
-    //Check if STOMPP has been disabled
-    if(!stomppActive)
-        output->ok = true;
-}
-
-//Testing purposes
-void Stompp::reset()
-{
-    stomppActive = false;
-}
-
-//Testing purposes
-void Stompp::toggleStompp()
-{
+  //Check for two main requirements. Enable STOMPP IF:
+  //  Brakes are active
+  //  Accelerator Travel > 25%
+  if ((input->bse > params->stomppMechanicalBrakesThreshold) && (input->apps > params->stomppAppsCutoffThreshold)) {
+    output->ok = false;
     stomppActive = true;
+  }
+
+  //To disable STOMPP, Accelerator Travel must fall under 5%
+  if (stomppActive) {
+    output->ok = false;
+    if (input->apps < params->stomppAppsRecoveryThreshold) {
+      output->ok = true;
+      stomppActive = false;
+    }
+  }
+
+  //Check if STOMPP has been disabled
+  if (!stomppActive)
+    output->ok = true;
+
+  output->fault = (!output->ok) * STOMPP_FAULT;
+}
+
+//Testing purposes
+void Stompp::reset() {
+  stomppActive = false;
+}
+
+//Testing purposes
+void Stompp::toggleStompp() {
+  stomppActive = true;
 }
 

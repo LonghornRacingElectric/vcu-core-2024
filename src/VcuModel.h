@@ -18,6 +18,7 @@
 #include "blocks/Indicators.h"
 #include "blocks/SocEstimation.h"
 #include "blocks/Dash.h"
+#include "blocks/WheelMagnets.h"
 
 // https://www.figma.com/file/z98vFbTBytWElKBb5sTkwk/Lapsim-v2024-Architecture?type=whiteboard&node-id=0%3A1&t=05V7HnOWgZNBNB2B-1
 
@@ -31,10 +32,10 @@ typedef struct VcuInput {
 
   float steeringWheelPotVoltage; // (V)
 
-  float wheelDisplacementFl; // wheel displacement (rad)
-  float wheelDisplacementFr;
-  float wheelDisplacementBl;
-  float wheelDisplacementBr;
+  float wheelMagneticFieldFl; // magnetic flux density (mT)
+  float wheelMagneticFieldFr;
+  float wheelMagneticFieldBl;
+  float wheelMagneticFieldBr;
 
   float motorTemp; // (deg C)
   float inverterTemp;
@@ -88,14 +89,19 @@ typedef struct VcuOutput {
 
   float dashSpeed; // (mph)
 
+  float telemetryApps1;
+  float telemetryApps2;
   float telemetryApps;
+  float telemetryBse1;
+  float telemetryBse2;
   float telemetryBse;
+  float telemetryWheelSpeedFl;
+  float telemetryWheelSpeedFr;
+  float telemetryWheelSpeedBl;
+  float telemetryWheelSpeedBr;
   float telemetrySteeringWheel; // (
 
-  bool faultApps; // (true = fault)
-  bool faultBse;
-  bool faultStompp;
-  bool faultSteering;
+  uint16_t flags;
 } VcuOutput;
 
 
@@ -158,6 +164,10 @@ private:
   Dash dash;
   DashInput dashInput;
   DashOutput dashOutput;
+
+  WheelMagnets wheelMagnets;
+  WheelMagnetsInput wheelMagnetsInput;
+  WheelMagnetsOutput wheelMagnetsOutput;
 
 public:
   void setParameters(VcuParameters *newParams);
