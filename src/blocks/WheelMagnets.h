@@ -28,6 +28,11 @@ typedef struct WheelMagnetsOutput {
   bool ok;
 } WheelMagnetsOutput;
 
+typedef struct WheelTracker{
+    bool isHigh;
+    float displacement;
+}WheelTracker;
+
 
 class WheelMagnets {
 private:
