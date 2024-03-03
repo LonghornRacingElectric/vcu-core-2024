@@ -10,7 +10,7 @@ typedef struct TrackPositioningInput {
     double gpsLat; // degrees
     double gpsLong; // degrees
     float gpsSpeed; // knots
-    float gpsHeading; // degrees
+    float gpsHeading; // degrees, 0N
 
     xyz imu1Accel; // accel x, y, z (m/s^2)
     xyz imu2Accel;
@@ -50,8 +50,12 @@ class TrackPositioning {
 private:
     TrackPositioningState systemState;
     ExtendedKalmanFilter filter;
-    ControlState control;
-    TrackGPSLocation initialLocation;
+
+    // these get initialized in the update function
+    ControlState control{};
+    TrackGPSLocation initialLocation{};
+    VehicleState gpsEstimate{};
+
 
     bool isInitialState = true;
     float t{};

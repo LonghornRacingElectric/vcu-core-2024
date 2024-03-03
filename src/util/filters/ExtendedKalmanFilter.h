@@ -19,7 +19,7 @@ typedef struct ControlState {
 } ControlState;
 
 typedef struct JacobianVariables {
-    float delta_t;
+    double delta_t;
     double a_x;
     double a_y;
     double theta;
@@ -34,32 +34,54 @@ typedef struct VehicleState {
 } VehicleState;
 
 class ExtendedKalmanFilter {
-
-private:
+   private:
     Matrix state;
-    Matrix state_prev;
+    Matrix innovation_state;
     Matrix jacobian;
     VehicleState struct_state;
 
+    Matrix covariance_estimate;
+    Matrix process_covariance;
+    Matrix observation_covariance;
+
     double x, y, v_x, v_y, a_x, a_y, theta;
 
-    void f(ControlState control, float delta_t);
+    /**
+     *  -------------------------
+     * | Filter Prediction Steps |
+     *  -------------------------
+     */
 
-     Matrix evaluateJacobian(JacobianVariables variables);
+    void predictState(ControlState control, float delta_t);
+    Matrix predictCovariance();
+    Matrix computeStateTransitionJacobian(JacobianVariables variables);
 
-     static PositionalState convertLocalToGlobal(PositionalState *loc, double theta);
+    /**
+     *  -------------------------
+     * |   State Update Steps   |
+     *  -------------------------
+     */
 
-     static double getGlobalTheta(double theta);
+    Matrix getResidualCovariance();
+    Matrix getOptimalKalmanGain(Matrix residual_covariance);
+    Matrix updateStateEstimate(Matrix kalman_gain, Matrix y);
+    Matrix updateCovarianceEstimate();
 
-public:
+    /**
+     *  -------------------------
+     * |     Helper Methods     |
+     *  -------------------------
+     */
+
+    static PositionalState convertLocalToGlobal(PositionalState *loc, double theta);
+    static double getGlobalTheta(double theta);
+
+   public:
     ExtendedKalmanFilter();
 
-    VehicleState getState() {
-        return struct_state;
-    };
+    VehicleState getState() { return struct_state; };
 
+    void update(ControlState u, VehicleState z, float delta_time);
+};
 
-    void update(ControlState u, float delta_time);
-}
-
-#endif //VCU_CORE_EXTENDEDKALMANFILTER_H
+#endif  // VCU_CORE_EXTENDEDKALMANFILTER_H
