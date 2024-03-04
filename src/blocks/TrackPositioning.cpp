@@ -47,5 +47,9 @@ void TrackPositioning::evaluate(VcuParameters *params, TrackPositioningInput *in
     output->vehicleVelocity = {filter.getState().v_x, filter.getState().v_y, 0};   // m/s
     output->vehicleAcceleration = {control.a_x, control.a_y, input->imu1Accel.z};  // m/s^2
 
+    // get the new predicted gps lng lat:
+    Position::convertToLongitudeLatitude(initialLocation,
+                                         {filter.getState().x, filter.getState().y, 0});
+
     t += deltaTime;
 }

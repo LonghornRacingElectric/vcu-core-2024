@@ -34,7 +34,7 @@ double Position::distanceBetween(double lng1, double lat1, double lng2, double l
     // apply formulae
     double a = pow(sin(dLat / 2), 2) + pow(sin(dLon / 2), 2) * cos(lat1) * cos(lat2);
     double c = 2 * asin(sqrt(a));
-    return radiusOfEarth * c;
+    return radiusOfEarthMeters * c;
 }
 
 /**
@@ -60,4 +60,13 @@ SquareDist Position::unitDistanceBetween(double lng1, double lat1, double lng2, 
     };
 
     return displacement;
+}
+
+TrackGPSLocation Position::convertToLongitudeLatitude(TrackGPSLocation initial_location,
+                                                      xyz cartesianCoords) {
+    double new_latitude =
+        initial_location.lat + (cartesianCoords.y / radiusOfEarthMeters) * (180 / M_PI);
+    double new_longitude =
+        initial_location.lng + (cartesianCoords.x / radiusOfEarthMeters) * (180 / M_PI);
+    return {new_latitude, new_longitude};
 }

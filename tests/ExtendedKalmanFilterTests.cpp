@@ -10,6 +10,9 @@
 #include <util/math/Position.h>
 
 TEST(Kalman, ExtendedKalmanFilter) {
+
+//    std::cout << "GETTING DIST OF LATS LNGS: " << Position::distanceBetween(0,0,10,10) << "\n";
+
     ExtendedKalmanFilter testFilter;
 
     ControlState control = {0, 1, 0};
