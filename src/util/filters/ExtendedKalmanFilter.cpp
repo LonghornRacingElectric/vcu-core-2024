@@ -147,7 +147,7 @@ void ExtendedKalmanFilter::update(ControlState u, VehicleState z, float delta_ti
 
     // std::cout << "Kalman Gain: \n" << kalman_gain.toString() << "\n";
 
-    // GPS state into a matrix
+    // GPS state into a matrix (z_k/y)
     innovation_state.set(0, 0, z.x);
     innovation_state.set(1, 0, z.y);
     innovation_state.set(2, 0, z.v_x);
