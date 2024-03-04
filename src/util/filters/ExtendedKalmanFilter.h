@@ -74,6 +74,7 @@ class ExtendedKalmanFilter {
     Matrix innovation_state;
     Matrix jacobian;
     VehicleState struct_state;
+    ControlState prev_control;
 
     Matrix covariance_estimate;
     Matrix process_covariance;
@@ -108,8 +109,8 @@ class ExtendedKalmanFilter {
      *  -------------------------
      */
 
-    static PositionalState getMathUnits(PositionalState* loc, double theta);
-    static double getMathTheta(double theta);
+    static PositionalState getGeographicUnits(PositionalState* loc, double theta);
+    static double getGeographicTheta(double theta);
 
    public:
     ExtendedKalmanFilter();

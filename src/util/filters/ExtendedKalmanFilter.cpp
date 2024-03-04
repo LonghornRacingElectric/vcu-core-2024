@@ -22,6 +22,8 @@ ExtendedKalmanFilter::ExtendedKalmanFilter() {
     x = 0, y = 0, v_x = 0, v_y = 0, theta = 0;
     state = Matrix(5, 1);
     innovation_state = Matrix(5, 1);
+
+    prev_control = {0, 0, 0};
 }
 
 /**
@@ -39,24 +41,21 @@ ExtendedKalmanFilter::ExtendedKalmanFilter() {
 void ExtendedKalmanFilter::predictState(ControlState control, float delta_t) {
     // Gets the acceleration of the vehicle in terms of global coordinates (instead of vehicle
     // coordinates)
-
     PositionalState current_state = {control.a_x, control.a_y};
-    PositionalState global_state_accel = getMathUnits(&current_state, theta);
-    // PositionalState global_state = current_state;
+    PositionalState geographic_accel = getGeographicUnits(&current_state, theta);
 
     // Calculate new position based on previous velocity estimate
-    double y_new = y + v_y * delta_t + ((1.0 / 2.0) * global_state_accel.y * (delta_t * delta_t));
-    double x_new = x + v_x * delta_t + ((1.0 / 2.0) * global_state_accel.x * (delta_t * delta_t));
+    double y_new = y + v_y * delta_t + ((1.0 / 2.0) * geographic_accel.y * (delta_t * delta_t));
+    double x_new = x + v_x * delta_t + ((1.0 / 2.0) * geographic_accel.x * (delta_t * delta_t));
     double theta_new = control.v_theta * delta_t + theta;
 
     std::cout << "New Position: " << x_new << ", " << y_new << "\n";
 
     // Calculate new velocities
-    double v_x_new = v_x + delta_t * global_state_accel.x;
-    double v_y_new = v_y + delta_t * global_state_accel.y;
+    double v_x_new = v_x + delta_t * geographic_accel.x;
+    double v_y_new = v_y + delta_t * geographic_accel.y;
 
     // calculate the jacobian for the current iteration
-    computeStateTransitionJacobian({delta_t, a_x, a_y, theta});
 
     // update the variables in the filter state.
     y = y_new;
@@ -126,7 +125,8 @@ Matrix ExtendedKalmanFilter::predictCovariance() {
  */
 void ExtendedKalmanFilter::update(ControlState u, VehicleState z, float delta_time) {
     // update state prediction and generate the jacobian matrix
-    predictState(u, delta_time);
+    predictState(prev_control, delta_time);
+    computeStateTransitionJacobian({delta_time, a_x, a_y, theta});
 
     // std::cout << "State: \n" << state.toString() << "\n";
 
@@ -156,6 +156,10 @@ void ExtendedKalmanFilter::update(ControlState u, VehicleState z, float delta_ti
 
     struct_state = {state.get(0, 0), state.get(1, 0), state.get(2, 0), state.get(3, 0),
                     state.get(4, 0)};
+
+    prev_control.a_x = u.a_x;
+    prev_control.a_y = u.a_y;
+    prev_control.v_theta = u.v_theta;
 }
 
 Matrix ExtendedKalmanFilter::getResidualCovariance() {
@@ -163,20 +167,10 @@ Matrix ExtendedKalmanFilter::getResidualCovariance() {
 }
 
 Matrix ExtendedKalmanFilter::getOptimalKalmanGain(const Matrix& residual_covariance) {
-    // std::cout << "Kalman Gain Division : \n "
-    //           << Matrix(5, 5, 1).divide(residual_covariance).toString() << "\n";
-    // std::cout << "Kalman Gain Multiplication : \n "
-    //           << (covariance_estimate * Matrix(5, 5, 1).divide(residual_covariance)).toString()
-    //           << "\n";
-
     return covariance_estimate * Matrix(5, 5, 1).divide(residual_covariance);
 }
 
 Matrix ExtendedKalmanFilter::updateStateEstimate(const Matrix& kalman_gain, const Matrix& y) {
-    // std::cout << "Kalman Gain * y : \n" << (kalman_gain * y).toString() << "\n";
-
-    // std::cout << "State : \n" << state.toString() << "\n";
-    // std::cout << "With State : \n" << (state + (kalman_gain * y)).toString() << "\n";
     return state + (kalman_gain * y);
 }
 
@@ -196,7 +190,7 @@ Matrix ExtendedKalmanFilter::updateCovarianceEstimate(const Matrix& predicted_co
  * @param theta The theta value in degrees.
  * @return The global theta value calculated as 90.0 minus the given theta value.
  */
-double ExtendedKalmanFilter::getMathTheta(double theta) { return 1.57 - theta; }
+double ExtendedKalmanFilter::getGeographicTheta(double theta) { return 1.57 - theta; }
 
 /**
  * Converts a vehicle-local positional state to a global positional state.
@@ -206,8 +200,8 @@ double ExtendedKalmanFilter::getMathTheta(double theta) { return 1.57 - theta; }
  * system in degrees
  * @return The converted global positional state.
  */
-PositionalState ExtendedKalmanFilter::getMathUnits(PositionalState* loc, double theta) {
-    double global_theta = getMathTheta(theta);
+PositionalState ExtendedKalmanFilter::getGeographicUnits(PositionalState* loc, double theta) {
+    double global_theta = getGeographicTheta(theta);
     // double global_theta = theta;
     double global_x = loc->x * cos(global_theta) + loc->y * sin(global_theta);
     double global_y = loc->x * sin(global_theta) - loc->y * cos(global_theta);
