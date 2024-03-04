@@ -17,7 +17,7 @@ ExtendedKalmanFilter::ExtendedKalmanFilter() {
     jacobian = Matrix::getIdentityMatrix(5);
     covariance_estimate = Matrix(5, 5, 0);
     process_covariance = Matrix(5, 5, 0.000000000);
-    observation_covariance = Matrix(5, 5, 0.000000f);
+    observation_covariance = Matrix(5, 5, 0.00000);
 
     x = 0, y = 0, v_x = 0, v_y = 0, theta = 0;
     state = Matrix(5, 1);
@@ -111,9 +111,9 @@ Matrix ExtendedKalmanFilter::predictCovariance() {
 }
 
 /**
- *  -------------------------
+ *  ------------------------
  * |   State Update Steps   |
- *  -------------------------
+ *  ------------------------
  */
 
 /**
@@ -185,9 +185,9 @@ Matrix ExtendedKalmanFilter::updateCovarianceEstimate(const Matrix& predicted_co
 }
 
 /**
- *  -------------------------
+ *  ------------------------
  * |     Helper Methods     |
- *  -------------------------
+ *  ------------------------
  */
 
 /**
@@ -196,7 +196,7 @@ Matrix ExtendedKalmanFilter::updateCovarianceEstimate(const Matrix& predicted_co
  * @param theta The theta value in degrees.
  * @return The global theta value calculated as 90.0 minus the given theta value.
  */
-double ExtendedKalmanFilter::getMathTheta(double theta) { return 90.0 - theta; }
+double ExtendedKalmanFilter::getMathTheta(double theta) { return 1.57 - theta; }
 
 /**
  * Converts a vehicle-local positional state to a global positional state.
@@ -207,10 +207,10 @@ double ExtendedKalmanFilter::getMathTheta(double theta) { return 90.0 - theta; }
  * @return The converted global positional state.
  */
 PositionalState ExtendedKalmanFilter::getMathUnits(PositionalState* loc, double theta) {
-    double global_theta = Position::degreesToRadians(getMathTheta(theta));
+    double global_theta = getMathTheta(theta);
     // double global_theta = theta;
-    double global_y = loc->x * cos(global_theta) + loc->y * sin(global_theta);
-    double global_x = loc->x * sin(global_theta) - loc->y * cos(global_theta);
+    double global_x = loc->x * cos(global_theta) + loc->y * sin(global_theta);
+    double global_y = loc->x * sin(global_theta) - loc->y * cos(global_theta);
     // double global_x = sqrt(pow(loc->x, 2) + pow(loc->y, 2)) * cos(global_theta);
     // double global_y = sqrt(pow(loc->x, 2) + pow(loc->y, 2)) * sin(global_theta);
 

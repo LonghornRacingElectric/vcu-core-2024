@@ -20,7 +20,7 @@ typedef struct PositionalState {
  *
  * @param a_x the acceleration in the x direction
  * @param a_y the acceleration in the y direction
- * @param v_theta the angular velocity (in degrees)
+ * @param v_theta the angular velocity (in radians per second)
  */
 typedef struct ControlState {
     float a_x;
