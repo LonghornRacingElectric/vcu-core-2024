@@ -12,12 +12,34 @@ typedef struct PositionalState {
     double y;
 } PositionalState;
 
+/**
+ * @brief Represents the state of control variables.
+ *
+ * This struct stores the values of control variables used in the Extended Kalman Filter.
+ * It includes the acceleration in the x and y directions, as well as the angular velocity.
+ *
+ * @param a_x the acceleration in the x direction
+ * @param a_y the acceleration in the y direction
+ * @param v_theta the angular velocity (in degrees)
+ */
 typedef struct ControlState {
     float a_x;
     float a_y;
     float v_theta;
 } ControlState;
 
+/**
+ * @brief Struct representing the variables used in the Jacobian matrix calculations.
+ *
+ * This struct stores the variables required for calculating the Jacobian matrix in the Extended
+ * Kalman Filter. It includes the time step (delta_t), acceleration in the x and y directions (a_x
+ * and a_y), and the angle (theta).
+ *
+ * @param delta_t the time step
+ * @param a_x the acceleration in the x direction
+ * @param a_y the acceleration in the y direction
+ * @param theta the angle in radians
+ */
 typedef struct JacobianVariables {
     double delta_t;
     double a_x;
@@ -25,6 +47,19 @@ typedef struct JacobianVariables {
     double theta;
 } JacobianVariables;
 
+/**
+ * @brief Represents the state of a vehicle.
+ *
+ * This struct stores the position, velocity, and orientation of a vehicle.
+ * The position is represented by the coordinates (x, y), the velocity by (v_x, v_y),
+ * and the orientation by theta.
+ *
+ * @param x the x-coordinate of the vehicle
+ * @param y the y-coordinate of the vehicle
+ * @param v_x the velocity in the x direction
+ * @param v_y the velocity in the y direction
+ * @param theta the angle of the vehicle in radians
+ */
 typedef struct VehicleState {
     float x;
     float y;
@@ -63,9 +98,9 @@ class ExtendedKalmanFilter {
      */
 
     Matrix getResidualCovariance();
-    Matrix getOptimalKalmanGain(Matrix residual_covariance);
-    Matrix updateStateEstimate(Matrix kalman_gain, Matrix y);
-    Matrix updateCovarianceEstimate();
+    Matrix getOptimalKalmanGain(const Matrix& residual_covariance);
+    Matrix updateStateEstimate(const Matrix& kalman_gain, const Matrix& y);
+    Matrix updateCovarianceEstimate(const Matrix& predicted_covariance);
 
     /**
      *  -------------------------
@@ -73,8 +108,8 @@ class ExtendedKalmanFilter {
      *  -------------------------
      */
 
-    static PositionalState convertLocalToGlobal(PositionalState *loc, double theta);
-    static double getGlobalTheta(double theta);
+    static PositionalState getMathUnits(PositionalState* loc, double theta);
+    static double getMathTheta(double theta);
 
    public:
     ExtendedKalmanFilter();

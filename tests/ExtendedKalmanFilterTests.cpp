@@ -11,14 +11,20 @@
 TEST(Kalman, ExtendedKalmanFilter) {
     ExtendedKalmanFilter testFilter;
 
-    ControlState control = {50, 1, 0};
-    VehicleState gpsEstimate = {0, 0, 0, 0, 0};
+    ControlState control = {50, 50, 0};
+    VehicleState gpsEstimate = {0, 271, 0, 0, 0};
     float delta_t = 0.003;
 
-//    testFilter.update(control, gpsEstimate, delta_t);
+    testFilter.update(control, gpsEstimate, delta_t);
 
     for (int i = 0; i < 1500; i++) {
         testFilter.update(control, gpsEstimate, delta_t);
+        gpsEstimate.y += delta_t * 10000;
+    }
+
+    for (int i = 0; i < 1500; i++) {
+        testFilter.update(control, gpsEstimate, delta_t);
+        gpsEstimate.y += delta_t * -10000;
     }
 
     std::cout << "\nFINAL STATE\n";

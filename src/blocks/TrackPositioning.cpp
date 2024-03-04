@@ -35,7 +35,7 @@ void TrackPositioning::evaluate(VcuParameters *params, TrackPositioningInput *in
 
     gpsEstimate.x = displacement.x_displacement;
     gpsEstimate.y = displacement.y_displacement;
-    gpsEstimate.theta = 90.0 - input->gpsHeading;
+    gpsEstimate.theta = Position::degreesToRadians(90.0 - input->gpsHeading);
 
     // get the GPS speed for both directions
     gpsEstimate.v_x = input->gpsSpeed * sin(gpsEstimate.theta);

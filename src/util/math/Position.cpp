@@ -3,6 +3,7 @@
 //
 
 #include "Position.h"
+
 #include <cmath>
 
 xyz Position::convertToXYZ(double longitude, double latitude) {
@@ -10,7 +11,7 @@ xyz Position::convertToXYZ(double longitude, double latitude) {
     double y = radiusOfEarthMeters * cos(latitude) * sin(longitude);
     double z = radiusOfEarthMeters * sin(latitude);
 
-    return { (float) x, (float) y, (float) z};
+    return {(float)x, (float)y, (float)z};
 }
 
 /**
@@ -31,19 +32,14 @@ double Position::distanceBetween(double lng1, double lat1, double lng2, double l
     lat2 = degreesToRadians(lat2);
 
     // apply formulae
-    double a = pow(sin(dLat / 2), 2) +
-               pow(sin(dLon / 2), 2) *
-               cos(lat1) * cos(lat2);
+    double a = pow(sin(dLat / 2), 2) + pow(sin(dLon / 2), 2) * cos(lat1) * cos(lat2);
     double c = 2 * asin(sqrt(a));
     return radiusOfEarth * c;
 }
 
-double Position::degreesToRadians(double deg) {
-    return deg * (M_PI / 180);
-}
-
 /**
- * Assumes that lng1 is the first location, and lng2 is the second. This matters for the direction this vector gives.
+ * Assumes that lng1 is the first location, and lng2 is the second. This matters for the direction
+ * this vector gives.
  * @param lng1
  * @param lat1
  * @param lng2
@@ -59,8 +55,8 @@ SquareDist Position::unitDistanceBetween(double lng1, double lat1, double lng2, 
     double x_dist = distanceBetween(lng1, lat1, lng4, lat4);
 
     SquareDist displacement = {
-            x_dist,
-            y_dist,
+        x_dist,
+        y_dist,
     };
 
     return displacement;

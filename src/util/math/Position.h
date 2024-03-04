@@ -5,9 +5,9 @@
 #ifndef VCU_CORE_POSITION_H
 #define VCU_CORE_POSITION_H
 
+#include <cmath>
 
 #include "util/Structs.h"
-
 
 typedef struct SquareDist {
     double x_displacement;
@@ -15,19 +15,18 @@ typedef struct SquareDist {
 } SquareDist;
 
 class Position {
-
-private:
+   private:
     float longitude, latitude;
     constexpr static double radiusOfEarthMeters = 6357 * 1000;
     constexpr static double radiusOfEarth = 6357;
 
-    static double degreesToRadians(double deg);
-
-public:
+   public:
     Position(float longitude, float latitude) {
         this->longitude = longitude;
         this->latitude = latitude;
     }
+
+    inline static double degreesToRadians(double deg) { return deg * (M_PI / 180); }
 
     // TODO - CONVERT TYPE OF XYZ TO LAT/LONG USING HAVERSINE FUNCTION
     explicit Position(xyz coordinates) {
@@ -44,5 +43,4 @@ public:
     static Position convertToLongitudeLatitude(xyz cartesianCoords);
 };
 
-
-#endif //VCU_CORE_POSITION_H
+#endif  // VCU_CORE_POSITION_H
