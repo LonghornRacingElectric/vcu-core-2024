@@ -7,8 +7,6 @@
 #include <cmath>
 #include <iostream>
 
-#include "util/math/Position.h"
-
 /**
  * @brief Construct a new Extended Kalman Filter object
  *
@@ -125,7 +123,12 @@ Matrix ExtendedKalmanFilter::predictCovariance() {
  */
 void ExtendedKalmanFilter::update(ControlState u, VehicleState z, float delta_time) {
     // update state prediction and generate the jacobian matrix
+
+    // motivation for not returning a state matrix is to prevent creating new matrices and doing
+    // extra computation, we already have class state matrix variables that can be updated directly
+    // without affecting the filter. Can change this if we determine its insignificant.
     predictState(prev_control, delta_time);
+
     computeStateTransitionJacobian({delta_time, a_x, a_y, theta});
 
     // std::cout << "State: \n" << state.toString() << "\n";
@@ -157,6 +160,7 @@ void ExtendedKalmanFilter::update(ControlState u, VehicleState z, float delta_ti
     struct_state = {state.get(0, 0), state.get(1, 0), state.get(2, 0), state.get(3, 0),
                     state.get(4, 0)};
 
+    // update the previous control state to be used in the next iteration
     prev_control.a_x = u.a_x;
     prev_control.a_y = u.a_y;
     prev_control.v_theta = u.v_theta;
