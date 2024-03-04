@@ -16,8 +16,8 @@
 ExtendedKalmanFilter::ExtendedKalmanFilter() {
     jacobian = Matrix::getIdentityMatrix(5);
     covariance_estimate = Matrix(5, 5, 0);
-    process_covariance = Matrix(5, 5, 0.0000000001f);
-    observation_covariance = Matrix(5, 5, 0.0000001f);
+    process_covariance = Matrix(5, 5, 0.000000000);
+    observation_covariance = Matrix(5, 5, 0.000000f);
 
     x = 0, y = 0, v_x = 0, v_y = 0, theta = 0;
     state = Matrix(5, 1);
@@ -41,17 +41,19 @@ void ExtendedKalmanFilter::predictState(ControlState control, float delta_t) {
     // coordinates)
 
     PositionalState current_state = {control.a_x, control.a_y};
-    PositionalState global_state = getMathUnits(&current_state, theta);
+    PositionalState global_state_accel = getMathUnits(&current_state, theta);
     // PositionalState global_state = current_state;
 
     // Calculate new position based on previous velocity estimate
-    double y_new = y + v_y + ((1.0 / 2.0) * global_state.y * (delta_t * delta_t));
-    double x_new = x + v_x + ((1.0 / 2.0) * global_state.x * (delta_t * delta_t));
+    double y_new = y + v_y * delta_t + ((1.0 / 2.0) * global_state_accel.y * (delta_t * delta_t));
+    double x_new = x + v_x * delta_t + ((1.0 / 2.0) * global_state_accel.x * (delta_t * delta_t));
     double theta_new = control.v_theta * delta_t + theta;
 
+    std::cout << "New Position: " << x_new << ", " << y_new << "\n";
+
     // Calculate new velocities
-    double v_x_new = v_x + delta_t * global_state.x;
-    double v_y_new = v_y + delta_t * global_state.y;
+    double v_x_new = v_x + delta_t * global_state_accel.x;
+    double v_y_new = v_y + delta_t * global_state_accel.y;
 
     // calculate the jacobian for the current iteration
     computeStateTransitionJacobian({delta_t, a_x, a_y, theta});
@@ -73,6 +75,8 @@ void ExtendedKalmanFilter::predictState(ControlState control, float delta_t) {
     state.set(2, 0, v_x);
     state.set(3, 0, v_y);
     state.set(4, 0, theta);
+
+    std::cout << "State: \n" << state.toString() << "\n";
 }
 
 Matrix ExtendedKalmanFilter::computeStateTransitionJacobian(JacobianVariables variables) {
@@ -204,8 +208,11 @@ double ExtendedKalmanFilter::getMathTheta(double theta) { return 90.0 - theta; }
  */
 PositionalState ExtendedKalmanFilter::getMathUnits(PositionalState* loc, double theta) {
     double global_theta = Position::degreesToRadians(getMathTheta(theta));
-    double global_x = loc->x * cos(global_theta) - loc->y * sin(global_theta);
-    double global_y = loc->x * sin(global_theta) + loc->y * cos(global_theta);
+    // double global_theta = theta;
+    double global_y = loc->x * cos(global_theta) + loc->y * sin(global_theta);
+    double global_x = loc->x * sin(global_theta) - loc->y * cos(global_theta);
+    // double global_x = sqrt(pow(loc->x, 2) + pow(loc->y, 2)) * cos(global_theta);
+    // double global_y = sqrt(pow(loc->x, 2) + pow(loc->y, 2)) * sin(global_theta);
 
     PositionalState newState = {global_x, global_y};
 
