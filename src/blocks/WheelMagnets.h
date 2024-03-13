@@ -31,6 +31,8 @@ typedef struct WheelMagnetsOutput {
 typedef struct WheelTracker{
     bool isHigh;
     float displacement;
+    float curTime;
+    float lastTime;
 }WheelTracker;
 
 

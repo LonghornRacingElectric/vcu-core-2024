@@ -1,11 +1,11 @@
 #include "WheelMagnets.h"
 
-float thresh = 0.1;
+float thresh = 10.0f;
 
-WheelTracker dispFr{false, 0};
-WheelTracker dispFl{false, 0};
-WheelTracker dispBr{false, 0};
-WheelTracker dispBl{false, 0};
+WheelTracker dispFr{false, 0, 0, 0};
+WheelTracker dispFl{false, 0, 0, 0};
+WheelTracker dispBr{false, 0, 0, 0};
+WheelTracker dispBl{false, 0, 0, 0};
 
 void WheelMagnets::setParameters(VcuParameters *params) {
     speedFilterFl = LowPassFilter(params->wheelMagnetLpfTimeConstant);
@@ -15,15 +15,22 @@ void WheelMagnets::setParameters(VcuParameters *params) {
 }
 
 
-float
-calcSpeed(WheelTracker *tracker, float field, Differentiator differentiator, float deltaTime, LowPassFilter filter) {
+float calcSpeed(WheelTracker *tracker, float field, Differentiator& differentiator,
+                float deltaTime, LowPassFilter& filter) {
     if (!tracker->isHigh && field > thresh) {
         tracker->isHigh = true;
+        tracker->displacement += (M_PI) / 3.0f;
     } else if (tracker->isHigh && field < -1 * thresh) {
         tracker->isHigh = false;
-        tracker->displacement += (2 * M_PI) / 3;
+        tracker->displacement += (M_PI) / 3.0f;
     }
-    filter.add(differentiator.get(tracker->displacement, deltaTime), deltaTime);
+    tracker->lastTime += deltaTime;
+    float dydx = differentiator.get(tracker->displacement, tracker->lastTime);
+    if(dydx != 0){
+        filter.add(dydx, tracker->lastTime);
+        tracker->lastTime = tracker->lastTime;
+        tracker->curTime = 0;
+    }
     return filter.get();
 }
 
