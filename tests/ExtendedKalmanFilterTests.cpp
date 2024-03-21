@@ -14,7 +14,7 @@ TEST(Kalman, ExtendedKalmanFilter) {
 
     ControlState control = {0, 1.002003, 0};
     VehicleState gpsEstimate = {0, 0, 0, 0, 0};
-    float delta_t = 0.03;
+    float delta_t = 0.003f;
 
     // drive 10 seconds at 1m/s in the Y direction (car-centric forward)
     for (int i = 0; i < 334; i++) {
