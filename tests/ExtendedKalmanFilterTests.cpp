@@ -26,19 +26,19 @@ TEST(Kalman, ExtendedKalmanFilter) {
     std::cout << "Control A_y: " << control.a_y << "\n";
 
         // start decelerating (3 seconds to get to 0), and turn 30 degrees clockwise each step
-//        control.a_y = -3.3;
-//        control.v_theta = Position::degreesToRadians(30);
-//
-//        for (int i = 0; i < 100; i++) {
-//            testFilter.update(control, gpsEstimate, delta_t);
-//        }
-//
-//        control.a_y = 1.2;
-//        control.v_theta = Position::degreesToRadians(0);
-//
-//        for (int i = 0; i < 333; i++) {
-//            testFilter.update(control, gpsEstimate, delta_t);
-//        }
+        control.a_y = -3.3;
+        control.v_theta = Position::degreesToRadians(30);
+
+        for (int i = 0; i < 100; i++) {
+            testFilter.update(control, gpsEstimate, delta_t);
+        }
+
+        control.a_y = 1.2;
+        control.v_theta = Position::degreesToRadians(0);
+
+        for (int i = 0; i < 333; i++) {
+            testFilter.update(control, gpsEstimate, delta_t);
+        }
 
     std::cout << "\nFINAL STATE\n";
     std::cout << "X: " << testFilter.getState().x << "\n";
