@@ -47,8 +47,6 @@ void ExtendedKalmanFilter::predictState(ControlState control, float delta_t) {
     double x_new = x + v_x * delta_t + ((1.0 / 2.0) * geographic_accel.x * (delta_t * delta_t));
     double theta_new = control.v_theta * delta_t + theta;
 
-    std::cout << "New Position: " << x_new << ", " << y_new << "\n";
-
     // Calculate new velocities
     double v_x_new = v_x + delta_t * geographic_accel.x;
     double v_y_new = v_y + delta_t * geographic_accel.y;
@@ -73,7 +71,6 @@ void ExtendedKalmanFilter::predictState(ControlState control, float delta_t) {
     state.set(3, 0, v_y);
     state.set(4, 0, theta);
 
-    std::cout << "State: \n" << state.toString() << "\n";
 }
 
 Matrix ExtendedKalmanFilter::computeStateTransitionJacobian(JacobianVariables variables) {
@@ -97,8 +94,6 @@ Matrix ExtendedKalmanFilter::computeStateTransitionJacobian(JacobianVariables va
     jacobian.set(1, 4, y_partial);
     jacobian.set(2, 4, x_dot_partial);
     jacobian.set(3, 4, y_dot_partial);
-
-    // std::cout << "Jacobian: \n" << jacobian.toString() << "\n";
 
     return jacobian;
 }
@@ -131,21 +126,13 @@ void ExtendedKalmanFilter::update(ControlState u, VehicleState z, float delta_ti
 
     computeStateTransitionJacobian({delta_time, a_x, a_y, theta});
 
-    // std::cout << "State: \n" << state.toString() << "\n";
-
     // Because we are assuming h(*) is insignificant, we can simply use z_k as y
     Matrix predicted_covariance = predictCovariance();
-
-    // std::cout << "Predicted Covariance: \n" << predicted_covariance.toString() << "\n";
 
     // update the covariance estimate
     Matrix residual_covariance = getResidualCovariance();
 
-    // std::cout << "Residual Covariance: \n" << residual_covariance.toString() << "\n";
-
     Matrix kalman_gain = getOptimalKalmanGain(residual_covariance);
-
-    // std::cout << "Kalman Gain: \n" << kalman_gain.toString() << "\n";
 
     // GPS state into a matrix (z_k/y)
     innovation_state.set(0, 0, z.x);
@@ -205,18 +192,12 @@ double ExtendedKalmanFilter::getGeographicTheta(double theta) { return 1.57 - th
  * @return The converted global positional state.
  */
 PositionalState ExtendedKalmanFilter::getGeographicUnits(PositionalState* loc, double theta) {
-    double global_theta = getGeographicTheta(theta);
-    // double global_theta = theta;
-    double global_x = loc->x * cos(global_theta) + loc->y * sin(global_theta);
-    double global_y = loc->x * sin(global_theta) - loc->y * cos(global_theta);
-    // double global_x = sqrt(pow(loc->x, 2) + pow(loc->y, 2)) * cos(global_theta);
-    // double global_y = sqrt(pow(loc->x, 2) + pow(loc->y, 2)) * sin(global_theta);
+     double global_theta = getGeographicTheta(theta);
+
+     double global_x = sqrt(pow(loc->x, 2) + pow(loc->y, 2)) * cos(global_theta);
+     double global_y = sqrt(pow(loc->x, 2) + pow(loc->y, 2)) * sin(global_theta);
 
     PositionalState newState = {global_x, global_y};
-
-    std::cout << "Theta: " << theta << "\n";
-    std::cout << "Global Theta: " << global_theta << "\n";
-    std::cout << "New State: " << newState.x << ", " << newState.y << "\n";
 
     return newState;
 }
