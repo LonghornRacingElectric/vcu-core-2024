@@ -1,4 +1,5 @@
 #include "Matrix.h"
+#include <stdexcept>
 
 Matrix Matrix::getTranspose() const {
     Matrix result(columns(), rows(), 0.0f);
