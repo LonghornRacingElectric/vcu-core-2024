@@ -206,11 +206,12 @@ double ExtendedKalmanFilter::getGeographicTheta(double theta) { return 1.57 - th
  */
 PositionalState ExtendedKalmanFilter::getGeographicUnits(PositionalState* loc, double theta) {
     double global_theta = getGeographicTheta(theta);
-    // double global_theta = theta;
-    double global_x = loc->x * cos(global_theta) + loc->y * sin(global_theta);
-    double global_y = loc->x * sin(global_theta) - loc->y * cos(global_theta);
-    // double global_x = sqrt(pow(loc->x, 2) + pow(loc->y, 2)) * cos(global_theta);
-    // double global_y = sqrt(pow(loc->x, 2) + pow(loc->y, 2)) * sin(global_theta);
+//    double global_theta = theta;
+//    double global_x = loc->x * cos(global_theta) + loc->y * sin(global_theta);
+//    double global_y = loc->x * sin(global_theta) - loc->y * cos(global_theta);
+
+     double global_x = sqrt(pow(loc->x, 2) + pow(loc->y, 2)) * cos(global_theta);
+     double global_y = sqrt(pow(loc->x, 2) + pow(loc->y, 2)) * sin(global_theta);
 
     PositionalState newState = {global_x, global_y};
 
