@@ -13,9 +13,15 @@
  */
 ExtendedKalmanFilter::ExtendedKalmanFilter() {
     jacobian = Matrix::getIdentityMatrix(5);
+
+    // Matrix P
     covariance_estimate = Matrix(5, 5, 0);
-    process_covariance = Matrix(5, 5, 0.000000000);
-    observation_covariance = Matrix(5, 5, 0.00000);
+
+    // Matrix Q
+    process_covariance = Matrix::getIdentityMatrix(5); // Matrix(5, 5, 0.000000000);
+
+    // Matrix R
+    observation_covariance = Matrix::getIdentityMatrix(5);
 
     x = 0, y = 0, v_x = 0, v_y = 0, theta = 0;
     state = Matrix(5, 1);

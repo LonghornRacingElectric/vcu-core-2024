@@ -38,6 +38,7 @@ TEST(Kalman, ExtendedKalmanFilter) {
 
         for (int i = 0; i < 333; i++) {
             testFilter.update(control, gpsEstimate, delta_t);
+            gpsEstimate.v_y += control.a_y * delta_t;
         }
 
     std::cout << "\nFINAL STATE\n";
