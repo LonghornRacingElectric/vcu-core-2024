@@ -15,13 +15,17 @@ ExtendedKalmanFilter::ExtendedKalmanFilter() {
     jacobian = Matrix::getIdentityMatrix(5);
 
     // Matrix P
-    covariance_estimate = Matrix(5, 5, 0);
+    covariance_estimate = Matrix::getIdentityMatrix(5);
+
+    covariance_estimate = covariance_estimate.divideDiagonal(Matrix(5, 5, 3));
 
     // Matrix Q
     process_covariance = Matrix::getIdentityMatrix(5); // Matrix(5, 5, 0.000000000);
 
     // Matrix R
     observation_covariance = Matrix::getIdentityMatrix(5);
+
+
 
     x = 0, y = 0, v_x = 0, v_y = 0, theta = 0;
     state = Matrix(5, 1);
@@ -128,27 +132,47 @@ void ExtendedKalmanFilter::update(ControlState u, VehicleState z, float delta_ti
     // motivation for not returning a state matrix is to prevent creating new matrices and doing
     // extra computation, we already have class state matrix variables that can be updated directly
     // without affecting the filter. Can change this if we determine its insignificant.
+
+    double prev_theta = theta;
+
     predictState(prev_control, delta_time);
 
-    computeStateTransitionJacobian({delta_time, a_x, a_y, theta});
+    computeStateTransitionJacobian({delta_time, a_x, a_y, prev_theta});
+
+//    std::cout << "Computed Jacobian \n" << jacobian.toString() << "\n";
 
     // Because we are assuming h(*) is insignificant, we can simply use z_k as y
     Matrix predicted_covariance = predictCovariance();
 
+//    std::cout << "Predicted Covariance \n" << predicted_covariance.toString() << "\n";
+
+    predicted_covariance.clearAllButDiagonal();
+
     // update the covariance estimate
     Matrix residual_covariance = getResidualCovariance();
 
-    Matrix kalman_gain = getOptimalKalmanGain(residual_covariance);
+//    std::cout << "Residual Covariance \n" << residual_covariance.toString() << "\n";
+
+    Matrix kalman_gain = getOptimalKalmanGain(predicted_covariance, residual_covariance);
+
+//    std::cout << "Kalman Gain \n" << kalman_gain.toString() << "\n";
 
     // GPS state into a matrix (z_k/y)
-    innovation_state.set(0, 0, z.x);
-    innovation_state.set(1, 0, z.y);
-    innovation_state.set(2, 0, z.v_x);
-    innovation_state.set(3, 0, z.v_y);
-    innovation_state.set(4, 0, z.theta);
+    innovation_state.set(0, 0, z.x - state.get(0,0));
+    innovation_state.set(1, 0, z.y - state.get(1, 0));
+    innovation_state.set(2, 0, z.v_x - state.get(2, 0));
+    innovation_state.set(3, 0, z.v_y - state.get(3, 0));
+    innovation_state.set(4, 0, z.theta - state.get(4, 0));
 
     state = updateStateEstimate(kalman_gain, innovation_state);
-    covariance_estimate = updateCovarianceEstimate(predicted_covariance);
+
+//    std::cout << "State \n" << state.toString() << "\n";
+
+    covariance_estimate = updateCovarianceEstimate(kalman_gain, predicted_covariance);
+
+//    std::cout << "Covariance Estimate \n" << covariance_estimate.toString() << "\n";
+
+//    covariance_estimate.clearAllButDiagonal();
 
     struct_state = {state.get(0, 0), state.get(1, 0), state.get(2, 0), state.get(3, 0),
                     state.get(4, 0)};
@@ -163,16 +187,17 @@ Matrix ExtendedKalmanFilter::getResidualCovariance() {
     return covariance_estimate + observation_covariance;
 }
 
-Matrix ExtendedKalmanFilter::getOptimalKalmanGain(const Matrix& residual_covariance) {
-    return covariance_estimate * Matrix(5, 5, 1).divide(residual_covariance);
+Matrix ExtendedKalmanFilter::getOptimalKalmanGain(const Matrix& predicted_covariance, const Matrix& residual_covariance) {
+//    std::cout << "Division of Identity\n" << (Matrix::getIdentityMatrix(5).divide(residual_covariance)).toString() << "\n";
+    return predicted_covariance * Matrix::getIdentityMatrix(5).divide(residual_covariance);
 }
 
 Matrix ExtendedKalmanFilter::updateStateEstimate(const Matrix& kalman_gain, const Matrix& y) {
     return state + (kalman_gain * y);
 }
 
-Matrix ExtendedKalmanFilter::updateCovarianceEstimate(const Matrix& predicted_covariance) {
-    return (Matrix::getIdentityMatrix(5) - jacobian) * predicted_covariance;
+Matrix ExtendedKalmanFilter::updateCovarianceEstimate(const Matrix& kalman_gain, const Matrix& predicted_covariance) {
+    return (Matrix::getIdentityMatrix(5) - kalman_gain) * predicted_covariance;
 }
 
 /**
@@ -198,10 +223,11 @@ double ExtendedKalmanFilter::getGeographicTheta(double theta) { return 1.57 - th
  * @return The converted global positional state.
  */
 PositionalState ExtendedKalmanFilter::getGeographicUnits(PositionalState* loc, double theta) {
-     double global_theta = getGeographicTheta(theta);
+     double global_x = loc->x * cos(theta) - loc->y * sin(theta);
+     double global_y = loc->x * sin(theta) + loc->y * cos(theta);
 
-     double global_x = sqrt(pow(loc->x, 2) + pow(loc->y, 2)) * cos(global_theta);
-     double global_y = sqrt(pow(loc->x, 2) + pow(loc->y, 2)) * sin(global_theta);
+//     double global_x = sqrt(pow(loc->x, 2) + pow(loc->y, 2)) * cos(global_theta);
+//     double global_y = sqrt(pow(loc->x, 2) + pow(loc->y, 2)) * sin(global_theta);
 
     PositionalState newState = {global_x, global_y};
 

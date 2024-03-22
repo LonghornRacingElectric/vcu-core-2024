@@ -99,9 +99,9 @@ class ExtendedKalmanFilter {
      */
 
     Matrix getResidualCovariance();
-    Matrix getOptimalKalmanGain(const Matrix& residual_covariance);
+    Matrix getOptimalKalmanGain(const Matrix& predicted_covariance, const Matrix& residual_covariance);
     Matrix updateStateEstimate(const Matrix& kalman_gain, const Matrix& y);
-    Matrix updateCovarianceEstimate(const Matrix& predicted_covariance);
+    Matrix updateCovarianceEstimate(const Matrix& kalman_gain, const Matrix& predicted_covariance);
 
     /**
      *  -------------------------

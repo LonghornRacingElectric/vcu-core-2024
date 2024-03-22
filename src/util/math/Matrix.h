@@ -86,6 +86,8 @@ Matrix divide(const Matrix& other) const;
 
 Matrix divideDiagonal(const Matrix& other) const;
 
+void clearAllButDiagonal();
+
 Matrix multiply(const Matrix& other) const;
 
 Matrix add(const Matrix& other) const;

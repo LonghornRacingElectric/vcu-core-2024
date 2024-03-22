@@ -131,3 +131,13 @@ std::string Matrix::toString() {
     }
     return base;
 }
+
+void Matrix::clearAllButDiagonal()  {
+    for(int row = 0; row < this->rows(); row++) {
+        for(int col = 0; col < this->columns(); col++) {
+            if(col != row) {
+                this->set(row, col, 0);
+            }
+        }
+    }
+}

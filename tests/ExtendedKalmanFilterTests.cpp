@@ -12,13 +12,15 @@
 TEST(Kalman, ExtendedKalmanFilter) {
   ExtendedKalmanFilter testFilter;
 
-  ControlState control = {0, 1, 0};
+  ControlState control = {1, 0, 0};
   VehicleState gpsEstimate = {0, 0, 0, 0, 0};
   float delta_t = 0.003f;
 
   // drive 10 seconds at 1m/s in the Y direction (car-centric forward)
   for (int i = 0; i < 3330; i++) {
     testFilter.update(control, gpsEstimate, delta_t);
+      gpsEstimate.v_x += delta_t * control.a_x;
+      gpsEstimate.x += delta_t * gpsEstimate.v_x;
   }
 
   // moved a total of 50 meters
@@ -31,10 +33,11 @@ TEST(Kalman, ExtendedKalmanFilter) {
 
 
   // make right turn
-  control.a_x = -20.0;
-  control.v_theta = Position::degreesToRadians(90);
+  control.a_y = -5.235987756;
+  control.a_x = 0;
+  control.v_theta = Position::degreesToRadians(-30);
 
-  for (int i = 0; i < 333; i++) {
+  for (int i = 0; i < (333 * 3); i++) {
     testFilter.update(control, gpsEstimate, delta_t);
   }
 
@@ -45,8 +48,8 @@ TEST(Kalman, ExtendedKalmanFilter) {
   std::cout << "V_Y: " << testFilter.getState().v_y << "\n";
   std::cout << "THETA: " << testFilter.getState().theta << "\n";
 
-  control.a_x = 0.0;
-  control.a_y = -10.0;
+  control.a_y = 0.0;
+  control.a_x = -10.0;
   control.v_theta = Position::degreesToRadians(0);
 
   for (int i = 0; i < 333; i++) {
