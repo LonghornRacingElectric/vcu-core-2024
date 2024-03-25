@@ -7,7 +7,6 @@ enable_testing()
 add_executable(
         ${BINARY}
         ${TEST_SOURCES}
-        blocks/WheelMagnetTests.cpp
 )
 target_link_libraries(
         ${BINARY}
