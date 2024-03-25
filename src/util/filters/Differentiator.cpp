@@ -9,7 +9,8 @@ void Differentiator::reset() {
 }
 
 float Differentiator::get(float value, float deltaTime) {
-    float dx_dt = (value - this->last) / deltaTime;
+    float dx = (value - this->last);
+    float dx_dt = dx / deltaTime;
     this->last = value;
     return dx_dt;
 }
