@@ -1,6 +1,6 @@
 #include "WheelMagnets.h"
 
-float thresh = 10.0f;
+float thresh = 3.0f;
 
 WheelTracker dispFr{false, 0, 0, 0};
 WheelTracker dispFl{false, 0, 0, 0};
@@ -19,17 +19,16 @@ float calcSpeed(WheelTracker *tracker, float field, Differentiator& differentiat
                 float deltaTime, LowPassFilter& filter) {
     if (!tracker->isHigh && field > thresh) {
         tracker->isHigh = true;
-        tracker->displacement += (M_PI) / 3.0f;
+        tracker->displacement += 3.14159f / 3.0f;
     } else if (tracker->isHigh && field < -1 * thresh) {
         tracker->isHigh = false;
-        tracker->displacement += (M_PI) / 3.0f;
+        tracker->displacement += 3.14159f / 3.0f;
     }
     tracker->lastTime += deltaTime;
     float dydx = differentiator.get(tracker->displacement, tracker->lastTime);
     if(dydx != 0){
         filter.add(dydx, tracker->lastTime);
-        tracker->lastTime = tracker->lastTime;
-        tracker->curTime = 0;
+        tracker->lastTime = 0;
     }
     return filter.get();
 }
