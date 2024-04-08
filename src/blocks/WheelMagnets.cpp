@@ -1,6 +1,6 @@
 #include "WheelMagnets.h"
 
-float thresh = 0.5f;
+float thresh = 0.3f;
 
 WheelTracker dispFr{false, 0, 0, 0};
 WheelTracker dispFl{false, 0, 0, 0};
