@@ -1,6 +1,6 @@
 #include "WheelMagnets.h"
 
-float thresh = 3.0f;
+float thresh = 0.5f;
 
 WheelTracker dispFr{false, 0, 0, 0};
 WheelTracker dispFl{false, 0, 0, 0};
@@ -16,7 +16,7 @@ void WheelMagnets::setParameters(VcuParameters *params) {
 
 
 float calcSpeed(WheelTracker *tracker, float field, Differentiator& differentiator,
-                float deltaTime, LowPassFilter& filter) {
+                float deltaTime, LowPassFilter& filter, float timeConstant) {
     if (!tracker->isHigh && field > thresh) {
         tracker->isHigh = true;
         tracker->displacement += 3.14159f / 3.0f;
@@ -24,13 +24,19 @@ float calcSpeed(WheelTracker *tracker, float field, Differentiator& differentiat
         tracker->isHigh = false;
         tracker->displacement += 3.14159f / 3.0f;
     }
-    tracker->lastTime += deltaTime;
-    float dydx = differentiator.get(tracker->displacement, tracker->lastTime);
+    tracker->tickDuration += deltaTime;
+    float dydx = differentiator.get(tracker->displacement, tracker->tickDuration);
     if(dydx != 0){
-        filter.add(dydx, tracker->lastTime);
-        tracker->lastTime = 0;
+        filter.add(dydx, tracker->tickDuration);
+        tracker->tickDuration = 0;
     }
-    return filter.get();
+    float angularVelocity = filter.get();
+    if(tracker->tickDuration > 0) {
+      dydx = (3.14159f / 3.0f) / tracker->tickDuration;
+      float alpha = tracker->tickDuration / (timeConstant + tracker->tickDuration);
+      angularVelocity = (angularVelocity * (1 - alpha)) + (dydx * alpha);
+    }
+    return angularVelocity;
 }
 
 void WheelMagnets::evaluate(VcuParameters *params, WheelMagnetsInput *input, WheelMagnetsOutput *output, float deltaTime) {
@@ -48,10 +54,14 @@ void WheelMagnets::evaluate(VcuParameters *params, WheelMagnetsInput *input, Whe
         return;
     }
 
-    output->wheelSpeedFr = calcSpeed(&dispFr, input->wheelMagneticFieldFr, differentiatorFr, deltaTime, speedFilterFr);
-    output->wheelSpeedFl = calcSpeed(&dispFl, input->wheelMagneticFieldFl, differentiatorFl, deltaTime, speedFilterFl);
-    output->wheelSpeedBr = calcSpeed(&dispBr, input->wheelMagneticFieldBr, differentiatorBr, deltaTime, speedFilterBr);
-    output->wheelSpeedBl = calcSpeed(&dispBl, input->wheelMagneticFieldBl, differentiatorBl, deltaTime, speedFilterBl);
+    output->wheelSpeedFr = calcSpeed(&dispFr, input->wheelMagneticFieldFr, differentiatorFr, deltaTime,
+                                     speedFilterFr, params->wheelMagnetLpfTimeConstant);
+    output->wheelSpeedFl = calcSpeed(&dispFl, input->wheelMagneticFieldFl, differentiatorFl, deltaTime,
+                                     speedFilterFl, params->wheelMagnetLpfTimeConstant);
+    output->wheelSpeedBr = calcSpeed(&dispBr, input->wheelMagneticFieldBr, differentiatorBr, deltaTime,
+                                     speedFilterBr, params->wheelMagnetLpfTimeConstant);
+    output->wheelSpeedBl = calcSpeed(&dispBl, input->wheelMagneticFieldBl, differentiatorBl, deltaTime,
+                                     speedFilterBl, params->wheelMagnetLpfTimeConstant);
 
 }
 

@@ -32,7 +32,7 @@ typedef struct WheelTracker{
     bool isHigh;
     float displacement;
     float curTime;
-    float lastTime;
+    float tickDuration;
 }WheelTracker;
 
 
