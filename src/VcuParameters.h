@@ -19,17 +19,17 @@ typedef struct VcuParameters {
   float appsLowPassFilterTimeConstant = 0.000f; // (s)
   float appsImplausibilityTime = 0.100f; // (s)
   float appsPlausibilityRange = 0.10f; // (%)
-  float apps1VoltageMin = 1.0f; // voltage corresponding to 0% pedal travel (V)
-  float apps1VoltageMax = 4.0f; // voltage corresponding to 100% pedal travel (V)
-  float apps2VoltageMin = 0.5f; // voltage corresponding to 0% pedal travel (V)
-  float apps2VoltageMax = 2.0f; // voltage corresponding to 100% pedal travel (V)
+  float apps1VoltageMin = 0.05f; // voltage corresponding to 0% pedal travel (V)
+  float apps1VoltageMax = 2.91f; // voltage corresponding to 100% pedal travel (V)
+  float apps2VoltageMin = 0.08f; // voltage corresponding to 0% pedal travel (V)
+  float apps2VoltageMax = 1.41f; // voltage corresponding to 100% pedal travel (V)
   float appsDeadZonePct = 0.05f; // (%) of travel that is 0 or 100
 
   // ===== BSE PARAMETERS =====
   float bseLowPassFilterTimeConstant = 0.000f; // (s)
   float bseImplausibilityTime = 0.100f; // (s)
-  float bseVoltageMin = 0.5f; // voltage corresponding to 0% brake pressure (V)
-  float bseVoltageMax = 4.5f; // voltage corresponding to 100% brake pressure (V)
+  float bseVoltageMin = 0.45f; // voltage corresponding to 0% brake pressure (V)
+  float bseVoltageMax = 4.55f; // voltage corresponding to 100% brake pressure (V)
 
   // ===== STOMPP PARAMETERS =====
   float stomppMechanicalBrakesThreshold = 0.1f; // minimum brakes to count as mechanical brakes engaged for EV 4.7 (%)
@@ -64,8 +64,10 @@ typedef struct VcuParameters {
   // ==== STEERING PARAMETERS ====
   CurveParameter steeringWheelToOuterWheel;
   CurveParameter steeringWheelToInnerWheel;
-  float steeringPotMaxVoltage = 3.3f;
-  float steeringWheelMaxAngle = 90.0f;
+  float steeringPotMinVoltage = 0.0f;
+  float steeringPotMaxVoltage = 2.59f;
+  float steeringWheelMinAngle = -99.0f;
+  float steeringWheelMaxAngle = 122.0f;
 
   // ==== SOC PARAMETERS ====
   float socCurrentLpfTimeConstant = 0.500f; // (s)
