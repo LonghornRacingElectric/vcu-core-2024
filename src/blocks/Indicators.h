@@ -6,16 +6,21 @@
 
 
 typedef struct IndicatorsInput {
+    bool parkOrDrive;
     float bse;
 } IndicatorsInput;
 
 
 typedef struct IndicatorsOutput {
-    bool brakeLight;
+    float brakeLight;
 } IndicatorsOutput;
 
 
 class Indicators {
+private:
+    float brakeTimer = 0;
+    float accumulator = 0;
+    float time = 0;
 public:
     void setParameters(VcuParameters* params);
     void evaluate(VcuParameters *params, IndicatorsInput *input, IndicatorsOutput *output, float deltaTime);

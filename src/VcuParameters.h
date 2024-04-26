@@ -31,8 +31,11 @@ typedef struct VcuParameters {
   float bseVoltageMin = 0.45f; // voltage corresponding to 0% brake pressure (V)
   float bseVoltageMax = 4.55f; // voltage corresponding to 100% brake pressure (V)
 
+  // ===== BRAKE PARAMETERS =====
+  float brakesSoftThreshold = 0.1f; // minimum brakes to count as mechanical brakes engaged for EV 4.7, also brake light (%)
+  float brakesHardThreshold = 0.3f; // hard braking (%)
+
   // ===== STOMPP PARAMETERS =====
-  float stomppMechanicalBrakesThreshold = 0.1f; // minimum brakes to count as mechanical brakes engaged for EV 4.7 (%)
   float stomppAppsCutoffThreshold = 0.25f; // apps pedal travel where motor power needs to be cut off (%)
   float stomppAppsRecoveryThreshold = 0.05f; // apps pedal travel where motor power can be restored (%)
 

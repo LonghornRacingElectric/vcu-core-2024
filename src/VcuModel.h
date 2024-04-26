@@ -72,7 +72,7 @@ typedef struct VcuOutput {
 
   bool prndlState; // (true = drive)
   bool r2dBuzzer; // (true = buzz)
-  bool brakeLight; // (true = on)
+  float brakeLight; // (%)
 
   bool enableDragReduction; // (true = enable)
 

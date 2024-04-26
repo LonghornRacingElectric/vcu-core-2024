@@ -123,6 +123,7 @@ void VcuModel::evaluate(VcuInput *vcuInput, VcuOutput *vcuOutput, float deltaTim
   cooling.evaluate(params, &coolingInput, &coolingOutput, deltaTime);
 
   indicatorsInput = {
+      prndlOutput.state,
       bseProcessorOutput.bse,
   };
   indicators.evaluate(params, &indicatorsInput, &indicatorsOutput, deltaTime);
@@ -157,7 +158,7 @@ void VcuModel::evaluate(VcuInput *vcuInput, VcuOutput *vcuOutput, float deltaTim
                    | (softShutdownOutput.enableInverter << 8)
                    | (prndlOutput.state << 9)
                    | (prndlOutput.buzzer << 10)
-                   | (indicatorsOutput.brakeLight << 11)
+                   | ((indicatorsOutput.brakeLight > 0) << 11)
                    | (drsOutput.enable << 12);
 
   *vcuOutput = {
