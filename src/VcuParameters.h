@@ -56,12 +56,12 @@ typedef struct VcuParameters {
   float prndlSwitchDebounceDuration = 0.100f; // how long a digital high/low must be sustained to be considered (s)
 
   // ==== COOLING PARAMETERS =====
-  CurveParameter  coolingBattery;
-  CurveParameter  coolingMotor;
+  CurveParameter  coolingRadiatorFanCurve;
+  CurveParameter  coolingBatteryFanCurve;
 
 
     // ==== TRACTION CONTROL PARAMETERS =====
-  bool tcsEnabled = true;
+  bool tcsEnabled = false;
   float tcsFeedbackLowPassFilterTimeConstant = 0.050f;
 
   // ==== STEERING PARAMETERS ====
