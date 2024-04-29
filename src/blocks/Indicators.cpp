@@ -23,11 +23,12 @@ void Indicators::evaluate(VcuParameters *params, IndicatorsInput *input, Indicat
     brakeTimer += deltaTime;
   } else if (braking) {
     percent = maxPercent;
-  } else if (!input->parkOrDrive) {
-    time += deltaTime;
-    float sineWave = 0.5f * (sin(6.28f / 2.0f * (time - 1.0f)) + 1.0f);
-    float pct = sineWave * 0.90f + 0.10f;
-    percent = (pct * pct * 0.4f);
+//  } else if (!input->parkOrDrive) {
+//    time += deltaTime;
+//    float sineWave = 0.5f * (sin(6.28f / 2.0f * (time - 1.0f)) + 1.0f);
+//    float pct = sineWave * 0.90f + 0.10f;
+//    percent = (pct * pct * 0.4f);
+//    brakeTimer = 0;
   } else {
     percent = 0.0005f;
     brakeTimer = 0;

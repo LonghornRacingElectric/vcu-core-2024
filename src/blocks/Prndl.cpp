@@ -19,10 +19,6 @@
 void Prndl::evaluate(VcuParameters *params, PrndlInput *input, PrndlOutput *output, float deltaTime) {
     switchInputDebounce.add(input->driveSwitch, deltaTime);
     bool driveSwitch = switchInputDebounce.get();
-    if(driveSwitch) {
-      volatile int x = 0;
-      x++;
-    }
     bool driveSwitchRisingEdge = (driveSwitch > driveSwitchLastState);
     driveSwitchLastState = driveSwitch;
 
@@ -36,7 +32,7 @@ void Prndl::evaluate(VcuParameters *params, PrndlInput *input, PrndlOutput *outp
 
     } else {
         // we're currently in Park
-        bool brakesPressed = (input->bse > params->prndlBrakeToStartThreshold);
+        bool brakesPressed = (input->bse > params->brakesSoftThreshold);
         bool acceleratorReleased = (input->apps == 0.0f);
 
         if (driveSwitchRisingEdge && input->inverterReady && brakesPressed && acceleratorReleased) {

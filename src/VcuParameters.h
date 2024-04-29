@@ -18,22 +18,22 @@ typedef struct VcuParameters {
   // ===== APPS PARAMETERS =====
   float appsLowPassFilterTimeConstant = 0.000f; // (s)
   float appsImplausibilityTime = 0.100f; // (s)
-  float appsPlausibilityRange = 0.10f; // (%)
-  float apps1VoltageMin = 0.05f; // voltage corresponding to 0% pedal travel (V)
-  float apps1VoltageMax = 2.91f; // voltage corresponding to 100% pedal travel (V)
-  float apps2VoltageMin = 0.08f; // voltage corresponding to 0% pedal travel (V)
-  float apps2VoltageMax = 1.41f; // voltage corresponding to 100% pedal travel (V)
+  float appsPlausibilityRange = 0.20f; // (%)
+  float apps1VoltageMin = 2.94f; // voltage corresponding to 0% pedal travel (V)
+  float apps1VoltageMax = 3.29f; // voltage corresponding to 100% pedal travel (V)
+  float apps2VoltageMin = 1.47f; // voltage corresponding to 0% pedal travel (V)
+  float apps2VoltageMax = 1.98f; // voltage corresponding to 100% pedal travel (V)
   float appsDeadZonePct = 0.05f; // (%) of travel that is 0 or 100
 
   // ===== BSE PARAMETERS =====
-  float bseLowPassFilterTimeConstant = 0.000f; // (s)
+  float bseLowPassFilterTimeConstant = 0.050f; // (s)
   float bseImplausibilityTime = 0.100f; // (s)
   float bseVoltageMin = 0.45f; // voltage corresponding to 0% brake pressure (V)
   float bseVoltageMax = 4.55f; // voltage corresponding to 100% brake pressure (V)
 
   // ===== BRAKE PARAMETERS =====
-  float brakesSoftThreshold = 0.1f; // minimum brakes to count as mechanical brakes engaged for EV 4.7, also brake light (%)
-  float brakesHardThreshold = 0.3f; // hard braking (%)
+  float brakesSoftThreshold = 0.03f; // minimum brakes to count as mechanical brakes engaged for EV 4.7, also brake light (%)
+  float brakesHardThreshold = 0.08f; // hard braking (%)
 
   // ===== STOMPP PARAMETERS =====
   float stomppAppsCutoffThreshold = 0.25f; // apps pedal travel where motor power needs to be cut off (%)
@@ -51,8 +51,7 @@ typedef struct VcuParameters {
   float mapPowerLimitFeedbackTimeConstant = 0.100f;
 
   // ===== PRNDL PARAMETERS =====
-  float prndlBrakeToStartThreshold = 0.1f; // minimum brakes required to go into drive (%)
-  float prndlBuzzerDuration = 2.0f; // how long the buzzer buzzes (s)
+  float prndlBuzzerDuration = 1.100f; // how long the buzzer buzzes (s)
   float prndlSwitchDebounceDuration = 0.100f; // how long a digital high/low must be sustained to be considered (s)
 
   // ==== COOLING PARAMETERS =====
