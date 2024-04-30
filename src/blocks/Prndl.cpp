@@ -1,3 +1,4 @@
+#include <cmath>
 #include "Prndl.h"
 #include "util/filters/Timer.h"
 
@@ -41,8 +42,10 @@ void Prndl::evaluate(VcuParameters *params, PrndlInput *input, PrndlOutput *outp
         }
     }
 
+    bool pattern = fmod(params->prndlBuzzerDuration - buzzerTimer.time, 0.25f) < 0.20f;
+
     output->state = state; // Park = false, Drive = true
-    output->buzzer = state && !buzzerTimer.isFinished(); // buzz if we're in the first X seconds of Drive
+    output->buzzer = state && (!buzzerTimer.isFinished()) && pattern; // buzz if we're in the first X seconds of Drive
 }
 
 void Prndl::setParameters(VcuParameters *params) {

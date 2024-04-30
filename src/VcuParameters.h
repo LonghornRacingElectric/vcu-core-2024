@@ -51,7 +51,7 @@ typedef struct VcuParameters {
   float mapPowerLimitFeedbackTimeConstant = 0.100f;
 
   // ===== PRNDL PARAMETERS =====
-  float prndlBuzzerDuration = 1.100f; // how long the buzzer buzzes (s)
+  float prndlBuzzerDuration = 1.000f; // how long the buzzer buzzes (s)
   float prndlSwitchDebounceDuration = 0.100f; // how long a digital high/low must be sustained to be considered (s)
 
   // ==== COOLING PARAMETERS =====
