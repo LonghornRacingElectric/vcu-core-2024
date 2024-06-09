@@ -119,6 +119,7 @@ void VcuModel::evaluate(VcuInput *vcuInput, VcuOutput *vcuOutput, float deltaTim
       vcuInput->hvBatteryTemp,
       vcuInput->inverterTemp,
       vcuInput->motorTemp,
+      prndlOutput.state
   };
   cooling.evaluate(params, &coolingInput, &coolingOutput, deltaTime);
 

@@ -9,6 +9,7 @@ typedef struct CoolingInput {
     float batteryTemp;
     float inverterTemp;
     float motorTemp;
+    bool parkOrDrive;
 } CoolingInput;
 
 
