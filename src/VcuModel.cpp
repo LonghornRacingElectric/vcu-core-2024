@@ -51,6 +51,8 @@ void VcuModel::evaluate(VcuInput *vcuInput, VcuOutput *vcuOutput, float deltaTim
   torqueMapInput = {
       appsProcessorOutput.apps,
       vcuInput->motorTemp,
+      wheelMagnetsOutput.wheelSpeedBl,
+      wheelMagnetsOutput.wheelSpeedBr,
       vcuInput->inverterTemp,
       vcuInput->hvBatteryTemp,
       vcuInput->hvBatterySoc,

@@ -49,6 +49,8 @@ typedef struct VcuParameters {
   float mapPowerLimit = 78000; // power limit (W)
   float mapPowerLimitFeedbackP = 0.10f; // PID proportional gain (Nm/W)
   float mapPowerLimitFeedbackTimeConstant = 0.100f;
+  float mapLowSpeedDerateMin = 0.30f; // derate (%)
+  float mapLowSpeedDerateEnd = 10.0f; // speed (rad/s)
 
   // ===== PRNDL PARAMETERS =====
   float prndlBuzzerDuration = 1.000f; // how long the buzzer buzzes (s)
