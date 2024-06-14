@@ -8,11 +8,11 @@ void TorqueMap::evaluate(VcuParameters *params, TorqueMapInput *input, TorqueMap
     float torqueRequest = params->mapPedalToTorqueRequest(input->apps);
     float derate;
 
-//    float wheelSpeedAvg = (input->wheelSpeedBl + input->wheelSpeedBr) / 2.0f;
-//    if(wheelSpeedAvg < params->mapLowSpeedDerateEnd) {
-//      derate = wheelSpeedAvg / params->mapLowSpeedDerateEnd;
-//      if(derate < params->mapLowSpeedDerateMin) derate = params->mapLowSpeedDerateMin;
-//      torqueRequest *= derate;
+//    if(input->motorRpm < 300.0f) {
+//      float maxTorqueAtThisRpm = (input->motorRpm / 300.0f * 200.0f) + 30.0f;
+//      if(torqueRequest > maxTorqueAtThisRpm) {
+//        torqueRequest = maxTorqueAtThisRpm;
+//      }
 //    }
 
 //    derate = params->mapDerateMotorTemp(input->motorTemp);

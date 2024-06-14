@@ -9,8 +9,7 @@
 typedef struct TorqueMapInput {
     float apps; // pedal travel (%)
     float motorTemp; // (deg C)
-    float wheelSpeedBl; // (rad/s)
-    float wheelSpeedBr; // (rad/s)
+    float motorRpm; // (rpm)
     float inverterTemp; // (deg C)
     float batteryTemp; // (deg C)
     float batterySoc; // (%)

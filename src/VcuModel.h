@@ -32,6 +32,8 @@ typedef struct VcuInput {
 
   float steeringWheelPotVoltage; // (V)
 
+  float motorRpm; // (rpm)
+
   float wheelMagneticFieldFl; // magnetic flux density (mT)
   float wheelMagneticFieldFr;
   float wheelMagneticFieldBl;

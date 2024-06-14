@@ -62,14 +62,14 @@ void AppsProcessor::evaluate(VcuParameters *params, AppsProcessorInput *input,
   output->ok = !(APPS_SHUTDOWN_MASK & output->fault);
 
   float appsNoDeadzone = (app1Perc + app2Perc) / 2;
-  float slope = 1.0f / (1.0f - (2.0f * params->appsDeadZonePct));
+  float slope = 1.0f / (1.0f - params->appsDeadZoneTopPct - params->appsDeadZoneBottomPct);
 
-  if (appsNoDeadzone <= params->appsDeadZonePct) {
+  if (appsNoDeadzone <= params->appsDeadZoneBottomPct) {
     output->apps = 0;
-  } else if (appsNoDeadzone >= (1 - params->appsDeadZonePct)) {
+  } else if (appsNoDeadzone >= (1 - params->appsDeadZoneTopPct)) {
     output->apps = 1;
   } else {
-    output->apps = slope * (appsNoDeadzone - params->appsDeadZonePct);
+    output->apps = slope * (appsNoDeadzone - params->appsDeadZoneBottomPct);
   }
 }
 

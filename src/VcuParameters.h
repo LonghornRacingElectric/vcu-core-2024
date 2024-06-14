@@ -19,11 +19,12 @@ typedef struct VcuParameters {
   float appsLowPassFilterTimeConstant = 0.000f; // (s)
   float appsImplausibilityTime = 0.100f; // (s)
   float appsPlausibilityRange = 0.20f; // (%)
-  float apps1VoltageMin = 2.94f; // voltage corresponding to 0% pedal travel (V)
-  float apps1VoltageMax = 3.29f; // voltage corresponding to 100% pedal travel (V)
-  float apps2VoltageMin = 1.48f; // voltage corresponding to 0% pedal travel (V)
-  float apps2VoltageMax = 1.97f; // voltage corresponding to 100% pedal travel (V)
-  float appsDeadZonePct = 0.04f; // (%) of travel that is 0 or 100
+  float apps1VoltageMin = 2.22f; // voltage corresponding to 0% pedal travel (V)
+  float apps1VoltageMax = 3.02f; // voltage corresponding to 100% pedal travel (V)
+  float apps2VoltageMin = 1.07f; // voltage corresponding to 0% pedal travel (V)
+  float apps2VoltageMax = 1.50f; // voltage corresponding to 100% pedal travel (V)
+  float appsDeadZoneBottomPct = 0.08f; // (%) of travel that is 0 or 100
+  float appsDeadZoneTopPct = 0.13f; // (%) of travel that is 0 or 100
 
   // ===== BSE PARAMETERS =====
   float bseLowPassFilterTimeConstant = 0.050f; // (s)
@@ -49,8 +50,8 @@ typedef struct VcuParameters {
   float mapPowerLimit = 78000; // power limit (W)
   float mapPowerLimitFeedbackP = 0.10f; // PID proportional gain (Nm/W)
   float mapPowerLimitFeedbackTimeConstant = 0.100f;
-  float mapLowSpeedDerateMin = 0.30f; // derate (%)
-  float mapLowSpeedDerateEnd = 10.0f; // speed (rad/s)
+//  float mapLowSpeedDerateMin = 0.30f; // derate (%)
+//  float mapLowSpeedDerateEnd = 10.0f; // speed (rad/s)
 
   // ===== PRNDL PARAMETERS =====
   float prndlBuzzerDuration = 1.000f; // how long the buzzer buzzes (s)
