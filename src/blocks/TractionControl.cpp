@@ -20,7 +20,7 @@ void TractionControl::evaluate(VcuParameters *params, TractionControlInput *inpu
     float excessVelocityL = input->wheelSpeedBl - averageFrontVelocity;
     float excessVelocityR = input->wheelSpeedBr - averageFrontVelocity;
     float excessVelocity = (excessVelocityL > excessVelocityR) ? excessVelocityL : excessVelocityR;
-    float excessSlip = (excessVelocity / averageFrontVelocity) - 0.15f;
+    float excessSlip = (excessVelocity / averageFrontVelocity) - params->tcsTargetSlipRatio;
 
     if(excessSlip < 0 || excessVelocity < 0.01f) {
         excessSlip = 0;
@@ -29,18 +29,10 @@ void TractionControl::evaluate(VcuParameters *params, TractionControlInput *inpu
     lowPassFeedback.add(excessVelocity, deltaTime);
     excessVelocity = lowPassFeedback.get();
 
-    float negativeFeedback = 3.0f * excessVelocity;
+    float negativeFeedback = params->tcsProportionalGain * excessVelocity;
 
-    float maxTorque = 230.0f;
-    float openLoopTorqueLimit = input->unregulatedTorqueRequest;
-    if(input->unregulatedTorqueRequest > maxTorque) {
-        openLoopTorqueLimit = maxTorque;
+    output->regulatedTorqueRequest = input->unregulatedTorqueRequest - negativeFeedback;
+    if(output->regulatedTorqueRequest < 0.0f) {
+      output->regulatedTorqueRequest = 0.0f;
     }
-
-    if(negativeFeedback > openLoopTorqueLimit) {
-        negativeFeedback = openLoopTorqueLimit;
-    }
-
-    output->regulatedTorqueRequest = openLoopTorqueLimit - negativeFeedback;
-
 }

@@ -54,7 +54,7 @@ typedef struct VcuParameters {
 //  float mapLowSpeedDerateEnd = 10.0f; // speed (rad/s)
 
   // ===== PRNDL PARAMETERS =====
-  float prndlBuzzerDuration = 1.000f; // how long the buzzer buzzes (s)
+  float prndlBuzzerDuration = 0.25f; // how long the buzzer buzzes (s)
   float prndlSwitchDebounceDuration = 0.100f; // how long a digital high/low must be sustained to be considered (s)
 
   // ==== COOLING PARAMETERS =====
@@ -62,9 +62,11 @@ typedef struct VcuParameters {
   CurveParameter  coolingBatteryFanCurve;
 
 
-    // ==== TRACTION CONTROL PARAMETERS =====
-  bool tcsEnabled = false;
+  // ==== TRACTION CONTROL PARAMETERS =====
+  bool tcsEnabled = true;
   float tcsFeedbackLowPassFilterTimeConstant = 0.050f;
+  float tcsTargetSlipRatio = 0.12f;
+  float tcsProportionalGain = 3.0f; // tuned to 3.0f in sim
 
   // ==== STEERING PARAMETERS ====
   CurveParameter steeringWheelToOuterWheel;
