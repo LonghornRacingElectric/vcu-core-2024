@@ -17,9 +17,12 @@ void TractionControl::evaluate(VcuParameters *params, TractionControlInput *inpu
     }
 
     float averageFrontVelocity = (input->wheelSpeedFl + input->wheelSpeedFr) / 2.0f;
-    float excessVelocityL = input->wheelSpeedBl - averageFrontVelocity;
-    float excessVelocityR = input->wheelSpeedBr - averageFrontVelocity;
-    float excessVelocity = (excessVelocityL > excessVelocityR) ? excessVelocityL : excessVelocityR;
+//    float excessVelocityL = input->wheelSpeedBl - averageFrontVelocity;
+//    float excessVelocityR = input->wheelSpeedBr - averageFrontVelocity;
+//    float excessVelocity = (excessVelocityL > excessVelocityR) ? excessVelocityL : excessVelocityR;
+    float averageRearVelocity = (input->motorRpm / 4.0f) * (2.0f * 3.14159f / 60.0f);
+    float excessVelocity = averageRearVelocity - averageFrontVelocity;
+
     float excessSlip = (excessVelocity / averageFrontVelocity) - params->tcsTargetSlipRatio;
 
     if(excessSlip < 0 || excessVelocity < 0.01f) {

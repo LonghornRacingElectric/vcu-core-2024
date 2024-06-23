@@ -66,6 +66,7 @@ void VcuModel::evaluate(VcuInput *vcuInput, VcuOutput *vcuOutput, float deltaTim
       wheelMagnetsOutput.wheelSpeedFr,
       wheelMagnetsOutput.wheelSpeedBl,
       wheelMagnetsOutput.wheelSpeedBr,
+      vcuInput->motorRpm,
       wheelMagnetsOutput.ok,
   };
   tractionControl.evaluate(params, &tractionControlInput, &tractionControlOutput, deltaTime);
