@@ -66,7 +66,7 @@ typedef struct VcuParameters {
   bool tcsEnabled = true;
   float tcsFeedbackLowPassFilterTimeConstant = 0.050f;
   float tcsTargetSlipRatio = 0.12f;
-  float tcsProportionalGain = 3.0f; // tuned to 3.0f in sim
+  float tcsProportionalGain = 10.0f;
 
   // ==== STEERING PARAMETERS ====
   CurveParameter steeringWheelToOuterWheel;
