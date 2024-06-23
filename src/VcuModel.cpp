@@ -161,7 +161,7 @@ void VcuModel::evaluate(VcuInput *vcuInput, VcuOutput *vcuOutput, float deltaTim
                    | (softShutdownOutput.enableInverter << 8)
                    | (prndlOutput.state << 9)
                    | (prndlOutput.buzzer << 10)
-                   | ((indicatorsOutput.brakeLight > 0) << 11)
+                   | ((indicatorsOutput.brakeLight > 0.1) << 11)
                    | (drsOutput.enable << 12);
 
   *vcuOutput = {
