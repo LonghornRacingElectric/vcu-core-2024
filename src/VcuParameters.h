@@ -63,7 +63,7 @@ typedef struct VcuParameters {
 
 
   // ==== TRACTION CONTROL PARAMETERS =====
-  bool tcsEnabled = true;
+  bool tcsEnabled = false;
   float tcsFeedbackLowPassFilterTimeConstant = 0.050f;
   float tcsTargetSlipRatio = 0.12f;
   float tcsProportionalGain = 5.0f;
