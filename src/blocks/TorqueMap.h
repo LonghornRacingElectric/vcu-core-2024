@@ -25,7 +25,7 @@ typedef struct TorqueMapOutput {
 
 class TorqueMap {
 private:
-    LowPassFilter powerNegativeFeedbackFilter = LowPassFilter(0);
+    LowPassFilter openCircuitVoltageFilter = LowPassFilter(1.0f);
 public:
     void setParameters(VcuParameters* params);
     void evaluate(VcuParameters *params, TorqueMapInput *input, TorqueMapOutput *output, float deltaTime);
