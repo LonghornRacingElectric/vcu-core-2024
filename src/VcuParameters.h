@@ -48,7 +48,8 @@ typedef struct VcuParameters {
   CurveParameter mapDerateBatteryTemp; // allowed torque (%) as a function of battery temperature (deg C)
   CurveParameter mapDerateBatterySoc; // allowed torque (%) as a function of battery SoC (%)
   float mapPowerLimit = 80000; // power limit (W)
-  float mapPowerLimitFeedbackP = 0.005f; // PID proportional gain (Nm/W)
+  float mapPowerLimit_kP = 0.0f; // PID proportional gain (Nm/W)
+  float mapPowerLimit_kI = 0.2f; // PID integral gain (Nm/(Ws))
 
   // ===== PRNDL PARAMETERS =====
   float prndlBuzzerDuration = 0.25f; // how long the buzzer buzzes (s)

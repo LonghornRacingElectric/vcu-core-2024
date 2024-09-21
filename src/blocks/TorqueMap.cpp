@@ -34,38 +34,33 @@ void TorqueMap::evaluate(VcuParameters *params, TorqueMapInput *input, TorqueMap
         powerLimit = currentBasedPowerLimit;
     }
 
-    float motorAngularVelocity = input->motorRpm / 60.0f * 2.0f * 3.14159f; // rad/s
-    float maxTorqueAtPowerLimit = powerLimit / motorAngularVelocity * 0.95f; // Nm
-    if(torqueRequest > maxTorqueAtPowerLimit) {
-        torqueRequest = maxTorqueAtPowerLimit;
-    }
+//    float motorAngularVelocity = input->motorRpm / 60.0f * 2.0f * 3.14159f; // rad/s
+//    float maxTorqueAtPowerLimit = powerLimit / motorAngularVelocity * 0.90f; // Nm
+//    if(torqueRequest > maxTorqueAtPowerLimit) {
+//        torqueRequest = maxTorqueAtPowerLimit;
+//    }
 
     float currentPower = input->batteryVoltage * input->batteryCurrent;
     if(input->batteryCurrent > 240.0f || currentPower > 85000.0f) {
         torqueRequest = 0;
     }
 
-//    float powerError = 0;
-//    if (currentPower > params->mapPowerLimit) {
-//        // acceleration power limit
-//        powerError = params->mapPowerLimit - currentPower;
-//    } else if (currentPower < -params->mapPowerLimit) {
-//        // regen power limit
-//        powerError = -params->mapPowerLimit - currentPower;
-//    }
-//    float negativeFeedback = powerError * params->mapPowerLimitFeedbackP;
-//    if ((torqueRequest > 0 && torqueRequest + negativeFeedback < 0)
-//        || (torqueRequest < 0 && torqueRequest + negativeFeedback > 0)
-//        || (torqueRequest == 0)) {
-//        torqueRequest = 0;
-//    } else {
-//        torqueRequest = torqueRequest + negativeFeedback;
-//    }
-
-//    if(input->batteryCurrent > 200)
-//    {
-//        torqueRequest = 0;
-//    }
+    float powerError = powerLimit - currentPower;
+    this->integral += powerError * deltaTime;
+    if(integral > 0) {
+        integral = 0;
+    }
+    if(powerError > 0) {
+        powerError = 0;
+    }
+    float feedback = params->mapPowerLimit_kP * powerError + params->mapPowerLimit_kI * this->integral;
+    if(feedback > 0) {
+        feedback = 0;
+    }
+    torqueRequest += feedback; // feedback is negative
+    if(torqueRequest < 0) {
+        torqueRequest = 0;
+    }
 
     output->torqueRequest = torqueRequest;
 }
