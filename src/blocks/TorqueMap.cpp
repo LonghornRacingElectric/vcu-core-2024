@@ -21,7 +21,7 @@ void TorqueMap::evaluate(VcuParameters *params, TorqueMapInput *input, TorqueMap
 //    torqueRequest *= derate;
 //
 
-    if(input->batteryCurrent < 1.0f && input->batteryCurrent > 1.0f) {
+    if(input->batteryCurrent > -1.0f && input->batteryCurrent < 1.0f) {
         openCircuitVoltageFilter.add(input->batteryVoltage, deltaTime);
     }
     float openCircuitVoltage = openCircuitVoltageFilter.get();
