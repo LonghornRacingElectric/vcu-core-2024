@@ -16,15 +16,15 @@
 typedef struct VcuParameters {
 
   // ===== APPS PARAMETERS =====
-  float appsLowPassFilterTimeConstant = 0.000f; // (s)
+  float appsLowPassFilterTimeConstant = 0.050f; // (s)
   float appsImplausibilityTime = 0.100f; // (s)
   float appsPlausibilityRange = 0.20f; // (%)
   float apps1VoltageMin = 2.22f; // voltage corresponding to 0% pedal travel (V)
   float apps1VoltageMax = 3.02f; // voltage corresponding to 100% pedal travel (V)
-  float apps2VoltageMin = 1.07f; // voltage corresponding to 0% pedal travel (V)
-  float apps2VoltageMax = 1.50f; // voltage corresponding to 100% pedal travel (V)
-  float appsDeadZoneBottomPct = 0.08f; // (%) of travel that is 0 or 100
-  float appsDeadZoneTopPct = 0.13f; // (%) of travel that is 0 or 100
+  float apps2VoltageMin = 1.09f; // voltage corresponding to 0% pedal travel (V)
+  float apps2VoltageMax = 1.48f; // voltage corresponding to 100% pedal travel (V)
+  float appsDeadZoneBottomPct = 0.05f; // (%) of travel that is 0 or 100
+  float appsDeadZoneTopPct = 0.05f; // (%) of travel that is 0 or 100
 
   // ===== BSE PARAMETERS =====
   float bseLowPassFilterTimeConstant = 0.050f; // (s)
@@ -47,9 +47,9 @@ typedef struct VcuParameters {
   CurveParameter mapDerateInverterTemp; // allowed torque (%) as a function of inverter temperature (deg C)
   CurveParameter mapDerateBatteryTemp; // allowed torque (%) as a function of battery temperature (deg C)
   CurveParameter mapDerateBatterySoc; // allowed torque (%) as a function of battery SoC (%)
-  float mapPowerLimit = 80000; // power limit (W)
+  float mapPowerLimit = 78000; // power limit (W)
   float mapPowerLimit_kP = 0.0f; // PID proportional gain (Nm/W)
-  float mapPowerLimit_kI = 0.2f; // PID integral gain (Nm/(Ws))
+  float mapPowerLimit_kI = 0.15f; // PID integral gain (Nm/(Ws))
 
   // ===== PRNDL PARAMETERS =====
   float prndlBuzzerDuration = 0.25f; // how long the buzzer buzzes (s)

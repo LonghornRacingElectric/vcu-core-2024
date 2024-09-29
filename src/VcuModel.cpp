@@ -200,6 +200,13 @@ void VcuModel::evaluate(VcuInput *vcuInput, VcuOutput *vcuOutput, float deltaTim
       wheelMagnetsOutput.wheelSpeedBr,
       steeringOutput.steeringWheelAngle,
 
+      // new power limit telemetry
+      torqueMapOutput.ocvEstimate,
+      torqueMapOutput.powerLimit,
+      torqueMapOutput.feedbackP,
+      torqueMapOutput.feedbackI,
+      torqueMapOutput.feedbackTorque,
+
       // faults
       flags,
   };

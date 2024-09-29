@@ -21,17 +21,21 @@ void TorqueMap::evaluate(VcuParameters *params, TorqueMapInput *input, TorqueMap
 //    torqueRequest *= derate;
 //
 
+    currentOvershootFilter.add(input->batteryCurrent, deltaTime);
     if(input->batteryCurrent > -1.0f && input->batteryCurrent < 1.0f) {
         openCircuitVoltageFilter.add(input->batteryVoltage, deltaTime);
     }
     float openCircuitVoltage = openCircuitVoltageFilter.get();
-    float internalResistance = 0.650; // Ohms, estimated
+    float internalResistance = 0.750; // Ohms, estimated
 
     float currentLimit = 230.0f; // Amps
     float currentBasedPowerLimit = (openCircuitVoltage - (currentLimit * internalResistance)) * currentLimit;
     float powerLimit = params->mapPowerLimit;
     if(currentBasedPowerLimit < powerLimit) {
         powerLimit = currentBasedPowerLimit;
+    }
+    if(powerLimit < 0) {
+        powerLimit = 0;
     }
 
 //    float motorAngularVelocity = input->motorRpm / 60.0f * 2.0f * 3.14159f; // rad/s
@@ -40,8 +44,9 @@ void TorqueMap::evaluate(VcuParameters *params, TorqueMapInput *input, TorqueMap
 //        torqueRequest = maxTorqueAtPowerLimit;
 //    }
 
+    float smoothedCurrent = currentOvershootFilter.get();
     float currentPower = input->batteryVoltage * input->batteryCurrent;
-    if(input->batteryCurrent > 240.0f || currentPower > 85000.0f) {
+    if(smoothedCurrent > 240.0f || currentPower > 85000.0f) {
         torqueRequest = 0;
     }
 
@@ -63,6 +68,12 @@ void TorqueMap::evaluate(VcuParameters *params, TorqueMapInput *input, TorqueMap
     }
 
     output->torqueRequest = torqueRequest;
+
+    output->ocvEstimate = openCircuitVoltage;
+    output->powerLimit = powerLimit;
+    output->feedbackP = powerError;
+    output->feedbackI = this->integral;
+    output->feedbackTorque = feedback;
 }
 
 void TorqueMap::setParameters(VcuParameters *params) {

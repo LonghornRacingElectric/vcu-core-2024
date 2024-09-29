@@ -101,7 +101,14 @@ typedef struct VcuOutput {
   float telemetryWheelSpeedFr;
   float telemetryWheelSpeedBl;
   float telemetryWheelSpeedBr;
-  float telemetrySteeringWheel; // (
+  float telemetrySteeringWheel;
+
+  // new stuff for power limit
+  float telemetryOcvEstimate;
+  float telemetryPowerLimit;
+  float telemetryPowerLimitFeedbackP;
+  float telemetryPowerLimitFeedbackI;
+  float telemetryPowerLimitFeedbackTorque;
 
   uint16_t flags;
 } VcuOutput;

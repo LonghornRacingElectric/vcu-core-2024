@@ -20,12 +20,19 @@ typedef struct TorqueMapInput {
 
 typedef struct TorqueMapOutput {
     float torqueRequest; // torque (Nm)
+
+    float ocvEstimate; // open circuit voltage (V)
+    float powerLimit; // power (W)
+    float feedbackP; // torque (Nm)
+    float feedbackI; // torque (Nm)
+    float feedbackTorque; // torque (Nm)
 } TorqueMapOutput;
 
 
 class TorqueMap {
 private:
-    LowPassFilter openCircuitVoltageFilter = LowPassFilter(1.0f);
+    LowPassFilter openCircuitVoltageFilter = LowPassFilter(1.000f);
+    LowPassFilter currentOvershootFilter = LowPassFilter(0.200f);
     float integral = 0.0f;
 public:
     void setParameters(VcuParameters* params);
