@@ -28,7 +28,7 @@ void TorqueMap::evaluate(VcuParameters *params, TorqueMapInput *input, TorqueMap
     float openCircuitVoltage = openCircuitVoltageFilter.get();
     float internalResistance = 0.750; // Ohms, estimated
 
-    float currentLimit = 230.0f; // Amps
+    float currentLimit = 200.0f; // Amps (reduced from 230A)
     float currentBasedPowerLimit = (openCircuitVoltage - (currentLimit * internalResistance)) * currentLimit;
     float powerLimit = params->mapPowerLimit;
     if(currentBasedPowerLimit < powerLimit) {
