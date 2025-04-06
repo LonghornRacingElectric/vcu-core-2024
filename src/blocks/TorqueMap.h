@@ -25,6 +25,7 @@ typedef struct TorqueMapOutput {
     float powerLimit; // power (W)
     float feedbackP; // torque (Nm)
     float feedbackI; // torque (Nm)
+    float feedbackD; // torque (Nm)
     float feedbackTorque; // torque (Nm)
 } TorqueMapOutput;
 
@@ -34,6 +35,7 @@ private:
     LowPassFilter openCircuitVoltageFilter = LowPassFilter(1.000f);
     LowPassFilter currentOvershootFilter = LowPassFilter(0.200f);
     float integral = 0.0f;
+    float prevError = 0.0f;
 public:
     void setParameters(VcuParameters* params);
     void evaluate(VcuParameters *params, TorqueMapInput *input, TorqueMapOutput *output, float deltaTime);

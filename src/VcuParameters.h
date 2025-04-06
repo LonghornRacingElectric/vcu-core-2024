@@ -50,7 +50,7 @@ typedef struct VcuParameters {
   float mapPowerLimit = 50000; // power limit (W) (DE-RATED)
   float mapPowerLimit_kP = 0.0f; // PID proportional gain (Nm/W)
   float mapPowerLimit_kI = 0.15f; // PID integral gain (Nm/(Ws))
-
+    float mapPowerLimit_kD = 0.01;
   // ===== PRNDL PARAMETERS =====
   float prndlBuzzerDuration = 0.25f; // how long the buzzer buzzes (s)
   float prndlSwitchDebounceDuration = 0.100f; // how long a digital high/low must be sustained to be considered (s)
