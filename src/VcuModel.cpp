@@ -205,6 +205,7 @@ void VcuModel::evaluate(VcuInput *vcuInput, VcuOutput *vcuOutput, float deltaTim
       torqueMapOutput.powerLimit,
       torqueMapOutput.feedbackP,
       torqueMapOutput.feedbackI,
+      torqueMapOutput.feedbackD,
       torqueMapOutput.feedbackTorque,
 
       // faults
