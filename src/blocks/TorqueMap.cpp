@@ -38,6 +38,12 @@ void TorqueMap::evaluate(VcuParameters *params, TorqueMapInput *input, TorqueMap
         powerLimit = 0;
     }
 
+
+
+    // battery OCV based derate
+    derate = std::max(std::min((openCircuitVoltage/126.0f - 3.5f) / 0.1f, 1.0f), 0.0f);
+    torqueRequest *= derate;
+
 //    float motorAngularVelocity = input->motorRpm / 60.0f * 2.0f * 3.14159f; // rad/s
 //    float maxTorqueAtPowerLimit = powerLimit / motorAngularVelocity * 0.90f; // Nm
 //    if(torqueRequest > maxTorqueAtPowerLimit) {
