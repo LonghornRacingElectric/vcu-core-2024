@@ -62,7 +62,8 @@ void TorqueMap::evaluate(VcuParameters *params, TorqueMapInput *input, TorqueMap
     if(powerError > 0) {
         powerError = 0;
     }
-    float derivative = (powerError - this->prevError)/deltaTime;
+    float derivative = -(powerError - this->prevError)/deltaTime;
+    derivative = 0;
     float feedback = params->mapPowerLimit_kP * powerError + params->mapPowerLimit_kI * this->integral + params->mapPowerLimit_kD * derivative;
 
     if(feedback > 0) {
