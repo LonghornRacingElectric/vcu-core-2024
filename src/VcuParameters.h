@@ -1,3 +1,4 @@
+
 #ifndef VCU_CORE_VCUPARAMETERS_H
 #define VCU_CORE_VCUPARAMETERS_H
 
@@ -16,23 +17,27 @@
 typedef struct VcuParameters {
 
   // ===== APPS PARAMETERS =====
-  float appsLowPassFilterTimeConstant = 0.000f; // (s)
-  float appsImplausibilityTime = 0.100f; // (s)
-  float appsPlausibilityRange = 0.10f; // (%)
-  float apps1VoltageMin = 1.0f; // voltage corresponding to 0% pedal travel (V)
-  float apps1VoltageMax = 4.0f; // voltage corresponding to 100% pedal travel (V)
-  float apps2VoltageMin = 0.5f; // voltage corresponding to 0% pedal travel (V)
-  float apps2VoltageMax = 2.0f; // voltage corresponding to 100% pedal travel (V)
-  float appsDeadZonePct = 0.05f; // (%) of travel that is 0 or 100
+  float appsLowPassFilterTimeConstant = 0.050f; // (s)
+  float appsImplausibilityTime = 0.100f; // (s) fixed my rules
+  float appsPlausibilityRange = 0.10f; // (%) // prev 0.2
+  float apps1VoltageMin = 0.82f; // voltage corresponding to 0% pedal travel (V)
+  float apps1VoltageMax = 1.64f; // voltage corresponding to 100% pedal travel (V)
+  float apps2VoltageMin = 0.40f; // voltage corresponding to 0% pedal travel (V)
+  float apps2VoltageMax = 0.83f; // voltage corresponding to 100% pedal travel (V)
+  float appsDeadZoneBottomPct = 0.10f; // (%) of travel that is 0 or 100
+  float appsDeadZoneTopPct = 0.13f; // (%) of travel that is 0 or 100
 
   // ===== BSE PARAMETERS =====
-  float bseLowPassFilterTimeConstant = 0.000f; // (s)
+  float bseLowPassFilterTimeConstant = 0.050f; // (s)
   float bseImplausibilityTime = 0.100f; // (s)
-  float bseVoltageMin = 0.5f; // voltage corresponding to 0% brake pressure (V)
-  float bseVoltageMax = 4.5f; // voltage corresponding to 100% brake pressure (V)
+  float bseVoltageMin = 0.45f; // voltage corresponding to 0% brake pressure (V)
+  float bseVoltageMax = 4.55f; // voltage corresponding to 100% brake pressure (V)
+
+  // ===== BRAKE PARAMETERS =====
+  float brakesSoftThreshold = 0.03f; // minimum brakes to count as mechanical brakes engaged for EV 4.7, also brake light (%)
+  float brakesHardThreshold = 0.08f; // hard braking (%)
 
   // ===== STOMPP PARAMETERS =====
-  float stomppMechanicalBrakesThreshold = 0.1f; // minimum brakes to count as mechanical brakes engaged for EV 4.7 (%)
   float stomppAppsCutoffThreshold = 0.25f; // apps pedal travel where motor power needs to be cut off (%)
   float stomppAppsRecoveryThreshold = 0.05f; // apps pedal travel where motor power can be restored (%)
 
@@ -43,29 +48,32 @@ typedef struct VcuParameters {
   CurveParameter mapDerateInverterTemp; // allowed torque (%) as a function of inverter temperature (deg C)
   CurveParameter mapDerateBatteryTemp; // allowed torque (%) as a function of battery temperature (deg C)
   CurveParameter mapDerateBatterySoc; // allowed torque (%) as a function of battery SoC (%)
-  float mapPowerLimit = 78000; // power limit (W)
-  float mapPowerLimitFeedbackP = 0.10f; // PID proportional gain (Nm/W)
-  float mapPowerLimitFeedbackTimeConstant = 0.100f;
-
+  float mapPowerLimit = 50000; // power limit (W) (DE-RATED)
+  float mapPowerLimit_kP = 0.0f; // PID proportional gain (Nm/W)
+  float mapPowerLimit_kI = 0.15f; // PID integral gain (Nm/(Ws))
+    float mapPowerLimit_kD = 0.01;
   // ===== PRNDL PARAMETERS =====
-  float prndlBrakeToStartThreshold = 0.1f; // minimum brakes required to go into drive (%)
-  float prndlBuzzerDuration = 2.0f; // how long the buzzer buzzes (s)
+  float prndlBuzzerDuration = 0.25f; // how long the buzzer buzzes (s)
   float prndlSwitchDebounceDuration = 0.100f; // how long a digital high/low must be sustained to be considered (s)
 
   // ==== COOLING PARAMETERS =====
-  CurveParameter  coolingBattery;
-  CurveParameter  coolingMotor;
+  CurveParameter  coolingRadiatorFanCurve;
+  CurveParameter  coolingBatteryFanCurve;
 
 
-    // ==== TRACTION CONTROL PARAMETERS =====
-  bool tcsEnabled = true;
+  // ==== TRACTION CONTROL PARAMETERS =====
+  bool tcsEnabled = false;
   float tcsFeedbackLowPassFilterTimeConstant = 0.050f;
+  float tcsTargetSlipRatio = 0.12f;
+  float tcsProportionalGain = 5.0f;
 
   // ==== STEERING PARAMETERS ====
   CurveParameter steeringWheelToOuterWheel;
   CurveParameter steeringWheelToInnerWheel;
-  float steeringPotMaxVoltage = 3.3f;
-  float steeringWheelMaxAngle = 90.0f;
+  float steeringPotMinVoltage = 0.0f;
+  float steeringPotMaxVoltage = 2.59f;
+  float steeringWheelMinAngle = -99.0f;
+  float steeringWheelMaxAngle = 122.0f;
 
   // ==== SOC PARAMETERS ====
   float socCurrentLpfTimeConstant = 0.500f; // (s)
