@@ -15,16 +15,16 @@
 
 typedef struct VcuParameters {
 
-  // ===== APPS PARAMETERS =====
-  float appsLowPassFilterTimeConstant = 0.050f; // (s)
-  float appsImplausibilityTime = 0.100f; // (s)
-  float appsPlausibilityRange = 0.20f; // (%)
-  float apps1VoltageMin = 2.22f; // voltage corresponding to 0% pedal travel (V)
-  float apps1VoltageMax = 3.02f; // voltage corresponding to 100% pedal travel (V)
-  float apps2VoltageMin = 1.09f; // voltage corresponding to 0% pedal travel (V)
-  float apps2VoltageMax = 1.48f; // voltage corresponding to 100% pedal travel (V)
-  float appsDeadZoneBottomPct = 0.05f; // (%) of travel that is 0 or 100
-  float appsDeadZoneTopPct = 0.05f; // (%) of travel that is 0 or 100
+    // ===== APPS PARAMETERS =====
+    float appsLowPassFilterTimeConstant = 0.050f; // (s)
+    float appsImplausibilityTime = 0.100f; // (s) fixed my rules
+    float appsPlausibilityRange = 0.10f; // (%) // prev 0.2
+    float apps1VoltageMin = 0.82f; // voltage corresponding to 0% pedal travel (V)
+    float apps1VoltageMax = 1.64f; // voltage corresponding to 100% pedal travel (V)
+    float apps2VoltageMin = 0.40f; // voltage corresponding to 0% pedal travel (V)
+    float apps2VoltageMax = 0.83f; // voltage corresponding to 100% pedal travel (V)
+    float appsDeadZoneBottomPct = 0.10f; // (%) of travel that is 0 or 100
+    float appsDeadZoneTopPct = 0.13f; // (%) of travel that is 0 or 100
 
   // ===== BSE PARAMETERS =====
   float bseLowPassFilterTimeConstant = 0.050f; // (s)
