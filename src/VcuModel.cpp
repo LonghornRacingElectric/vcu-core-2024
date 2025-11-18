@@ -51,6 +51,7 @@ void VcuModel::evaluate(VcuInput *vcuInput, VcuOutput *vcuOutput, float deltaTim
   torqueMapInput = {
       appsProcessorOutput.apps,
       vcuInput->motorTemp,
+      vcuInput->motorRpm,
       vcuInput->inverterTemp,
       vcuInput->hvBatteryTemp,
       vcuInput->hvBatterySoc,
@@ -65,6 +66,7 @@ void VcuModel::evaluate(VcuInput *vcuInput, VcuOutput *vcuOutput, float deltaTim
       wheelMagnetsOutput.wheelSpeedFr,
       wheelMagnetsOutput.wheelSpeedBl,
       wheelMagnetsOutput.wheelSpeedBr,
+      vcuInput->motorRpm,
       wheelMagnetsOutput.ok,
   };
   tractionControl.evaluate(params, &tractionControlInput, &tractionControlOutput, deltaTime);
@@ -119,10 +121,12 @@ void VcuModel::evaluate(VcuInput *vcuInput, VcuOutput *vcuOutput, float deltaTim
       vcuInput->hvBatteryTemp,
       vcuInput->inverterTemp,
       vcuInput->motorTemp,
+      prndlOutput.state
   };
   cooling.evaluate(params, &coolingInput, &coolingOutput, deltaTime);
 
   indicatorsInput = {
+      prndlOutput.state,
       bseProcessorOutput.bse,
   };
   indicators.evaluate(params, &indicatorsInput, &indicatorsOutput, deltaTime);
@@ -157,7 +161,7 @@ void VcuModel::evaluate(VcuInput *vcuInput, VcuOutput *vcuOutput, float deltaTim
                    | (softShutdownOutput.enableInverter << 8)
                    | (prndlOutput.state << 9)
                    | (prndlOutput.buzzer << 10)
-                   | (indicatorsOutput.brakeLight << 11)
+                   | ((indicatorsOutput.brakeLight > 0.1) << 11)
                    | (drsOutput.enable << 12);
 
   *vcuOutput = {
@@ -195,6 +199,14 @@ void VcuModel::evaluate(VcuInput *vcuInput, VcuOutput *vcuOutput, float deltaTim
       wheelMagnetsOutput.wheelSpeedBl,
       wheelMagnetsOutput.wheelSpeedBr,
       steeringOutput.steeringWheelAngle,
+
+      // new power limit telemetry
+      torqueMapOutput.ocvEstimate,
+      torqueMapOutput.powerLimit,
+      torqueMapOutput.feedbackP,
+      torqueMapOutput.feedbackI,
+      torqueMapOutput.feedbackD,
+      torqueMapOutput.feedbackTorque,
 
       // faults
       flags,

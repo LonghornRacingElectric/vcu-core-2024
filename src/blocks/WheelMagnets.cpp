@@ -28,14 +28,16 @@ float calcSpeed(WheelTracker *tracker, float field, Differentiator& differentiat
     float dydx = differentiator.get(tracker->displacement, tracker->tickDuration);
     if(dydx != 0){
         filter.add(dydx, tracker->tickDuration);
+        tracker->lastTickDuration = tracker->tickDuration;
         tracker->tickDuration = 0;
     }
     float angularVelocity = filter.get();
-    if(tracker->tickDuration > 0) {
-      dydx = (3.14159f / 3.0f) / tracker->tickDuration;
-      float alpha = tracker->tickDuration / (timeConstant + tracker->tickDuration);
-      angularVelocity = (angularVelocity * (1 - alpha)) + (dydx * alpha);
-    }
+
+    float nextEstimatedDuration = (tracker->tickDuration > tracker->lastTickDuration) ? tracker->tickDuration : tracker->lastTickDuration;
+    dydx = (3.14159f / 3.0f) / nextEstimatedDuration;
+    float alpha = nextEstimatedDuration / (timeConstant + nextEstimatedDuration);
+    angularVelocity = (angularVelocity * (1 - alpha)) + (dydx * alpha);
+
     return angularVelocity;
 }
 

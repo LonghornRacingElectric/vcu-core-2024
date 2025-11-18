@@ -11,10 +11,11 @@
 typedef struct TractionControlInput {
     float unregulatedTorqueRequest; // torque (Nm)
 
-    float wheelSpeedFl; // (rad)
+    float wheelSpeedFl; // (rad/s)
     float wheelSpeedFr;
     float wheelSpeedBl;
     float wheelSpeedBr;
+    float motorRpm; // (rpm)
 
     bool wheelSpeedsOk;
 } TractionControlInput;
@@ -27,11 +28,6 @@ typedef struct TractionControlOutput {
 
 class TractionControl {
 private:
-    Differentiator differentiatorFl;
-    Differentiator differentiatorFr;
-    Differentiator differentiatorBl;
-    Differentiator differentiatorBr;
-
     LowPassFilter lowPassFeedback = LowPassFilter(0);
 public:
     void setParameters(VcuParameters* params);

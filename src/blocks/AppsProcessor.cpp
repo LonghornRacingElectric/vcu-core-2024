@@ -12,7 +12,6 @@
 void AppsProcessor::evaluate(VcuParameters *params, AppsProcessorInput *input,
                              AppsProcessorOutput *output, float deltaTime) {
 
-
   bool apps1InRange = (input->apps1 >= params->apps1VoltageMin) && (input->apps1 <= params->apps1VoltageMax);
   bool apps2InRange = (input->apps2 >= params->apps2VoltageMin) && (input->apps2 <= params->apps2VoltageMax);
 
@@ -24,6 +23,7 @@ void AppsProcessor::evaluate(VcuParameters *params, AppsProcessorInput *input,
       app2Filter.reset();
       output->apps1 = 0;
       output->apps2 = 0;
+      output->apps = 0;
       output->ok = !(APPS_SHUTDOWN_MASK & output->fault);
       return;
     }
@@ -49,6 +49,7 @@ void AppsProcessor::evaluate(VcuParameters *params, AppsProcessorInput *input,
     if (differenceClock.isFinished()) {
       output->fault = APPS_DISAGREE;
       output->ok = !(APPS_SHUTDOWN_MASK & output->fault);
+      output->apps = 0;
       app1Filter.reset();
       app2Filter.reset();
       return;
@@ -61,14 +62,14 @@ void AppsProcessor::evaluate(VcuParameters *params, AppsProcessorInput *input,
   output->ok = !(APPS_SHUTDOWN_MASK & output->fault);
 
   float appsNoDeadzone = (app1Perc + app2Perc) / 2;
-  float slope = 1.0f / (1.0f - (2.0f * params->appsDeadZonePct));
+  float slope = 1.0f / (1.0f - params->appsDeadZoneTopPct - params->appsDeadZoneBottomPct);
 
-  if (appsNoDeadzone <= params->appsDeadZonePct) {
+  if (appsNoDeadzone <= params->appsDeadZoneBottomPct) {
     output->apps = 0;
-  } else if (appsNoDeadzone >= (1 - params->appsDeadZonePct)) {
+  } else if (appsNoDeadzone >= (1 - params->appsDeadZoneTopPct)) {
     output->apps = 1;
   } else {
-    output->apps = slope * (appsNoDeadzone - params->appsDeadZonePct);
+    output->apps = slope * (appsNoDeadzone - params->appsDeadZoneBottomPct);
   }
 }
 

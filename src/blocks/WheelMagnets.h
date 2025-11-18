@@ -33,6 +33,7 @@ typedef struct WheelTracker{
     float displacement;
     float curTime;
     float tickDuration;
+    float lastTickDuration;
 }WheelTracker;
 
 

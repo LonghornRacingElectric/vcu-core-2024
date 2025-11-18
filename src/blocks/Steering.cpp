@@ -1,4 +1,5 @@
 #include "Steering.h"
+#include "util/MathUtils.h"
 
 /**
  * We have a potentiometer on the steering wheel that we're using the measure the steering wheel angle.
@@ -10,8 +11,9 @@
 */
 
 void Steering::evaluate(VcuParameters *params, SteeringInput *input, SteeringOutput *output, float deltaTime) {
-  output->steeringWheelAngle =
-      -2.0f * (params->steeringWheelMaxAngle) * (((input->steeringPotVoltage) / params->steeringPotMaxVoltage) - 0.5f);
+  output->steeringWheelAngle = map(input->steeringPotVoltage,
+                                   params->steeringPotMinVoltage, params->steeringPotMaxVoltage,
+                                   params->steeringWheelMinAngle, params->steeringWheelMaxAngle);
 
   if (output->steeringWheelAngle > 0) {
     output->wheelAngleFl = params->steeringWheelToInnerWheel(output->steeringWheelAngle);

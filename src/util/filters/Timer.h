@@ -5,8 +5,8 @@
 class Timer {
 private:
     float duration;
-    float time;
 public:
+    float time;
     explicit Timer(float duration);
     void reset();
     void count(float deltaTime);

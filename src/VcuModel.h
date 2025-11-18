@@ -32,6 +32,8 @@ typedef struct VcuInput {
 
   float steeringWheelPotVoltage; // (V)
 
+  float motorRpm; // (rpm)
+
   float wheelMagneticFieldFl; // magnetic flux density (mT)
   float wheelMagneticFieldFr;
   float wheelMagneticFieldBl;
@@ -72,7 +74,7 @@ typedef struct VcuOutput {
 
   bool prndlState; // (true = drive)
   bool r2dBuzzer; // (true = buzz)
-  bool brakeLight; // (true = on)
+  float brakeLight; // (%)
 
   bool enableDragReduction; // (true = enable)
 
@@ -99,7 +101,15 @@ typedef struct VcuOutput {
   float telemetryWheelSpeedFr;
   float telemetryWheelSpeedBl;
   float telemetryWheelSpeedBr;
-  float telemetrySteeringWheel; // (
+  float telemetrySteeringWheel;
+
+  // new stuff for power limit
+  float telemetryOcvEstimate;
+  float telemetryPowerLimit;
+  float telemetryPowerLimitFeedbackP;
+  float telemetryPowerLimitFeedbackI;
+  float telemetryPowerLimitFeedbackD;
+  float telemetryPowerLimitFeedbackTorque;
 
   uint16_t flags;
 } VcuOutput;

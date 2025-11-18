@@ -40,6 +40,8 @@ void input() {
 
   cin >> vcuInput.steeringWheelPotVoltage;
 
+  cin >> vcuInput.motorRpm;
+
   cin >> vcuInput.wheelMagneticFieldFl;
   cin >> vcuInput.wheelMagneticFieldFr;
   cin >> vcuInput.wheelMagneticFieldBl;

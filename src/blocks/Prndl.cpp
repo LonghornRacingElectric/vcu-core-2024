@@ -1,3 +1,4 @@
+#include <cmath>
 #include "Prndl.h"
 #include "util/filters/Timer.h"
 
@@ -19,10 +20,6 @@
 void Prndl::evaluate(VcuParameters *params, PrndlInput *input, PrndlOutput *output, float deltaTime) {
     switchInputDebounce.add(input->driveSwitch, deltaTime);
     bool driveSwitch = switchInputDebounce.get();
-    if(driveSwitch) {
-      volatile int x = 0;
-      x++;
-    }
     bool driveSwitchRisingEdge = (driveSwitch > driveSwitchLastState);
     driveSwitchLastState = driveSwitch;
 
@@ -36,7 +33,7 @@ void Prndl::evaluate(VcuParameters *params, PrndlInput *input, PrndlOutput *outp
 
     } else {
         // we're currently in Park
-        bool brakesPressed = (input->bse > params->prndlBrakeToStartThreshold);
+        bool brakesPressed = (input->bse > params->brakesSoftThreshold);
         bool acceleratorReleased = (input->apps == 0.0f);
 
         if (driveSwitchRisingEdge && input->inverterReady && brakesPressed && acceleratorReleased) {
@@ -45,8 +42,10 @@ void Prndl::evaluate(VcuParameters *params, PrndlInput *input, PrndlOutput *outp
         }
     }
 
+    bool pattern = fmod(params->prndlBuzzerDuration - buzzerTimer.time, 0.25f) < 0.20f;
+
     output->state = state; // Park = false, Drive = true
-    output->buzzer = state && !buzzerTimer.isFinished(); // buzz if we're in the first X seconds of Drive
+    output->buzzer = state && (!buzzerTimer.isFinished()) && pattern; // buzz if we're in the first X seconds of Drive
 }
 
 void Prndl::setParameters(VcuParameters *params) {
