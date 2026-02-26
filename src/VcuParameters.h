@@ -20,11 +20,11 @@ typedef struct VcuParameters {
   float appsLowPassFilterTimeConstant = 0.050f; // (s)
   float appsImplausibilityTime = 0.100f; // (s) fixed my rules
   float appsPlausibilityRange = 0.10f; // (%) // prev 0.2
-  float apps1VoltageMin = 0.82f; // voltage corresponding to 0% pedal travel (V)
+  float apps1VoltageMin = 0.60f; // voltage corresponding to 0% pedal travel (V)
   float apps1VoltageMax = 1.64f; // voltage corresponding to 100% pedal travel (V)
-  float apps2VoltageMin = 0.40f; // voltage corresponding to 0% pedal travel (V)
+  float apps2VoltageMin = 0.30f; // voltage corresponding to 0% pedal travel (V)
   float apps2VoltageMax = 0.83f; // voltage corresponding to 100% pedal travel (V)
-  float appsDeadZoneBottomPct = 0.10f; // (%) of travel that is 0 or 100
+  float appsDeadZoneBottomPct = 0.12f; // (%) of travel that is 0 or 100
   float appsDeadZoneTopPct = 0.13f; // (%) of travel that is 0 or 100
 
   // ===== BSE PARAMETERS =====
@@ -34,7 +34,7 @@ typedef struct VcuParameters {
   float bseVoltageMax = 4.55f; // voltage corresponding to 100% brake pressure (V)
 
   // ===== BRAKE PARAMETERS =====
-  float brakesSoftThreshold = 0.03f; // minimum brakes to count as mechanical brakes engaged for EV 4.7, also brake light (%)
+  float brakesSoftThreshold = 0.02f; // minimum brakes to count as mechanical brakes engaged for EV 4.7, also brake light (%)
   float brakesHardThreshold = 0.08f; // hard braking (%)
 
   // ===== STOMPP PARAMETERS =====
