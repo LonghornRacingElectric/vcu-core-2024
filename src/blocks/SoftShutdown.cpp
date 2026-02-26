@@ -10,7 +10,7 @@ void SoftShutdown::evaluate(VcuParameters *params, SoftShutdownInput *input, Sof
 
     bool everythingOk = (input->appsOk && input->bseOk && input->stomppOk && input->prndlState);
 
-    output->enableInverter = everythingOk && (input->torqueRequest > 0.0f);
+    output->enableInverter = everythingOk;
     output->inverterTorqueRequest = (output->enableInverter) ? input->torqueRequest : 0;
 
 }
