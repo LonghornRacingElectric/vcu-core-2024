@@ -34,8 +34,8 @@ typedef struct VcuParameters {
   float bseVoltageMax = 4.55f; // voltage corresponding to 100% brake pressure (V)
 
   // ===== BRAKE PARAMETERS =====
-  float brakesSoftThreshold = 0.02f; // minimum brakes to count as mechanical brakes engaged for EV 4.7, also brake light (%)
-  float brakesHardThreshold = 0.08f; // hard braking (%)
+  float brakesSoftThreshold = 0.10f; // minimum brakes to count as mechanical brakes engaged for EV 4.7, also brake light (%)
+  float brakesHardThreshold = 0.14f; // hard braking (%)
 
   // ===== STOMPP PARAMETERS =====
   float stomppAppsCutoffThreshold = 0.25f; // apps pedal travel where motor power needs to be cut off (%)
@@ -48,10 +48,10 @@ typedef struct VcuParameters {
   CurveParameter mapDerateInverterTemp; // allowed torque (%) as a function of inverter temperature (deg C)
   CurveParameter mapDerateBatteryTemp; // allowed torque (%) as a function of battery temperature (deg C)
   CurveParameter mapDerateBatterySoc; // allowed torque (%) as a function of battery SoC (%)
-  float mapPowerLimit = 50000; // power limit (W) (DE-RATED)
+  float mapPowerLimit = 62000; // power limit (W) (DE-RATED)
   float mapPowerLimit_kP = 0.0f; // PID proportional gain (Nm/W)
-  float mapPowerLimit_kI = 0.15f; // PID integral gain (Nm/(Ws))
-    float mapPowerLimit_kD = 0.01;
+  float mapPowerLimit_kI = 0.0f; // PID integral gain (Nm/(W*s))
+  float mapPowerLimit_kD = 0.0f; // PID derivative gain (Nm*s/W)
   // ===== PRNDL PARAMETERS =====
   float prndlBuzzerDuration = 0.25f; // how long the buzzer buzzes (s)
   float prndlSwitchDebounceDuration = 0.100f; // how long a digital high/low must be sustained to be considered (s)

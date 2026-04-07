@@ -35,6 +35,10 @@ TEST(Vcu, NormalTorqueRequests) {
   input.apps2 = 0.55f;
   input.bse1 = 4.0f;
   input.bse2 = 4.0f;
+  input.wheelSensorFlOk = true;
+  input.wheelSensorFrOk = true;
+  input.wheelSensorBlOk = true;
+  input.wheelSensorBrOk = true;
   input.inverterReady = true;
   input.driveSwitch = false;
   for (int i = 0; i < 100; i++) {

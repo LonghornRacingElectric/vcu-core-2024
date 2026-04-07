@@ -38,6 +38,10 @@ typedef struct VcuInput {
   float wheelMagneticFieldFr;
   float wheelMagneticFieldBl;
   float wheelMagneticFieldBr;
+  bool wheelSensorFlOk;
+  bool wheelSensorFrOk;
+  bool wheelSensorBlOk;
+  bool wheelSensorBrOk;
 
   float motorTemp; // (deg C)
   float inverterTemp;

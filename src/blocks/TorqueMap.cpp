@@ -26,7 +26,7 @@ void TorqueMap::evaluate(VcuParameters *params, TorqueMapInput *input, TorqueMap
         openCircuitVoltageFilter.add(input->batteryVoltage, deltaTime);
     }
     float openCircuitVoltage = openCircuitVoltageFilter.get();
-    float internalResistance = 0.750; // Ohms, estimated
+    float internalResistance = 0.690; //this was 0.750 changed to account for reduced cell groups of 128. Added .05 for consistency from previous
 
     float currentLimit = 200.0f; // Amps (reduced from 230A)
     float currentBasedPowerLimit = (openCircuitVoltage - (currentLimit * internalResistance)) * currentLimit;
@@ -41,7 +41,7 @@ void TorqueMap::evaluate(VcuParameters *params, TorqueMapInput *input, TorqueMap
 
 
     // battery OCV based derate
-    derate = std::max(std::min((openCircuitVoltage/126.0f - 3.5f) / 0.1f, 1.0f), 0.0f);
+    derate = std::max(std::min((openCircuitVoltage/128.0f - 3.5f) / 0.1f, 1.0f), 0.0f); //updated to 128s config from 126. Linear derate 3.6 to 3.5 OCV cell
     torqueRequest *= derate;
 
 //    float motorAngularVelocity = input->motorRpm / 60.0f * 2.0f * 3.14159f; // rad/s
@@ -57,24 +57,40 @@ void TorqueMap::evaluate(VcuParameters *params, TorqueMapInput *input, TorqueMap
     }
 
     float powerError = powerLimit - currentPower;
-    this->integral += powerError * deltaTime;
-    if(integral > 0) {
-        integral = 0;
-    }
-    float integralMin = -100.0f;
-    if (integral < integralMin) {
-        integral = integralMin;
-    }
-    if(powerError > 0) {
-        powerError = 0;
-    }
-    float derivative = -(powerError - this->prevError)/deltaTime;
-    derivative = 0;
-    float feedback = params->mapPowerLimit_kP * powerError + params->mapPowerLimit_kI * this->integral + params->mapPowerLimit_kD * derivative;
 
-    if(feedback > 0) {
-        feedback = 0;
+    if(input->apps < 0.01f || torqueRequest <= 0.0f) {
+        this->integral = 0.0f;
+        this->prevError = powerError;
     }
+
+    float derivativeError = 0.0f;
+    if(deltaTime > 0.0f) {
+        derivativeError = (powerError - this->prevError) / deltaTime;
+    }
+
+    float proportional = params->mapPowerLimit_kP * powerError;
+    float candidateIntegral = this->integral;
+    if(deltaTime > 0.0f) {
+        candidateIntegral += powerError * deltaTime;
+    }
+    float derivative = params->mapPowerLimit_kD * derivativeError;
+
+    float feedbackMin = -torqueRequest;
+    float feedbackMax = 0.0f;
+
+    float candidateIntegralTerm = params->mapPowerLimit_kI * candidateIntegral;
+    float unsaturatedFeedback = proportional + candidateIntegralTerm + derivative;
+
+    bool saturatingHigh = unsaturatedFeedback > feedbackMax && powerError > 0.0f;
+    bool saturatingLow = unsaturatedFeedback < feedbackMin && powerError < 0.0f;
+    if(!(saturatingHigh || saturatingLow)) {
+        this->integral = candidateIntegral;
+    }
+
+    float integral = params->mapPowerLimit_kI * this->integral;
+    float feedback = proportional + integral + derivative;
+    feedback = std::max(feedbackMin, std::min(feedback, feedbackMax));
+
     torqueRequest += feedback; // feedback is negative
     if(torqueRequest < 0) {
         torqueRequest = 0;
@@ -84,8 +100,8 @@ void TorqueMap::evaluate(VcuParameters *params, TorqueMapInput *input, TorqueMap
 
     output->ocvEstimate = openCircuitVoltage;
     output->powerLimit = powerLimit;
-    output->feedbackP = powerError;
-    output->feedbackI = this->integral;
+    output->feedbackP = proportional;
+    output->feedbackI = integral;
     output->feedbackD = derivative;
     output->feedbackTorque = feedback;
 
@@ -93,5 +109,7 @@ void TorqueMap::evaluate(VcuParameters *params, TorqueMapInput *input, TorqueMap
 }
 
 void TorqueMap::setParameters(VcuParameters *params) {
-
+    (void) params;
+    this->integral = 0.0f;
+    this->prevError = 0.0f;
 }

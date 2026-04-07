@@ -4,7 +4,6 @@
 #include <stdint.h>
 
 #include "VcuParameters.h"
-#include "util/filters/Differentiator.h"
 #include "util/filters/LowPassFilter.h"
 
 #define WHEEL_MAGNETS_OK 0x00
@@ -15,7 +14,10 @@ typedef struct WheelMagnetsInput {
   float wheelMagneticFieldFr;
   float wheelMagneticFieldBl;
   float wheelMagneticFieldBr;
-  bool areSensorsOk; // whether we've received data from all four sensors recently
+  bool isSensorFlOk;
+  bool isSensorFrOk;
+  bool isSensorBlOk;
+  bool isSensorBrOk;
 } WheelMagnetsInput;
 
 
@@ -29,20 +31,28 @@ typedef struct WheelMagnetsOutput {
 } WheelMagnetsOutput;
 
 typedef struct WheelTracker{
-    bool isHigh;
-    float displacement;
-    float curTime;
-    float tickDuration;
-    float lastTickDuration;
+    bool hasEstimate;
+    bool hasPreviousSample;
+    float phase;
+    float previousPhase;
+    float signalOmega;
+    float omegaSample1;
+    float omegaSample2;
+    float wheelSpeedEstimate;
+    float previousFilteredField;
+    float amplitudeEstimate;
+    float quadratureEstimate;
+    float activityEstimate;
+    float stillTime;
 }WheelTracker;
 
 
 class WheelMagnets {
 private:
-  Differentiator differentiatorFl = Differentiator();
-  Differentiator differentiatorFr = Differentiator();
-  Differentiator differentiatorBl = Differentiator();
-  Differentiator differentiatorBr = Differentiator();
+  LowPassFilter fieldFilterFl = LowPassFilter(0.0f);
+  LowPassFilter fieldFilterFr = LowPassFilter(0.0f);
+  LowPassFilter fieldFilterBl = LowPassFilter(0.0f);
+  LowPassFilter fieldFilterBr = LowPassFilter(0.0f);
   LowPassFilter speedFilterFl = LowPassFilter(0.0f);
   LowPassFilter speedFilterFr = LowPassFilter(0.0f);
   LowPassFilter speedFilterBl = LowPassFilter(0.0f);

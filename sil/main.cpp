@@ -46,6 +46,10 @@ void input() {
   cin >> vcuInput.wheelMagneticFieldFr;
   cin >> vcuInput.wheelMagneticFieldBl;
   cin >> vcuInput.wheelMagneticFieldBr;
+  vcuInput.wheelSensorFlOk = true;
+  vcuInput.wheelSensorFrOk = true;
+  vcuInput.wheelSensorBlOk = true;
+  vcuInput.wheelSensorBrOk = true;
 
   cin >> vcuInput.motorTemp;
   cin >> vcuInput.inverterTemp;

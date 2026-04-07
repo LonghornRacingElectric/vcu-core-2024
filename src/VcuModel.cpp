@@ -44,7 +44,10 @@ void VcuModel::evaluate(VcuInput *vcuInput, VcuOutput *vcuOutput, float deltaTim
       vcuInput->wheelMagneticFieldFr,
       vcuInput->wheelMagneticFieldBl,
       vcuInput->wheelMagneticFieldBr,
-      true, // TODO use CAN timeout
+      vcuInput->wheelSensorFlOk,
+      vcuInput->wheelSensorFrOk,
+      vcuInput->wheelSensorBlOk,
+      vcuInput->wheelSensorBrOk,
   };
   wheelMagnets.evaluate(params, &wheelMagnetsInput, &wheelMagnetsOutput, deltaTime);
 
