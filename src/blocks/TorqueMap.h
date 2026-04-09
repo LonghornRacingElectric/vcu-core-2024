@@ -34,8 +34,10 @@ class TorqueMap {
 private:
     LowPassFilter openCircuitVoltageFilter = LowPassFilter(1.000f);
     LowPassFilter currentOvershootFilter = LowPassFilter(0.200f);
+    LowPassFilter measuredPowerFilter = LowPassFilter(0.050f);
     float integral = 0.0f;
-    float prevError = 0.0f;
+    float previousMeasuredBatteryPower = 0.0f;
+    bool hasMeasuredPowerHistory = false;
 public:
     void setParameters(VcuParameters* params);
     void evaluate(VcuParameters *params, TorqueMapInput *input, TorqueMapOutput *output, float deltaTime);

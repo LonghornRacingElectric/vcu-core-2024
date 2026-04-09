@@ -16,6 +16,8 @@ TEST(AppsProcessor, AppsRulesCompliance) {
     vcuParameters.appsImplausibilityTime = 0.1f;
     vcuParameters.appsPlausibilityRange = 0.1f;
     vcuParameters.appsLowPassFilterTimeConstant = 0.005f;
+    vcuParameters.appsDeadZoneBottomPct = 0.0f;
+    vcuParameters.appsDeadZoneTopPct = 0.0f;
 
     appsProcessor.setParameters(&vcuParameters);
 

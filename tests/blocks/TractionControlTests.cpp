@@ -16,7 +16,8 @@ TEST(TractionControl, TractionControlFunctionality) {
     for(int i = 0; i < 10; i++) {
         tractionControlInput = {
                 0.0f,
-                0, 0, 0, 0,
+                0.0f, 0.0f, 0.0f, 0.0f,
+                0.0f,
                 true
         };
         tractionControl.evaluate(&vcuParameters, &tractionControlInput, &tractionControlOutput, 0.001f);
@@ -27,7 +28,8 @@ TEST(TractionControl, TractionControlFunctionality) {
         float x = i;
         tractionControlInput = {
                 100.0f,
-                x, x, x*2, x*2,
+                x, x, x*2.0f, x*2.0f,
+                x * 2.0f * 60.0f / (2.0f * 3.14159f) * 4.0f,
                 true
         };
         tractionControl.evaluate(&vcuParameters, &tractionControlInput, &tractionControlOutput, 0.001f);

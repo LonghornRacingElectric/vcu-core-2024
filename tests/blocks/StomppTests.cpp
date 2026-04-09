@@ -17,7 +17,7 @@ TEST(Stompp, StomppRulesCompliance){
     StomppOutput stomppOutput = {};
 
     VcuParameters vcuParameters = {};
-    vcuParameters.stomppMechanicalBrakesThreshold = 0.1f;
+    vcuParameters.brakesSoftThreshold = 0.1f;
 
     //Test 0% apps with no break pressure - Stompp remains disabled
     stomppInput = {0.0f, 0.0f};
@@ -62,9 +62,9 @@ TEST(Stompp, StomppRulesCompliance){
     for(int bseInRange = 0; bseInRange < 1000;  bseInRange++) {
         stomppInput = {0.26, (float)bseInRange};
         stomppProcessor.evaluate(&vcuParameters, &stomppInput, &stomppOutput, 1.0f);
-        if((float)bseInRange > vcuParameters.stomppMechanicalBrakesThreshold)
+        if((float)bseInRange > vcuParameters.brakesSoftThreshold)
             EXPECT_FALSE(stomppOutput.ok);
-        else if((float)bseInRange <=vcuParameters.stomppMechanicalBrakesThreshold)
+        else if((float)bseInRange <= vcuParameters.brakesSoftThreshold)
             EXPECT_TRUE(stomppOutput.ok);
         stomppProcessor.reset();
     }

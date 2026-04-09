@@ -5,13 +5,21 @@
 namespace {
 constexpr float kPi = 3.14159265f;
 constexpr float kSignalCyclesPerWheelRevolution = 3.0f;
-constexpr float kFieldFilterTimeConstant = 0.010f;
+constexpr float kFieldFilterTimeConstant = 0.0f;
+constexpr float kBaselineFilterTimeConstant = 0.250f;
 constexpr float kAmplitudeFilterTimeConstant = 0.050f;
 constexpr float kActivityFilterTimeConstant = 0.035f;
-constexpr float kDerivativeFilterTimeConstant = 0.006f;
+constexpr float kCrossingPeriodFilterTimeConstant = 0.050f;
 constexpr float kFrequencyFilterTimeConstant = 0.020f;
 constexpr float kOutputFilterTimeConstant = 0.035f;
-constexpr float kMinSignalAmplitude = 0.25f;
+constexpr float kMinSignalAmplitude = 0.18f;
+constexpr float kMinCrossingThreshold = 0.12f;
+constexpr float kCrossingHysteresisFraction = 0.55f;
+constexpr float kCrossingReleaseFraction = 0.35f;
+constexpr float kCrossingPeriodToleranceFraction = 0.35f;
+constexpr uint8_t kRequiredConsistentCrossings = 2;
+constexpr float kMinCrossingPeriod = 0.080f;
+constexpr float kCrossingTimeoutMultiplier = 1.8f;
 constexpr float kStoppedTimeoutMin = 0.250f;
 constexpr float kStoppedActivityThreshold = 0.8f;
 constexpr float kZeroSpeedThreshold = 0.1f;
@@ -41,8 +49,15 @@ void resetTracker(WheelTracker *tracker) {
     tracker->wheelSpeedEstimate = 0.0f;
     tracker->previousFilteredField = 0.0f;
     tracker->amplitudeEstimate = 0.0f;
+    tracker->baselineEstimate = 0.0f;
     tracker->quadratureEstimate = 0.0f;
     tracker->activityEstimate = 0.0f;
+    tracker->directionEstimate = 0.0f;
+    tracker->crossingPeriod = 0.0f;
+    tracker->timeSinceCrossing = 0.0f;
+    tracker->consistentCrossings = 0;
+    tracker->signalBand = 0;
+    tracker->risingEdgeArmed = false;
     tracker->stillTime = 0.0f;
 }
 
@@ -97,10 +112,10 @@ float median3(float a, float b, float c) {
 }
 }
 
-WheelTracker dispFr{false, false, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
-WheelTracker dispFl{false, false, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
-WheelTracker dispBr{false, false, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
-WheelTracker dispBl{false, false, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+WheelTracker dispFr{false, false, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0, 0, false, 0.0f};
+WheelTracker dispFl{false, false, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0, 0, false, 0.0f};
+WheelTracker dispBr{false, false, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0, 0, false, 0.0f};
+WheelTracker dispBl{false, false, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0, 0, false, 0.0f};
 
 void WheelMagnets::setParameters(VcuParameters *params) {
     fieldFilterFl = LowPassFilter(kFieldFilterTimeConstant);
@@ -121,12 +136,25 @@ void WheelMagnets::setParameters(VcuParameters *params) {
 float calcSpeed(WheelTracker *tracker, float field, float deltaTime, LowPassFilter& fieldFilter, LowPassFilter& speedFilter) {
     fieldFilter.add(field, deltaTime);
     float filteredField = fieldFilter.get();
+    tracker->baselineEstimate = lowPassStep(
+        tracker->baselineEstimate,
+        filteredField,
+        kBaselineFilterTimeConstant,
+        deltaTime
+    );
+    if (filteredField > tracker->baselineEstimate) {
+        tracker->baselineEstimate = filteredField;
+    }
+    float dipDepth = fmaxf(0.0f, tracker->baselineEstimate - filteredField);
     tracker->amplitudeEstimate = lowPassStep(
         tracker->amplitudeEstimate,
-        std::fabs(filteredField),
+        dipDepth,
         kAmplitudeFilterTimeConstant,
         deltaTime
     );
+    if (dipDepth > tracker->amplitudeEstimate) {
+        tracker->amplitudeEstimate = dipDepth;
+    }
 
     if (!tracker->hasPreviousSample) {
         tracker->hasPreviousSample = true;
@@ -159,60 +187,65 @@ float calcSpeed(WheelTracker *tracker, float field, float deltaTime, LowPassFilt
     }
 
     if (!tracker->hasEstimate) {
-        float normalizedField = clamp(filteredField / tracker->amplitudeEstimate, -1.0f, 1.0f);
-        tracker->quadratureEstimate = fieldSlope;
-        tracker->phase = std::asin(normalizedField);
-        tracker->previousPhase = tracker->phase;
-        tracker->signalOmega = 0.0f;
-        tracker->omegaSample1 = 0.0f;
-        tracker->omegaSample2 = 0.0f;
-        tracker->wheelSpeedEstimate = 0.0f;
         tracker->hasEstimate = true;
+        tracker->signalOmega = 0.0f;
+        tracker->wheelSpeedEstimate = 0.0f;
+        tracker->crossingPeriod = 0.0f;
+        tracker->timeSinceCrossing = 0.0f;
+        tracker->consistentCrossings = 0;
+        tracker->signalBand = 0;
+        tracker->risingEdgeArmed = false;
     }
 
-    tracker->quadratureEstimate = lowPassStep(
-        tracker->quadratureEstimate,
-        fieldSlope,
-        kDerivativeFilterTimeConstant,
-        deltaTime
-    );
+    float crossingThreshold = fmaxf(kMinCrossingThreshold, tracker->amplitudeEstimate * kCrossingHysteresisFraction);
+    float crossingRelease = crossingThreshold * kCrossingReleaseFraction;
 
-    float normalizedField = clamp(filteredField / tracker->amplitudeEstimate, -1.0f, 1.0f);
-    float principalPhase = std::asin(normalizedField);
-    if (tracker->quadratureEstimate < 0.0f) {
-        tracker->phase = kPi - principalPhase;
-        if (tracker->phase > kPi) {
-            tracker->phase -= 2.0f * kPi;
+    tracker->timeSinceCrossing += deltaTime;
+
+    if (!tracker->risingEdgeArmed &&
+        dipDepth > crossingThreshold &&
+        fieldSlope < 0.0f) {
+        float measuredPeriod = tracker->timeSinceCrossing;
+        tracker->timeSinceCrossing = 0.0f;
+        tracker->risingEdgeArmed = true;
+
+        if (measuredPeriod >= kMinCrossingPeriod) {
+            bool isConsistent = tracker->crossingPeriod <= 0.0f ||
+                                std::fabs(measuredPeriod - tracker->crossingPeriod) <=
+                                (tracker->crossingPeriod * kCrossingPeriodToleranceFraction);
+
+            if (isConsistent) {
+                tracker->consistentCrossings = std::min<uint8_t>(tracker->consistentCrossings + 1, kRequiredConsistentCrossings);
+            } else {
+                tracker->consistentCrossings = 1;
+            }
+
+            if (tracker->crossingPeriod <= 0.0f || !isConsistent) {
+                tracker->crossingPeriod = measuredPeriod;
+            } else {
+                tracker->crossingPeriod = lowPassStep(
+                    tracker->crossingPeriod,
+                    measuredPeriod,
+                    kCrossingPeriodFilterTimeConstant,
+                    measuredPeriod
+                );
+            }
+
+            if (tracker->consistentCrossings >= kRequiredConsistentCrossings && tracker->crossingPeriod > 0.0f) {
+                float measuredSignalOmega = (2.0f * kPi) / tracker->crossingPeriod;
+                tracker->signalOmega = lowPassStep(
+                    tracker->signalOmega,
+                    clamp(measuredSignalOmega, 0.0f, kMaxSignalOmega),
+                    kFrequencyFilterTimeConstant,
+                    measuredPeriod
+                );
+            }
         }
-    } else {
-        tracker->phase = principalPhase;
     }
 
-    float instantaneousSignalOmega = tracker->signalOmega;
-    float cosineMagnitude = std::sqrt(fmaxf(0.0f, 1.0f - (normalizedField * normalizedField)));
-    if (cosineMagnitude > 0.35f) {
-        float derivativeSignalOmega = std::fabs(tracker->quadratureEstimate) /
-                                      (tracker->amplitudeEstimate * cosineMagnitude);
-        instantaneousSignalOmega = derivativeSignalOmega;
+    if (tracker->risingEdgeArmed && dipDepth < crossingRelease) {
+        tracker->risingEdgeArmed = false;
     }
-
-    instantaneousSignalOmega = clamp(instantaneousSignalOmega, 0.0f, kMaxSignalOmega);
-
-    float medianSignalOmega = median3(
-        instantaneousSignalOmega,
-        tracker->omegaSample1,
-        tracker->omegaSample2
-    );
-    tracker->omegaSample2 = tracker->omegaSample1;
-    tracker->omegaSample1 = instantaneousSignalOmega;
-
-    tracker->signalOmega = lowPassStep(
-        tracker->signalOmega,
-        medianSignalOmega,
-        kFrequencyFilterTimeConstant,
-        deltaTime
-    );
-    tracker->previousPhase = tracker->phase;
 
     if (tracker->stillTime > kStoppedTimeoutMin) {
         fieldFilter.reset();
@@ -221,7 +254,38 @@ float calcSpeed(WheelTracker *tracker, float field, float deltaTime, LowPassFilt
         return 0.0f;
     }
 
+    if (tracker->crossingPeriod > 0.0f && tracker->amplitudeEstimate < kMinSignalAmplitude) {
+        tracker->consistentCrossings = 0;
+        tracker->signalOmega = 0.0f;
+        tracker->wheelSpeedEstimate = 0.0f;
+        speedFilter.reset();
+        return 0.0f;
+    }
+
+    if (tracker->crossingPeriod > 0.0f) {
+        float crossingTimeout = fmaxf(kStoppedTimeoutMin, tracker->crossingPeriod * kCrossingTimeoutMultiplier);
+        if (tracker->timeSinceCrossing > crossingTimeout) {
+            tracker->signalOmega = lowPassStep(
+                tracker->signalOmega,
+                0.0f,
+                kFrequencyFilterTimeConstant,
+                deltaTime
+            );
+
+            if (tracker->timeSinceCrossing > crossingTimeout + kStoppedTimeoutMin) {
+                fieldFilter.reset();
+                speedFilter.reset();
+                resetTracker(tracker);
+                return 0.0f;
+            }
+        }
+    }
+
     tracker->previousFilteredField = filteredField;
+
+    if (tracker->consistentCrossings < kRequiredConsistentCrossings) {
+        return 0.0f;
+    }
 
     float wheelAngularVelocity = tracker->signalOmega / kSignalCyclesPerWheelRevolution;
     float maxSpeedStep = kMaxWheelAcceleration * deltaTime;

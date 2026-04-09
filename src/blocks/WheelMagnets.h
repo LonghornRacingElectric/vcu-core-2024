@@ -41,8 +41,15 @@ typedef struct WheelTracker{
     float wheelSpeedEstimate;
     float previousFilteredField;
     float amplitudeEstimate;
+    float baselineEstimate;
     float quadratureEstimate;
     float activityEstimate;
+    float directionEstimate;
+    float crossingPeriod;
+    float timeSinceCrossing;
+    uint8_t consistentCrossings;
+    int8_t signalBand;
+    bool risingEdgeArmed;
     float stillTime;
 }WheelTracker;
 

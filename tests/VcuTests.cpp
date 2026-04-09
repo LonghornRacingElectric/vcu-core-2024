@@ -5,15 +5,16 @@
 TEST(Vcu, NormalTorqueRequests) {
   VcuModel vcuModel;
   VcuParameters params;
-  VcuInput input;
-  VcuOutput output;
+  VcuInput input = {};
+  VcuOutput output = {};
 
   params.appsLowPassFilterTimeConstant = 0.0f;
   params.apps1VoltageMin = 1.0f;
   params.apps1VoltageMax = 4.0f;
   params.apps2VoltageMin = 0.5f;
   params.apps2VoltageMax = 2.0f;
-  params.appsDeadZonePct = 0.05f;
+  params.appsDeadZoneBottomPct = 0.05f;
+  params.appsDeadZoneTopPct = 0.05f;
   params.appsPlausibilityRange = 0.10f;
   params.appsImplausibilityTime = 0.100f;
 
@@ -22,7 +23,7 @@ TEST(Vcu, NormalTorqueRequests) {
   params.bseVoltageMin = 0.5f;
   params.bseVoltageMax = 4.5f;
 
-  params.prndlBrakeToStartThreshold = 0.1f;
+  params.brakesSoftThreshold = 0.1f;
   params.prndlSwitchDebounceDuration = 0.05f;
   params.prndlBuzzerDuration = 1.0f;
 
@@ -40,6 +41,10 @@ TEST(Vcu, NormalTorqueRequests) {
   input.wheelSensorBlOk = true;
   input.wheelSensorBrOk = true;
   input.inverterReady = true;
+  input.hvBatteryVoltage = 500.0f;
+  input.hvBatteryCurrent = 0.0f;
+  input.hvBatterySoc = 100.0f;
+  input.motorRpm = 500.0f;
   input.driveSwitch = false;
   for (int i = 0; i < 100; i++) {
     vcuModel.evaluate(&input, &output, 0.001f);

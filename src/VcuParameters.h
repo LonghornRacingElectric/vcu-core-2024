@@ -14,6 +14,16 @@
  * and getting updated by Texas Tune (or are coming from the sim).
  */
 
+static inline CurveParameter createDefaultMotorEfficiencyCurve() {
+  // Conservative rpm-only approximation of the EMRAX 228 efficiency map.
+  // This intentionally trends slightly below the center of the best-efficiency island.
+  float efficiency[11] = {
+      0.86f, 0.89f, 0.92f, 0.94f, 0.95f, 0.955f,
+      0.955f, 0.95f, 0.945f, 0.93f, 0.90f
+  };
+  return CurveParameter(0.0f, 5500.0f, efficiency);
+}
+
 typedef struct VcuParameters {
 
   // ===== APPS PARAMETERS =====
@@ -44,14 +54,19 @@ typedef struct VcuParameters {
   // ===== TORQUE MAP PARAMETERS =====
   CurveParameter mapPedalToTorqueRequest = CurveParameter(1.0f,
                                                           230.0f); // torque request (Nm) as a function of pedal travel (%)
+  float mapPedalExponentialFactor = 3.0f; // pedal nonlinearity, 0 is linear, positive softens low pedal, negative sharpens it
   CurveParameter mapDerateMotorTemp; // allowed torque (%) as a function of motor temperature (deg C)
   CurveParameter mapDerateInverterTemp; // allowed torque (%) as a function of inverter temperature (deg C)
   CurveParameter mapDerateBatteryTemp; // allowed torque (%) as a function of battery temperature (deg C)
   CurveParameter mapDerateBatterySoc; // allowed torque (%) as a function of battery SoC (%)
-  float mapPowerLimit = 62000; // power limit (W) (DE-RATED)
-  float mapPowerLimit_kP = 0.0f; // PID proportional gain (Nm/W)
-  float mapPowerLimit_kI = 0.0f; // PID integral gain (Nm/(W*s))
-  float mapPowerLimit_kD = 0.0f; // PID derivative gain (Nm*s/W)
+  float mapPowerLimit = 70000; // power limit (W) (DE-RATED)
+  CurveParameter mapPowerLimitMotorEfficiency = createDefaultMotorEfficiencyCurve(); // efficiency (%) as a function of motor speed (rpm)
+  float mapPowerLimitMinRpm = 100.0f; // minimum motor speed used by feedforward power-to-torque conversion (rpm)
+  float mapPowerLimitTrimLimit = 20.0f; // maximum trim torque added or removed by PI correction (Nm)
+  float mapPowerLimitMeasuredPowerLpfTimeConstant = 0.010f; // filter time constant for measured battery power used by trim loop (s)
+  float mapPowerLimit_kP = 0.01f; // PI trim proportional gain (Nm/W)
+  float mapPowerLimit_kI = 0.0f; // PI trim integral gain (Nm/(W*s))
+  float mapPowerLimit_kD = 0.000f; // transient damping gain on measured battery power rate (Nm*s/W)
   // ===== PRNDL PARAMETERS =====
   float prndlBuzzerDuration = 0.25f; // how long the buzzer buzzes (s)
   float prndlSwitchDebounceDuration = 0.100f; // how long a digital high/low must be sustained to be considered (s)
@@ -70,10 +85,10 @@ typedef struct VcuParameters {
   // ==== STEERING PARAMETERS ====
   CurveParameter steeringWheelToOuterWheel;
   CurveParameter steeringWheelToInnerWheel;
-  float steeringPotMinVoltage = 0.0f;
-  float steeringPotMaxVoltage = 2.59f;
-  float steeringWheelMinAngle = -99.0f;
-  float steeringWheelMaxAngle = 122.0f;
+  float steeringPotMinVoltage = 0.005f;
+  float steeringPotMaxVoltage = 2.43f;
+  float steeringWheelMinAngle = -117.0f;
+  float steeringWheelMaxAngle = 103.0f;
 
   // ==== SOC PARAMETERS ====
   float socCurrentLpfTimeConstant = 0.500f; // (s)

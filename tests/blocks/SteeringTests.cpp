@@ -20,6 +20,8 @@ TEST(Steering, Steering) {
     params.steeringWheelToOuterWheel = CurveParameter(0.0f, 90.0f, arrO);
 
     params.steeringPotMaxVoltage = 3.3f;
+    params.steeringPotMinVoltage = 0.0f;
+    params.steeringWheelMinAngle = -90.0f;
     params.steeringWheelMaxAngle = 90.0f;
 
     //TEST -- VOLTAGE -> STEERING ANGLE
@@ -30,11 +32,11 @@ TEST(Steering, Steering) {
     // Test voltage to steering angle for -90
     steeringInput = {0.0f};
     steering.evaluate(&params, &steeringInput, &steeringOutput, 1.0f);
-    EXPECT_FLOAT_EQ(steeringOutput.steeringWheelAngle, 90.0f);
+    EXPECT_FLOAT_EQ(steeringOutput.steeringWheelAngle, -90.0f);
     // Test voltage to steering angle for 90
     steeringInput = {3.3f};
     steering.evaluate(&params, &steeringInput, &steeringOutput, 1.0f);
-    EXPECT_FLOAT_EQ(steeringOutput.steeringWheelAngle, -90.0f);
+    EXPECT_FLOAT_EQ(steeringOutput.steeringWheelAngle, 90.0f);
 
     //TEST -- STEERING ANGLE -> WHEEL ANGLES
     //Test steering angle to FR wheel angle for 0 (1.65V)
@@ -44,11 +46,11 @@ TEST(Steering, Steering) {
     //Test steering angle to FR wheel angle for -90 (3.3V)
     steeringInput = {3.3f};
     steering.evaluate(&params, &steeringInput, &steeringOutput, 1.0f);
-    EXPECT_FLOAT_EQ(steeringOutput.wheelAngleFr, -0.3920);
+    EXPECT_FLOAT_EQ(steeringOutput.wheelAngleFr, 0.4388f);
     //Test steering angle to FL wheel angle for -90 (3.3V)
     steeringInput = {3.3f};
     steering.evaluate(&params, &steeringInput, &steeringOutput, 1.0f);
-    EXPECT_FLOAT_EQ(steeringOutput.wheelAngleFl, -0.4388);
+    EXPECT_FLOAT_EQ(steeringOutput.wheelAngleFl, 0.3920f);
 
     //TEST -- STEERING ANGLE -> BACK ANGLES
     steeringInput = {0.0f};
