@@ -54,17 +54,17 @@ typedef struct VcuParameters {
   // ===== TORQUE MAP PARAMETERS =====
   CurveParameter mapPedalToTorqueRequest = CurveParameter(1.0f,
                                                           230.0f); // torque request (Nm) as a function of pedal travel (%)
-  float mapPedalExponentialFactor = 3.0f; // pedal nonlinearity, 0 is linear, positive softens low pedal, negative sharpens it
+  float mapPedalExponentialFactor = 2.0f; // pedal nonlinearity, 0 is linear, positive softens low pedal, negative sharpens it
   CurveParameter mapDerateMotorTemp; // allowed torque (%) as a function of motor temperature (deg C)
   CurveParameter mapDerateInverterTemp; // allowed torque (%) as a function of inverter temperature (deg C)
   CurveParameter mapDerateBatteryTemp; // allowed torque (%) as a function of battery temperature (deg C)
   CurveParameter mapDerateBatterySoc; // allowed torque (%) as a function of battery SoC (%)
-  float mapPowerLimit = 70000; // power limit (W) (DE-RATED)
+  float mapPowerLimit = 80000; // power limit (W) (DE-RATED)
   CurveParameter mapPowerLimitMotorEfficiency = createDefaultMotorEfficiencyCurve(); // efficiency (%) as a function of motor speed (rpm)
   float mapPowerLimitMinRpm = 100.0f; // minimum motor speed used by feedforward power-to-torque conversion (rpm)
   float mapPowerLimitTrimLimit = 20.0f; // maximum trim torque added or removed by PI correction (Nm)
   float mapPowerLimitMeasuredPowerLpfTimeConstant = 0.010f; // filter time constant for measured battery power used by trim loop (s)
-  float mapPowerLimit_kP = 0.01f; // PI trim proportional gain (Nm/W)
+  float mapPowerLimit_kP = 0.005f; // PI trim proportional gain (Nm/W)
   float mapPowerLimit_kI = 0.0f; // PI trim integral gain (Nm/(W*s))
   float mapPowerLimit_kD = 0.000f; // transient damping gain on measured battery power rate (Nm*s/W)
   // ===== PRNDL PARAMETERS =====
