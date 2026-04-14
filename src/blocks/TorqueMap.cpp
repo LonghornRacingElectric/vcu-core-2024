@@ -73,7 +73,7 @@ void TorqueMap::evaluate(VcuParameters *params, TorqueMapInput *input, TorqueMap
     powerLimit = std::max(powerLimit, 0.0f);
 
     // battery OCV based derate
-    derate = clampValue((openCircuitVoltage / 128.0f - 3.4f) / 0.1f, 0.0f, 1.0f); // updated to 128s config from 126. Linear derate 3.5 to 3.4 OCV cell
+    derate = clampValue((openCircuitVoltage / 128.0f - 3.3f) / 0.1f, 0.0f, 1.0f); // updated to 128s config from 126. Linear derate 3.3 to 3.2 OCV cell
     pedalTorqueRequest *= derate;
 
     float measuredBatteryPower = input->batteryVoltage * input->batteryCurrent;
