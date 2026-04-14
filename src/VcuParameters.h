@@ -64,7 +64,7 @@ typedef struct VcuParameters {
   float mapPowerLimitMinRpm = 100.0f; // minimum motor speed used by feedforward power-to-torque conversion (rpm)
   float mapPowerLimitTrimLimit = 20.0f; // maximum trim torque added or removed by PI correction (Nm)
   float mapPowerLimitMeasuredPowerLpfTimeConstant = 0.010f; // filter time constant for measured battery power used by trim loop (s)
-  float mapPowerLimit_kP = 0.005f; // PI trim proportional gain (Nm/W)
+  float mapPowerLimit_kP = 0.002f; // PI trim proportional gain (Nm/W)
   float mapPowerLimit_kI = 0.0f; // PI trim integral gain (Nm/(W*s))
   float mapPowerLimit_kD = 0.000f; // transient damping gain on measured battery power rate (Nm*s/W)
   // ===== PRNDL PARAMETERS =====
